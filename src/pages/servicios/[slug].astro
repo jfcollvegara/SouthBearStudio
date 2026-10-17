@@ -1,0 +1,11 @@
+---
+import Base from '../../layouts/Base.astro';
+import {catalog} from '../../data/catalog.js';
+export function getStaticPaths(){return catalog.map(service=>({params:{slug:service.slug},props:{service}}));}
+const {service}=Astro.props;
+const base=import.meta.env.BASE_URL.replace(/\/$/,'');
+---
+<Base title={service.title} description={service.intro}>
+<section class="container page-head"><a class="back-link" href={base+'/servicios/'}>← Todos los servicios</a><div class="eyebrow">Nuestros servicios</div><h1>{service.title}</h1><p class="lead">{service.intro}</p></section>
+<section class="container section"><div class="pricing">{service.packages.map(pkg=><article class="price-card"><h2>{pkg.name}</h2><p class="service-price">Desde {pkg.price.toLocaleString('es-ES')} €{pkg.period||''}</p><ul class="feature-list">{pkg.features.map(feature=><li>{feature}</li>)}</ul><a class="button" href={base+'/presupuesto/?servicio='+encodeURIComponent(service.slug)+'&paquete='+encodeURIComponent(pkg.name)}>Solicitar presupuesto ↗</a></article>)}</div><p class="muted note">Precios orientativos sin IVA. {service.notIncluded}</p>{service.notice&&<p class="muted">{service.notice}</p>}</section>
+</Base>

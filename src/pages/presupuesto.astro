@@ -1,0 +1,24 @@
+---
+import Base from '../layouts/Base.astro';
+import {catalog} from '../data/catalog.js';
+import {site} from '../data/site.js';
+---
+<Base title="Solicitar presupuesto"><section class="container page-head"><div class="eyebrow">Presupuestos</div><h1>Cuéntanos tu proyecto.</h1><p class="lead">Selecciona el servicio y prepara los detalles de tu solicitud. No se enviará ningún dato automáticamente.</p></section>
+<section class="container section"><div class="form-panel">
+<form id="quote-form">
+<label for="service">Servicio</label><select id="service" name="service" required><option value="">Selecciona un servicio</option>{catalog.map(c=><option value={c.slug}>{c.title}</option>)}</select>
+<label for="package">Modalidad</label><select id="package" name="package" required><option value="">Elige primero un servicio</option></select>
+<label for="name">Nombre o empresa</label><input id="name" name="name" required maxlength="120" placeholder="Nombre o empresa"/>
+<label for="email">Correo de contacto</label><input id="email" name="email" type="email" required placeholder="correo@ejemplo.es"/>
+<label for="description">Describe el proyecto</label><textarea id="description" name="description" rows="6" maxlength="3000" required placeholder="¿Qué necesitas? ¿Tienes ya textos e imágenes?"></textarea>
+<label class="check-label"><input id="consent" type="checkbox" required/> Entiendo que este formulario solo prepara un texto para copiarlo; no transmite mis datos a la agencia.</label>
+<button class="button" type="submit">Preparar solicitud ↗</button></form>
+<div id="quote-result" class="result-panel" hidden><h2>Solicitud preparada</h2><p class="muted">Copia este texto y envíalo cuando el estudio tenga disponible su correo de contacto.</p><textarea id="quote-text" rows="12" readonly></textarea><button id="copy-quote" class="button" type="button">Copiar solicitud</button><span id="copy-status" role="status"></span>{site.email&&<a class="button secondary" id="send-quote" href={'mailto:'+site.email}>Abrir correo</a>}</div>
+</div></section>
+<script define:vars={{catalog,contactEmail:site.email}}>
+const form=document.querySelector('#quote-form');const service=form.querySelector('#service');const pkg=form.querySelector('#package');const params=new URLSearchParams(location.search);
+function renderPackages(){const c=catalog.find(x=>x.slug===service.value);pkg.replaceChildren();const placeholder=new Option('Selecciona una modalidad','');pkg.add(placeholder);if(c)for(const p of c.packages)pkg.add(new Option(p.name+' — desde '+p.price+' €'+(p.period||''),p.name));}
+service.addEventListener('change',renderPackages);if(params.get('servicio')){service.value=params.get('servicio');renderPackages();pkg.value=params.get('paquete')||'';}
+form.addEventListener('submit',e=>{e.preventDefault();if(!form.reportValidity())return;const c=catalog.find(x=>x.slug===service.value);const p=c?.packages.find(x=>x.name===pkg.value);const message=['SOLICITUD DE PRESUPUESTO','Servicio: '+(c?.title||''),'Modalidad: '+(p?.name||''),'Precio orientativo: '+(p?.price||'')+' €'+(p?.period||'')+' (sin IVA)','Nombre/empresa: '+form.elements.namedItem('name').value,'Correo: '+form.elements.namedItem('email').value,'Descripción:',form.elements.namedItem('description').value].join('\n');document.querySelector('#quote-text').value=message;document.querySelector('#quote-result').hidden=false;const send=document.querySelector('#send-quote');if(send&&contactEmail)send.href='mailto:'+contactEmail+'?subject='+encodeURIComponent('Solicitud de presupuesto')+'&body='+encodeURIComponent(message);document.querySelector('#quote-result').scrollIntoView({behavior:'smooth'});});document.querySelector('#copy-quote').addEventListener('click',async()=>{const value=document.querySelector('#quote-text').value;try{await navigator.clipboard.writeText(value);document.querySelector('#copy-status').textContent='Copiado';}catch{document.querySelector('#quote-text').select();document.querySelector('#copy-status').textContent='Selecciona y copia el texto';}});
+</script>
+</Base>

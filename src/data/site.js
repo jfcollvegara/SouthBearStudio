@@ -1,12 +1,11 @@
-// Cambia los datos de marca y contacto aquí cuando estén definidos.
-export const site = {name:'Estudio Digital',tagline:'Ideas que toman forma digital.',email:'',location:'Trabajamos con negocios de toda España'};
+export const site = {name:'SOUTHBEAR STUDIO',tagline:'Estudio creativo · Diseño, web y soluciones digitales.',email:'',location:'Trabajamos con negocios de toda España'};
 export const departments = [
-{title:'Diseño web',slug:'diseno-web',description:'Webs corporativas, landing pages y experiencias digitales.'},
-{title:'Branding',slug:'branding',description:'Logotipos e identidades visuales para marcas con personalidad.'},
-{title:'Diseño gráfico',slug:'diseno-grafico',description:'Carteles, catálogos, publicidad y piezas digitales.'},
-{title:'Soluciones QR',slug:'soluciones-qr',description:'Cartas, tarifas y catálogos digitales accesibles desde el móvil.'},
-{title:'Tiendas online',slug:'tiendas-online',description:'Comercio electrónico con plataformas consolidadas.'},
-{title:'Mantenimiento',slug:'mantenimiento',description:'Actualizaciones y cuidado de tu presencia digital.'}];
+{title:'Diseño web',slug:'diseno-web',description:'Webs corporativas, landing pages y experiencias digitales intuitivas.'},
+{title:'Branding',slug:'branding',description:'Logotipos e identidades visuales que hacen reconocible a tu marca.'},
+{title:'Diseño gráfico',slug:'diseno-grafico',description:'Cartelería, catálogos y materiales visuales para tu negocio.'},
+{title:'Soluciones QR',slug:'soluciones-qr',description:'Cartas, tarifas y catálogos digitales, listos para compartir.'},
+{title:'Tiendas online',slug:'tiendas-online',description:'Tiendas funcionales y preparadas para vender.'},
+{title:'Mantenimiento',slug:'mantenimiento',description:'Actualizaciones y acompañamiento para mantener tu presencia digital.'}];
 export const prices=[
 {group:'Diseño web',slug:'diseno-web',items:[['Landing page',299],['Web Esencial',549],['Web Profesional',899],['Web Premium',1490]]},
 {group:'Branding',slug:'branding',items:[['Logotipo Esencial',179],['Logotipo Profesional',299],['Identidad Visual',499],['Branding Integral',899]]},

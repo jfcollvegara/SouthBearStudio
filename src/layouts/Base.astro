@@ -1,9 +1,9 @@
 ---
 import '../styles/global.css';
 import {site} from '../data/site.js';
-const {title='Agencia creativa',description='Diseño web, branding, diseño gráfico, soluciones QR y tiendas online.'}=Astro.props;
+const {title='Estudio creativo',description='SOUTHBEAR STUDIO, diseño web, identidad visual y soluciones digitales.'}=Astro.props;
 const root=import.meta.env.BASE_URL.replace(/\/$/,'');
 const route=(path='/')=>root+(path==='/'?'/':path+'/');
-const nav=[['/','Inicio'],['/servicios','Servicios'],['/proyectos','Proyectos'],['/nosotros','Nosotros'],['/presupuesto','Presupuesto'],['/contacto','Contacto']];
+const nav=[['/','Inicio'],['/servicios','Servicios'],['/proyectos','Proyectos'],['/nosotros','Estudio'],['/contacto','Contacto'],['/presupuesto','Presupuesto ↗']];
 ---
-<!doctype html><html lang="es"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><meta name="description" content={description}/><meta name="theme-color" content="#101311"/><title>{title} | {site.name}</title></head><body><header class="site-header"><div class="container nav"><a class="wordmark" href={route()}>{site.name}<span class="accent">.</span></a><nav aria-label="Navegación principal">{nav.map(([url,label])=><a href={route(url)}>{label}</a>)}</nav></div></header><main><slot/></main><footer><div class="container footer-inner"><div><strong>{site.name}<span class="accent">.</span></strong><p class="muted">{site.tagline}</p></div><p class="muted">© {new Date().getFullYear()} · Web en preparación · <a href={route('/contacto')}>Contacto</a></p></div></footer></body></html>
+<!doctype html><html lang="es"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><meta name="description" content={description}/><meta name="theme-color" content="#101411"/><title>{title} | {site.name}</title></head><body><header class="site-header"><div class="container nav"><a class="wordmark brand-lockup" aria-label="SOUTHBEAR STUDIO — inicio" href={route()}><span class="brand-mark" aria-hidden="true">S</span><span>SOUTHBEAR <span style="font-weight:500">STUDIO</span></span></a><nav aria-label="Navegación principal">{nav.map(([url,label])=><a href={route(url)}>{label}</a>)}</nav></div></header><main><slot/></main><footer><div class="container footer-inner"><div><strong>{site.name}</strong><p class="muted">{site.tagline}</p></div><p class="muted">© {new Date().getFullYear()} SOUTHBEAR STUDIO · <a href={route('/contacto')}>Contacto</a></p></div></footer></body></html>

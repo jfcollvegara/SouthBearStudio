@@ -1,9 +1,60 @@
 ---
 import '../styles/global.css';
 import {site} from '../data/site.js';
-const {title='Estudio creativo',description='SOUTHBEAR STUDIO, diseño web, identidad visual y soluciones digitales.'}=Astro.props;
+const {
+  title='Estudio creativo',
+  description='SOUTHBEAR STUDIO, diseño web, identidad visual y soluciones digitales.',
+  landing=false
+}=Astro.props;
 const root=import.meta.env.BASE_URL.replace(/\/$/,'');
 const route=(path='/')=>root+(path==='/'?'/':path+'/');
-const nav=[['/','Inicio'],['/servicios','Servicios'],['/proyectos','Proyectos'],['/nosotros','Estudio'],['/contacto','Contacto'],['/presupuesto','Presupuesto ↗']];
+const nav=[
+  ['/','Inicio'],
+  ['/servicios','Servicios'],
+  ['/proyectos','Proyectos'],
+  ['/nosotros','Estudio'],
+  ['/contacto','Contacto'],
+  ['/presupuesto','Presupuesto']
+];
 ---
-<!doctype html><html lang="es"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><meta name="description" content={description}/><meta name="theme-color" content="#101411"/><title>{title} | {site.name}</title></head><body><header class="site-header"><div class="container nav"><a class="wordmark brand-lockup" aria-label="SOUTHBEAR STUDIO — inicio" href={route()}><span class="brand-logo-frame"><img class="brand-logo" src={root + "/southbear-logo.svg"} alt="SOUTHBEAR STUDIO"/></span></a><nav aria-label="Navegación principal">{nav.map(([url,label])=><a href={route(url)}>{label}</a>)}</nav></div></header><main><slot/></main><footer><div class="container footer-inner"><div><span class="footer-logo-frame"><img class="footer-logo" src={root + "/southbear-logo.svg"} alt="SOUTHBEAR STUDIO"/></span><p class="muted">{site.tagline}</p></div><p class="muted">© {new Date().getFullYear()} SOUTHBEAR STUDIO · <a href={route('/contacto')}>Contacto</a></p></div></footer></body></html>
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta name="description" content={description}/>
+    <meta name="theme-color" content="#101411"/>
+    <title>{title} | {site.name}</title>
+  </head>
+  <body class:list={[{'landing-page':landing}]}>
+    <header class="site-header">
+      <div class="container nav">
+        <a class="wordmark brand-lockup" aria-label="SOUTHBEAR STUDIO — inicio" href={route()}>
+          <span class="brand-logo-frame">
+            <img class="brand-logo" src={root + "/southbear-logo.svg"} alt="SOUTHBEAR STUDIO"/>
+          </span>
+        </a>
+        <details class="site-menu">
+          <summary class="menu-toggle" aria-label="Abrir menú de navegación">
+            <span class="menu-toggle-lines" aria-hidden="true"><span></span><span></span></span>
+          </summary>
+          <nav class="menu-panel" aria-label="Navegación principal">
+            {nav.map(([url,label],i)=><a href={route(url)}><span class="menu-index">0{i+1}</span>{label}<span class="menu-arrow" aria-hidden="true">↗</span></a>)}
+          </nav>
+        </details>
+      </div>
+    </header>
+    <main><slot/></main>
+    {!landing && (
+      <footer>
+        <div class="container footer-inner">
+          <div>
+            <span class="footer-logo-frame"><img class="footer-logo" src={root + "/southbear-logo.svg"} alt="SOUTHBEAR STUDIO"/></span>
+            <p class="muted">{site.tagline}</p>
+          </div>
+          <p class="muted">© {new Date().getFullYear()} SOUTHBEAR STUDIO · <a href={route('/contacto')}>Contacto</a></p>
+        </div>
+      </footer>
+    )}
+  </body>
+</html>

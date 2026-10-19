@@ -19,3 +19,9 @@ footer{background:var(--dark);color:#F5F4ED;border-top:1px solid #ffffff1e;paddi
 .footer-logo{display:block;width:clamp(205px,24vw,260px);height:auto;filter:invert(1);margin-bottom:12px}
 .brand-lockup{line-height:0}
 @media(max-width:650px){.brand-logo{width:190px}.footer-logo{width:220px}}
+
+/* Archivo SVG recibido, con mesa de trabajo Affinity 3000x2000. Se encuadra mediante CSS sin editar el logotipo. */
+.brand-logo-frame,.footer-logo-frame{position:relative;display:block;overflow:hidden;flex:none}
+.brand-logo-frame{width:230px;height:39px}.brand-logo{position:absolute!important;max-width:none;width:390px!important;height:260px!important;left:-81px;top:-107px;filter:invert(1)}
+.footer-logo-frame{width:260px;height:45px;margin-bottom:14px}.footer-logo{position:absolute!important;max-width:none;width:450px!important;height:300px!important;left:-94px;top:-124px;filter:invert(1)}
+@media(max-width:650px){.brand-logo-frame{width:207px;height:36px}.brand-logo{transform:scale(.9);transform-origin:top left}.footer-logo-frame{width:234px;height:41px}.footer-logo{transform:scale(.9);transform-origin:top left}}

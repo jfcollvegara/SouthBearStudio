@@ -1,27 +1,31 @@
 ---
 import Base from '../layouts/Base.astro';
-
-// Cuando tengamos el vídeo de presentación, se subirá a /public
-// y se indicará aquí su ruta (por ejemplo, '/southbear-film.mp4').
-const brandVideo = null;
+const root=import.meta.env.BASE_URL.replace(/\/$/,'');
+const videoPath=root+'/southbear-film.mp4';
 ---
 <Base title="Inicio" landing={true} description="SOUTHBEAR STUDIO. Estudio creativo de diseño, identidad visual y experiencias digitales.">
-  <section class="brand-film" aria-label="Presentación de SOUTHBEAR STUDIO">
-    {brandVideo ? (
-      <video class="brand-film-video" autoplay muted loop playsinline preload="metadata" aria-label="Vídeo de presentación de SOUTHBEAR STUDIO">
-        <source src={brandVideo} type="video/mp4" />
-        Tu navegador no admite reproducción de vídeo.
-      </video>
-    ) : (
-      <div class="brand-film-placeholder">
-        <div class="brand-film-orbit" aria-hidden="true"></div>
-        <div class="brand-film-content">
-          <span class="brand-film-overline">SOUTHBEAR STUDIO — BRAND FILM</span>
-          <p class="brand-film-headline">Diseñamos<br/><span>lo que viene.</span></p>
-          <span class="brand-film-caption">Espacio preparado para el vídeo de presentación.</span>
-        </div>
-        <div class="brand-film-edge" aria-hidden="true"><span>CREATIVE STUDIO</span><span>EST. 2026</span></div>
+  <section class="brand-film" aria-label="Presentación audiovisual de SOUTHBEAR STUDIO">
+    <video
+      class="brand-film-video"
+      autoplay
+      muted
+      loop
+      playsinline
+      preload="metadata"
+      aria-label="Vídeo de presentación de SOUTHBEAR STUDIO"
+      oncanplay="this.closest('.brand-film').classList.add('brand-film--playing')"
+      onerror="this.closest('.brand-film').classList.remove('brand-film--playing')"
+    >
+      <source src={videoPath} type="video/mp4"/>
+    </video>
+    <div class="brand-film-placeholder">
+      <div class="brand-film-orbit" aria-hidden="true"></div>
+      <div class="brand-film-content">
+        <span class="brand-film-overline">SOUTHBEAR STUDIO — BRAND FILM</span>
+        <p class="brand-film-headline">Diseñamos<br/><span>lo que viene.</span></p>
+        <span class="brand-film-caption">Presentación de marca</span>
       </div>
-    )}
+      <div class="brand-film-edge" aria-hidden="true"><span>CREATIVE STUDIO</span><span>EST. 2026</span></div>
+    </div>
   </section>
 </Base>

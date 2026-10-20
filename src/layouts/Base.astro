@@ -45,16 +45,42 @@ const nav=[
       </div>
     </header>
     <main><slot/></main>
-    {!landing && (
-      <footer>
-        <div class="container footer-inner">
-          <div>
-            <span class="footer-logo-frame"><img class="footer-logo" src={root + "/southbear-logo.svg"} alt="SOUTHBEAR STUDIO"/></span>
-            <p class="muted">{site.tagline}</p>
-          </div>
-          <p class="muted">© {new Date().getFullYear()} SOUTHBEAR STUDIO · <a href={route('/contacto')}>Contacto</a></p>
+    <footer class="sb-site-footer" aria-label="Pie de página">
+      <div class="container sb-footer-top">
+        <div>
+          <span class="sb-footer-eyebrow"><span class="sb-footer-dot" aria-hidden="true"></span> ¿TIENES UN PROYECTO EN MENTE?</span>
+          <h2>Hagamos algo<br/><span>que deje huella.</span></h2>
         </div>
-      </footer>
-    )}
+        <a class="sb-footer-cta" href={route('/presupuesto')}>
+          <span>Empezar un proyecto</span>
+          <span class="sb-footer-cta-icon" aria-hidden="true">↗</span>
+        </a>
+      </div>
+      <div class="container sb-footer-main">
+        <div class="sb-footer-brand">
+          <a href={route('/')} aria-label="SOUTHBEAR STUDIO — ir al inicio">
+            <img src={root + "/southbear-logo.svg"} alt="SOUTHBEAR STUDIO" width="340" height="64" loading="lazy"/>
+          </a>
+          <p>Estudio creativo independiente.<br/>Diseño web, identidad visual y soluciones digitales.</p>
+        </div>
+        <nav class="sb-footer-nav" aria-label="Navegación del pie de página">
+          <h3>Explora</h3>
+          <a href={route('/servicios')}>Servicios</a>
+          <a href={route('/proyectos')}>Proyectos</a>
+          <a href={route('/nosotros')}>El estudio</a>
+          <a href={route('/contacto')}>Contacto</a>
+        </nav>
+        <div class="sb-footer-location">
+          <h3>Estamos cerca</h3>
+          <p>Beniel, Murcia.</p>
+          <p>Murcia · Alicante · Almería</p>
+          <p>Trabajamos online con toda España.</p>
+        </div>
+      </div>
+      <div class="container sb-footer-bottom">
+        <span>© {new Date().getFullYear()} SOUTHBEAR STUDIO. Todos los derechos reservados.</span>
+        <a href={route('/')} aria-label="Volver al inicio">Ideas que dejan huella. <span aria-hidden="true">↗</span></a>
+      </div>
+    </footer>
   </body>
 </html>

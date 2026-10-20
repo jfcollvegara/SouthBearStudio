@@ -1,5 +1,5 @@
 {
-  "name": "agencia-digital",
+  "name": "southbear-studio",
   "version": "0.1.0",
   "private": true,
   "type": "module",
@@ -9,6 +9,7 @@
     "preview": "astro preview"
   },
   "dependencies": {
-    "astro": "^5.0.0"
+    "astro": "^5.0.0",
+    "@astrojs/sitemap": "^3.7.4"
   }
 }

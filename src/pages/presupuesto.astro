@@ -3,7 +3,7 @@ import Base from '../layouts/Base.astro';
 import {catalog} from '../data/catalog.js';
 import {site} from '../data/site.js';
 ---
-<Base title="Solicitar presupuesto"><section class="container page-head"><div class="eyebrow">Presupuestos</div><h1>Cuéntanos tu proyecto.</h1><p class="lead">Selecciona el servicio y prepara los detalles de tu solicitud. No se enviará ningún dato automáticamente.</p></section>
+<Base title="Solicitar presupuesto" description="Prepara una solicitud de presupuesto para diseño web, branding, diseño gráfico, tiendas online o soluciones digitales en SOUTHBEAR STUDIO."><section class="container page-head"><div class="eyebrow">Presupuestos</div><h1>Cuéntanos tu proyecto.</h1><p class="lead">Selecciona el servicio y prepara los detalles de tu solicitud. No se enviará ningún dato automáticamente.</p></section>
 <section class="container section"><div class="form-panel">
 <form id="quote-form">
 <label for="service">Servicio</label><select id="service" name="service" required><option value="">Selecciona un servicio</option>{catalog.map(c=><option value={c.slug}>{c.title}</option>)}</select>

@@ -172,3 +172,132 @@ body,button,input,textarea,select,h1,h2,h3,.wordmark{font-family:"Gotham","Gotha
   .landing-page main,.brand-film{min-height:calc(100svh - 76px)}
   .brand-film-placeholder{min-height:max(440px,calc(100svh - 76px))}
 }
+
+/* SOUTHBEAR STUDIO — pie de página editorial */
+.sb-site-footer{
+  background:#101411;
+  color:#F3F4EE;
+  border-top:1px solid #dDff9a50;
+  overflow:hidden;
+}
+.sb-site-footer a{color:inherit;text-decoration:none}
+.sb-site-footer a:focus-visible{outline:2px solid #DDFF9A;outline-offset:5px}
+.sb-footer-top{
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  gap:44px;
+  padding-top:clamp(64px,9vw,125px);
+  padding-bottom:clamp(56px,7vw,100px);
+}
+.sb-footer-eyebrow{
+  color:#DDFF9A;
+  font-size:.7rem;
+  font-weight:700;
+  letter-spacing:.17em;
+  display:inline-flex;
+  align-items:center;
+  gap:12px;
+}
+.sb-footer-dot{
+  display:inline-block;
+  width:8px;
+  height:8px;
+  background:#DDFF9A;
+  border-radius:50%;
+}
+.sb-footer-top h2{
+  font-family:"Gotham","Gotham Book",Arial,Helvetica,sans-serif;
+  font-size:clamp(2.85rem,6.5vw,6.2rem);
+  line-height:1.09;
+  letter-spacing:-.065em;
+  font-weight:700;
+  margin:26px 0 0;
+}
+.sb-footer-top h2 span{color:#DDFF9A}
+.sb-footer-cta{
+  border:1px solid #a6b09b66;
+  display:inline-flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:36px;
+  flex:none;
+  padding:8px 9px 8px 23px;
+  border-radius:50px;
+  font-size:.9rem;
+  font-weight:700;
+  transition:background .2s,color .2s,border-color .2s;
+}
+.sb-footer-cta:hover{color:#101411;background:#DDFF9A;border-color:#DDFF9A}
+.sb-footer-cta-icon{
+  display:grid;
+  place-items:center;
+  width:43px;height:43px;
+  border-radius:50%;
+  background:#DDFF9A;
+  color:#101411;
+  font-size:1.35rem;
+  font-weight:400;
+}
+.sb-footer-cta:hover .sb-footer-cta-icon{background:#101411;color:#DDFF9A}
+.sb-footer-main{
+  display:grid;
+  grid-template-columns:minmax(0,1.7fr) minmax(0,.7fr) minmax(0,1fr);
+  gap:clamp(28px,5vw,80px);
+  border-top:1px solid #ffffff2c;
+  padding-top:48px;
+  padding-bottom:60px;
+}
+.sb-footer-brand>a{display:inline-block;line-height:0}
+.sb-footer-brand img{
+  display:block;
+  width:min(100%,320px);
+  height:auto;
+  filter:invert(1);
+}
+.sb-footer-brand p,.sb-footer-location p{
+  color:#AAB3A7;
+  font-size:.88rem;
+  line-height:1.9;
+}
+.sb-footer-brand p{margin:22px 0 0}
+.sb-footer-main h3{
+  font-family:"Gotham","Gotham Book",Arial,Helvetica,sans-serif;
+  color:#F3F4EE;
+  font-size:.84rem;
+  font-weight:700;
+  letter-spacing:.01em;
+  margin:0 0 20px;
+}
+.sb-footer-nav{display:flex;flex-direction:column;align-items:flex-start;gap:13px}
+.sb-footer-nav a{font-size:.89rem;color:#AAB3A7;transition:color .2s}
+.sb-footer-nav a:hover,.sb-footer-bottom a:hover{color:#DDFF9A}
+.sb-footer-location p{margin:0 0 5px}
+.sb-footer-bottom{
+  border-top:1px solid #ffffff2c;
+  padding-top:24px;
+  padding-bottom:26px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  gap:18px;
+  font-size:.73rem;
+  color:#8F9A90;
+}
+.sb-footer-bottom a{color:#AAB3A7}
+.sb-footer-bottom a span{color:#DDFF9A}
+@media(max-width:850px){
+  .sb-footer-top{align-items:flex-start;flex-direction:column;gap:32px}
+  .sb-footer-main{grid-template-columns:1fr 1fr;gap:35px}
+  .sb-footer-brand{grid-column:1/-1}
+}
+@media(max-width:540px){
+  .sb-footer-top{padding-top:66px;padding-bottom:60px}
+  .sb-footer-top h2{font-size:clamp(2.65rem,10.5vw,3.7rem)}
+  .sb-footer-cta{width:100%;max-width:330px}
+  .sb-footer-main{grid-template-columns:1fr 1fr;gap:35px 18px;padding-top:38px;padding-bottom:45px}
+  .sb-footer-brand{grid-column:1/-1}
+  .sb-footer-brand img{width:min(100%,275px)}
+  .sb-footer-bottom{align-items:flex-start;flex-direction:column;line-height:1.7}
+}

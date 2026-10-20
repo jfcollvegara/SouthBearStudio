@@ -83,7 +83,7 @@ body,button,input,textarea,select,h1,h2,h3,.wordmark{font-family:"Gotham","Gotha
 .brand-film--playing .brand-film-placeholder{visibility:hidden}
 @media(max-width:650px){.brand-film-video{height:100%;min-height:0;object-position:center center}}
 
-/* Cabecera centrada SOUTHBEAR STUDIO: logo arriba, hamburguesa debajo. */
+/* SOUTHBEAR STUDIO: logotipo centrado, menú hamburguesa alineado a la izquierda debajo. */
 .site-header .nav{
   display:flex;
   flex-direction:column;
@@ -115,7 +115,7 @@ body,button,input,textarea,select,h1,h2,h3,.wordmark{font-family:"Gotham","Gotha
   object-fit:contain;
 }
 .site-header .site-menu{
-  align-self:center;
+  align-self:flex-start;
   position:relative;
   margin-top:9px;
 }
@@ -126,10 +126,10 @@ body,button,input,textarea,select,h1,h2,h3,.wordmark{font-family:"Gotham","Gotha
   border-radius:12px;
 }
 .site-header .nav .menu-panel{
-  left:50%;
+  left:0;
   right:auto;
   top:calc(100% + 9px);
-  transform:translateX(-50%);
+  transform:none;
   width:min(365px,calc(100vw - 32px));
 }
 .landing-page main,.brand-film{min-height:calc(100svh - 120px)}
@@ -152,10 +152,10 @@ body,button,input,textarea,select,h1,h2,h3,.wordmark{font-family:"Gotham","Gotha
   .site-header .site-menu{margin-top:6px}
   .site-header .menu-toggle{width:46px;height:35px}
   .site-header .nav .menu-panel{
-    left:50%;
+    left:0;
     right:auto;
     top:calc(100% + 9px);
-    transform:translateX(-50%);
+    transform:none;
   }
   .landing-page main,.brand-film{min-height:calc(100svh - 105px)}
   .brand-film-placeholder{min-height:max(440px,calc(100svh - 105px))}

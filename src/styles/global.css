@@ -83,28 +83,31 @@ body,button,input,textarea,select,h1,h2,h3,.wordmark{font-family:"Gotham","Gotha
 .brand-film--playing .brand-film-placeholder{visibility:hidden}
 @media(max-width:650px){.brand-film-video{height:100%;min-height:0;object-position:center center}}
 
-/* SOUTHBEAR STUDIO: logotipo centrado, menú hamburguesa alineado a la izquierda debajo. */
+/* Cabecera horizontal: logotipo centrado en ambas direcciones y menú a su izquierda. */
 .site-header .nav{
-  display:flex;
-  flex-direction:column;
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);
   align-items:center;
-  justify-content:center;
-  flex-wrap:nowrap;
-  gap:0;
-  min-height:0;
-  padding:15px 0 11px;
+  justify-items:stretch;
+  column-gap:0;
+  min-height:98px;
+  padding:12px 0;
 }
 .site-header .brand-lockup{
+  grid-column:2;
+  grid-row:1;
+  justify-self:center;
+  align-self:center;
   display:flex;
   align-items:center;
   justify-content:center;
-  flex:0 0 auto;
   width:auto;
-  margin-inline:auto;
+  margin:0;
+  min-width:0;
 }
 .site-header .brand-logo-frame{
   display:block;
-  width:min(280px,75vw);
+  width:280px;
   height:auto;
   aspect-ratio:1731 / 316;
 }
@@ -113,50 +116,59 @@ body,button,input,textarea,select,h1,h2,h3,.wordmark{font-family:"Gotham","Gotha
   width:100%;
   height:100%;
   object-fit:contain;
+  filter:invert(1);
 }
 .site-header .site-menu{
-  align-self:flex-start;
+  grid-column:1;
+  grid-row:1;
+  justify-self:start;
+  align-self:center;
   position:relative;
-  margin-top:9px;
+  margin:0;
+  z-index:2;
 }
 .site-header .menu-toggle{
+  display:flex;
+  align-items:center;
+  justify-content:center;
   width:48px;
-  height:38px;
+  height:42px;
   border:1px solid #ffffff24;
   border-radius:12px;
 }
 .site-header .nav .menu-panel{
+  position:absolute;
   left:0;
   right:auto;
-  top:calc(100% + 9px);
+  top:calc(100% + 14px);
   transform:none;
   width:min(365px,calc(100vw - 32px));
 }
-.landing-page main,.brand-film{min-height:calc(100svh - 120px)}
-.brand-film-placeholder{min-height:max(500px,calc(100svh - 120px))}
+.landing-page main,.brand-film{min-height:calc(100svh - 98px)}
+.brand-film-placeholder{min-height:max(490px,calc(100svh - 98px))}
 @media(max-width:650px){
   .site-header .nav{
-    display:flex;
-    flex-direction:column;
+    display:grid;
+    grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);
     align-items:center;
-    justify-content:center;
-    gap:0;
-    min-height:0;
-    padding:13px 0 9px;
+    justify-items:stretch;
+    column-gap:0;
+    min-height:76px;
+    padding:10px 0;
   }
   .site-header .brand-logo-frame{
-    width:min(220px,76vw);
+    width:min(200px,54vw);
     height:auto;
     aspect-ratio:1731 / 316;
   }
-  .site-header .site-menu{margin-top:6px}
-  .site-header .menu-toggle{width:46px;height:35px}
+  .site-header .site-menu{margin:0;justify-self:start;align-self:center}
+  .site-header .menu-toggle{width:44px;height:40px}
   .site-header .nav .menu-panel{
     left:0;
     right:auto;
-    top:calc(100% + 9px);
+    top:calc(100% + 12px);
     transform:none;
   }
-  .landing-page main,.brand-film{min-height:calc(100svh - 105px)}
-  .brand-film-placeholder{min-height:max(440px,calc(100svh - 105px))}
+  .landing-page main,.brand-film{min-height:calc(100svh - 76px)}
+  .brand-film-placeholder{min-height:max(440px,calc(100svh - 76px))}
 }

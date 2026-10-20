@@ -82,3 +82,81 @@ body,button,input,textarea,select,h1,h2,h3,.wordmark{font-family:"Gotham","Gotha
 .brand-film--playing .brand-film-video{opacity:1}
 .brand-film--playing .brand-film-placeholder{visibility:hidden}
 @media(max-width:650px){.brand-film-video{height:100%;min-height:0;object-position:center center}}
+
+/* Cabecera centrada SOUTHBEAR STUDIO: logo arriba, hamburguesa debajo. */
+.site-header .nav{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  flex-wrap:nowrap;
+  gap:0;
+  min-height:0;
+  padding:15px 0 11px;
+}
+.site-header .brand-lockup{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex:0 0 auto;
+  width:auto;
+  margin-inline:auto;
+}
+.site-header .brand-logo-frame{
+  display:block;
+  width:min(280px,75vw);
+  height:auto;
+  aspect-ratio:1731 / 316;
+}
+.site-header .brand-logo{
+  display:block;
+  width:100%;
+  height:100%;
+  object-fit:contain;
+}
+.site-header .site-menu{
+  align-self:center;
+  position:relative;
+  margin-top:9px;
+}
+.site-header .menu-toggle{
+  width:48px;
+  height:38px;
+  border:1px solid #ffffff24;
+  border-radius:12px;
+}
+.site-header .nav .menu-panel{
+  left:50%;
+  right:auto;
+  top:calc(100% + 9px);
+  transform:translateX(-50%);
+  width:min(365px,calc(100vw - 32px));
+}
+.landing-page main,.brand-film{min-height:calc(100svh - 120px)}
+.brand-film-placeholder{min-height:max(500px,calc(100svh - 120px))}
+@media(max-width:650px){
+  .site-header .nav{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:0;
+    min-height:0;
+    padding:13px 0 9px;
+  }
+  .site-header .brand-logo-frame{
+    width:min(220px,76vw);
+    height:auto;
+    aspect-ratio:1731 / 316;
+  }
+  .site-header .site-menu{margin-top:6px}
+  .site-header .menu-toggle{width:46px;height:35px}
+  .site-header .nav .menu-panel{
+    left:50%;
+    right:auto;
+    top:calc(100% + 9px);
+    transform:translateX(-50%);
+  }
+  .landing-page main,.brand-film{min-height:calc(100svh - 105px)}
+  .brand-film-placeholder{min-height:max(440px,calc(100svh - 105px))}
+}

@@ -20,14 +20,14 @@ const eur=new Intl.NumberFormat('es-ES');
     <div class="kb-wordmark-container">
       <img src={link('/southbear-logo.svg')} alt="SOUTHBEAR STUDIO"/>
     </div>
-    <nav class="kb-top-nav" aria-label="Navegación principal">
-      <a href={link('/servicios/')}>Servicios</a>
-      <a href={link('/proyectos/')}>Proyectos</a>
-      <a href={link('/nosotros/')}>Estudio</a>
-      <a href={link('/contacto/')}>Contacto</a>
-      <a href={link('/presupuesto/')}>Presupuesto</a>
-    </nav>
   </section>
+  <nav class="kb-top-nav" aria-label="Navegación principal">
+    <a href={link('/servicios/')}>Servicios</a>
+    <a href={link('/proyectos/')}>Proyectos</a>
+    <a href={link('/nosotros/')}>Estudio</a>
+    <a href={link('/contacto/')}>Contacto</a>
+    <a href={link('/presupuesto/')}>Presupuesto</a>
+  </nav>
 
   <section class="kb-section kb-intro" aria-labelledby="kb-title">
     <div class="kb-section-kicker">¿QUÉ HACE SOUTHBEAR?</div>
@@ -107,3 +107,37 @@ const eur=new Intl.NumberFormat('es-ES');
     <div class="kb-section-body"><h2>Hablemos de<br/>tu proyecto.</h2><a href={link('/presupuesto/')} class="kb-contact-link">Solicitar presupuesto <span aria-hidden="true">↗</span></a></div>
   </section>
 </Base>
+<script>
+  // El menú necesita ser hermano de la sección del logo para que
+  // position: sticky funcione y se mantenga visible durante el scroll.
+  const logo = document.querySelector('.kb-wordmark-container');
+  const nav = document.querySelector('.kb-top-nav');
+  if (logo && nav) {
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let queued = false;
+
+    function renderScroll() {
+      queued = false;
+      const travel = Math.max(125, logo.offsetHeight * 0.85);
+      const progress = reducedMotion.matches
+        ? 0
+        : Math.max(0, Math.min(1, (window.scrollY - 8) / travel));
+      logo.style.setProperty('--kb-logo-fade', progress.toFixed(3));
+      nav.classList.toggle('kb-top-nav--stuck',
+        window.scrollY > 0 && nav.getBoundingClientRect().top <= 0.5);
+    }
+
+    function scheduleScroll() {
+      if (!queued) {
+        queued = true;
+        window.requestAnimationFrame(renderScroll);
+      }
+    }
+
+    window.addEventListener('scroll', scheduleScroll, {passive: true});
+    window.addEventListener('resize', scheduleScroll, {passive: true});
+    window.addEventListener('pageshow', scheduleScroll);
+    reducedMotion.addEventListener('change', scheduleScroll);
+    scheduleScroll();
+  }
+</script>

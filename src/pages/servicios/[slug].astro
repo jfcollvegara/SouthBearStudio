@@ -1,11 +1,123 @@
 ---
 import Base from '../../layouts/Base.astro';
 import {catalog} from '../../data/catalog.js';
-export function getStaticPaths(){return catalog.map(service=>({params:{slug:service.slug},props:{service}}));}
+export function getStaticPaths(){
+  return catalog.map(service=>({params:{slug:service.slug},props:{service}}));
+}
 const {service}=Astro.props;
 const base=import.meta.env.BASE_URL.replace(/\/$/,'');
+const euros=new Intl.NumberFormat('es-ES',{minimumFractionDigits:0,maximumFractionDigits:2});
+const formatPrice=(item)=>{
+  if(item.price===null)return item.priceLabel||'Bajo presupuesto';
+  return (item.from?'Desde ':'')+euros.format(item.price)+' €'+(item.unit||'');
+};
+const formattedExtra=(item,section)=>{
+  if(service.slug==='branding' && section?.title==='Aplicaciones de identidad visual'){
+    return 'Incluido según paquete';
+  }
+  return formatPrice(item);
+};
+const quote=(pkg)=>base+'/presupuesto/?servicio='+encodeURIComponent(service.slug)+'&paquete='+encodeURIComponent(pkg.name);
 ---
-<Base title={service.title} description={`${service.title} en SOUTHBEAR STUDIO. ${service.intro} Servicios en Murcia, Alicante, Almería y online.`}>
-<section class="container page-head"><a class="back-link" href={base+'/servicios/'}>← Todos los servicios</a><div class="eyebrow">Nuestros servicios</div><h1>{service.title}</h1><p class="lead">{service.intro}</p></section>
-<section class="container section"><div class="pricing">{service.packages.map(pkg=><article class="price-card"><h2>{pkg.name}</h2><p class="service-price">Desde {pkg.price.toLocaleString('es-ES')} €{pkg.period||''}</p><ul class="feature-list">{pkg.features.map(feature=><li>{feature}</li>)}</ul><a class="button" href={base+'/presupuesto/?servicio='+encodeURIComponent(service.slug)+'&paquete='+encodeURIComponent(pkg.name)}>Solicitar presupuesto ↗</a></article>)}</div><p class="muted note">Precios orientativos sin IVA. {service.notIncluded}</p>{service.notice&&<p class="muted">{service.notice}</p>}</section>
+<Base title={service.title} description={service.title+' en SOUTHBEAR STUDIO. Paquetes, extras y precios con IVA incluido. '+service.intro}>
+  <section class="container page-head service-head">
+    <a class="back-link" href={base+'/servicios/'}>← Todos los servicios</a>
+    <div class="eyebrow">SOUTHBEAR STUDIO / SERVICIOS</div>
+    <h1>{service.title}</h1>
+    <p class="lead">{service.intro}</p>
+    <p class="tax-disclaimer">Todos los precios mostrados incluyen IVA.</p>
+  </section>
+  <section class="container service-section">
+    <div class="section-heading-new"><div><span class="eyebrow">01 / PAQUETES Y PRODUCTOS</span><h2>Elige tu punto de partida.</h2></div><p>Consulta qué incluye cada modalidad y solicita un presupuesto con el alcance que necesitas.</p></div>
+    <div class="package-grid">
+      {service.packages.map((pkg,index)=>
+        <article class="package-card">
+          <div class="package-index">0{index+1} / {service.packages.length<10?'0':''}{service.packages.length}</div>
+          <h3>{pkg.name}</h3>
+          <p class="package-price">{formatPrice(pkg)}</p>
+          <ul class="package-features">{pkg.features.map(feature=><li>{feature}</li>)}</ul>
+          <a class="button package-button" href={quote(pkg)}>Solicitar presupuesto ↗</a>
+        </article>
+      )}
+    </div>
+  </section>
+  {(service.extras?.length>0 || service.extraSections?.length>0)&&
+    <section class="container service-section extras-section">
+      <div class="section-heading-new"><div><span class="eyebrow">02 / EXTRAS Y COMPLEMENTOS</span><h2>Personaliza el servicio.</h2></div><p>Podrás añadirlos a tu presupuesto según las necesidades del proyecto. Los complementos no incluidos se contratan por separado.</p></div>
+      {service.extras?.length>0&&
+        <div class="extra-grid">
+          {service.extras.map(item=>
+            <article class="extra-item">
+              <div class="extra-title-row"><h3>{item.name}</h3><strong>{formatPrice(item)}</strong></div>
+              <p>{item.detail}</p>
+            </article>
+          )}
+        </div>
+      }
+      {service.extraSections?.map((section)=>
+        <div class="extra-section-block">
+          <h3>{section.title}</h3>
+          {section.intro&&<p class="extra-section-intro">{section.intro}</p>}
+          <div class="extra-grid">
+            {section.items.map(item=>
+              <article class="extra-item">
+                <div class="extra-title-row"><h4>{item.name}</h4><strong>{formattedExtra(item,section)}</strong></div>
+                <p>{item.detail}</p>
+              </article>
+            )}
+          </div>
+        </div>
+      )}
+    </section>
+  }
+  <section class="container service-section service-conditions">
+    <div class="conditions-panel">
+      <div><span class="eyebrow">03 / INFORMACIÓN ÚTIL</span><h2>Qué debes saber.</h2></div>
+      <div>
+        <ul class="conditions-list">{service.common.map(note=><li>{note}</li>)}</ul>
+        <p class="conditions-exclusions"><strong>Otros servicios y exclusiones:</strong> {service.notIncluded}</p>
+        <p class="conditions-exclusions">Los cambios adicionales requieren presupuesto previo. Las revisiones no incluyen nuevos diseños completos ni trabajos fuera del alcance contratado. Se respetan siempre los derechos legales del cliente.</p>
+        <a class="button" href={base+'/presupuesto/?servicio='+encodeURIComponent(service.slug)}>Cuéntanos tu proyecto ↗</a>
+      </div>
+    </div>
+  </section>
 </Base>
+<style>
+  .service-head{padding-bottom:40px}
+  .service-head h1{max-width:1000px}
+  .tax-disclaimer{color:#567837;font-weight:800;font-size:.89rem}
+  .service-section{padding-top:36px;padding-bottom:70px}
+  .section-heading-new{display:flex;align-items:flex-end;justify-content:space-between;gap:25px;margin-bottom:32px}
+  .section-heading-new h2,.conditions-panel h2{font-size:clamp(2rem,4vw,3.7rem);line-height:1.13;letter-spacing:-.06em;margin:14px 0 0}
+  .section-heading-new>p{max-width:370px;color:#656c63;line-height:1.75;margin:0}
+  .package-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+  .package-card{background:#fffcf5;border:1px solid #dcd8cd;border-radius:13px;padding:clamp(24px,3vw,38px);display:flex;flex-direction:column;gap:12px}
+  .package-index{font-size:.74rem;letter-spacing:.13em;color:#7c9e4c;font-weight:800}
+  .package-card h3{font-size:clamp(1.5rem,2.5vw,2.1rem);line-height:1.16;letter-spacing:-.055em;margin:8px 0 0}
+  .package-price{font-size:clamp(1.7rem,3vw,2.5rem);font-weight:800;color:#50762e;letter-spacing:-.055em;margin:2px 0 8px}
+  .package-features{list-style:none;margin:0 0 22px;padding:0;display:grid;gap:12px;flex:1}
+  .package-features li{line-height:1.6;padding:0 0 0 24px;position:relative;color:#495347}
+  .package-features li:before{content:'✓';position:absolute;left:0;top:0;color:#618e2e;font-weight:800}
+  .package-button{align-self:stretch}
+  .extras-section{padding-top:75px;border-top:1px solid #d6d2c4}
+  .extra-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+  .extra-item{border:1px solid #d9d4c5;padding:20px 22px;border-radius:11px;background:#fffdf7}
+  .extra-title-row{display:flex;justify-content:space-between;align-items:flex-start;gap:20px}
+  .extra-title-row h3,.extra-title-row h4{font-size:1.03rem;font-weight:800;line-height:1.4;letter-spacing:-.02em;margin:0}
+  .extra-title-row strong{white-space:nowrap;color:#50762e;font-size:.94rem;text-align:right}
+  .extra-item p{font-size:.87rem;color:#626c60;line-height:1.65;margin:12px 0 0}
+  .extra-section-block{margin-top:38px}
+  .extra-section-block>h3{font-size:1.6rem;letter-spacing:-.04em;margin:0 0 8px}
+  .extra-section-intro{max-width:850px;color:#626c60;line-height:1.65;margin:0 0 18px}
+  .service-conditions{padding-bottom:100px}
+  .conditions-panel{display:grid;grid-template-columns:1fr 1.4fr;gap:55px;background:#19211b;border-radius:15px;color:#f5f7ed;padding:clamp(28px,5vw,62px)}
+  .conditions-panel .eyebrow{color:#ddff9a}
+  .conditions-list{list-style:none;padding:0;margin:0 0 26px;display:grid;gap:16px}
+  .conditions-list li{color:#d1d9cf;line-height:1.65;padding-left:18px;position:relative}
+  .conditions-list li:before{content:'•';color:#ddff9a;position:absolute;left:0}
+  .conditions-exclusions{color:#bbc7ba;line-height:1.7;font-size:.91rem}
+  .conditions-exclusions strong{color:#f7f7f0}
+  .conditions-panel .button{background:#ddff9a;color:#101411;border-color:#ddff9a;margin-top:20px}
+  @media(max-width:800px){.section-heading-new{display:block}.section-heading-new>p{max-width:600px;margin-top:18px}.conditions-panel{grid-template-columns:1fr;gap:28px}}
+  @media(max-width:650px){.package-grid,.extra-grid{grid-template-columns:1fr}.service-section{padding-top:25px;padding-bottom:55px}.extras-section{padding-top:55px}.extra-title-row{gap:14px}}
+</style>

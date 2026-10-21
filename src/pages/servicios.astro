@@ -1,6 +1,61 @@
 ---
 import Base from '../layouts/Base.astro';
 import {catalog} from '../data/catalog.js';
-const contact=import.meta.env.BASE_URL.replace(/\/$/,'')+'/contacto/';
+const base=import.meta.env.BASE_URL.replace(/\/$/,'');
+const contact=base+'/presupuesto/';
+const euros=new Intl.NumberFormat('es-ES',{minimumFractionDigits:0,maximumFractionDigits:2});
+const label=(item)=>item.price===null?'Bajo presupuesto':(item.from?'Desde ':'')+euros.format(item.price)+' €'+(item.unit||'');
 ---
-<Base title="Diseño web, branding y otros servicios" description="Diseño web, branding, diseño gráfico, tiendas online y soluciones QR de SOUTHBEAR STUDIO. Servicios en Murcia, Alicante, Almería y online."><section class="container page-head"><div class="eyebrow">Servicios</div><h1>Todo lo que tu marca necesita.</h1><p class="lead">Soluciones visuales y digitales, de la primera idea al lanzamiento. Precios de partida, sin IVA.</p></section><section class="container section"><div class="pricing">{catalog.map(group=><article class="price-card" id={group.slug}><h2>{group.title}</h2><p class="muted">{group.intro}</p>{group.packages.map(pkg=><div class="price-line"><span>{pkg.name}</span><strong>Desde {pkg.price.toLocaleString("es-ES")} €{pkg.period||""}</strong></div>)}<a class="text-link" href={import.meta.env.BASE_URL.replace(/\/$/,"")+"/servicios/"+group.slug+"/"}>Ver modalidades y detalles →</a></article>)}</div><p class="muted note">Cada presupuesto especifica el alcance, las revisiones y los entregables. Dominio, alojamiento, licencias, servicios externos e impuestos no incluidos salvo acuerdo expreso.</p><div class="actions"><a class="button" href={contact}>Solicitar presupuesto ↗</a></div></section></Base>
+<Base title="Servicios y precios · SOUTHBEAR STUDIO" description="Descubre todos los paquetes y precios IVA incluido de SOUTHBEAR STUDIO: diseño web, logotipos e identidad visual, diseño gráfico, QR/NFC y producción audiovisual.">
+  <section class="container page-head">
+    <div class="eyebrow">SERVICIOS / SOUTHBEAR STUDIO</div>
+    <h1>Ideas que se convierten<br/>en proyectos.</h1>
+    <p class="lead">Cinco disciplinas creativas, con paquetes claros y soluciones personalizadas. Todos los precios mostrados incluyen IVA.</p>
+  </section>
+  <section class="container catalog-section">
+    <nav class="catalog-jump" aria-label="Ir a una categoría de servicios">
+      {catalog.map((group,index)=><a href={'#'+group.slug}><span>{String(index+1).padStart(2,'0')}</span>{group.title} ↗</a>)}
+    </nav>
+    <div class="catalog-grid">
+      {catalog.map((group,index)=>
+        <article class="catalog-card" id={group.slug}>
+          <div class="catalog-card-top"><span>{String(index+1).padStart(2,'0')} / 0{catalog.length}</span><span aria-hidden="true">↗</span></div>
+          <h2>{group.title}</h2>
+          <p>{group.intro}</p>
+          <div class="catalog-lines">
+            {group.packages.map(pkg=>
+              <div class="catalog-line">
+                <span>{pkg.name}</span>
+                <strong>{label(pkg)}</strong>
+              </div>
+            )}
+          </div>
+          <a class="catalog-card-link" href={base+'/servicios/'+group.slug+'/'}>Ver paquetes, extras y condiciones <span aria-hidden="true">→</span></a>
+        </article>
+      )}
+    </div>
+    <p class="catalog-footnote">Precios IVA incluido. Los servicios «desde» y «bajo presupuesto» se concretan según el encargo. Las impresiones, dominios, envíos y servicios de terceros se cobran aparte cuando no se indique expresamente lo contrario. Todos los presupuestos detallan el alcance y los entregables.</p>
+    <div class="actions"><a class="button" href={contact}>Solicitar presupuesto ↗</a></div>
+  </section>
+</Base>
+<style>
+  .catalog-section{padding-top:30px;padding-bottom:100px}
+  .catalog-jump{display:flex;flex-wrap:wrap;gap:9px;margin-bottom:32px}
+  .catalog-jump a{border:1px solid #b6b9a8;border-radius:999px;padding:12px 15px;font-size:.82rem;font-weight:700;transition:background .2s}
+  .catalog-jump a:hover{background:#e6eccd;color:#101411}
+  .catalog-jump span{margin-right:9px;color:#698f39;font-size:.72rem}
+  .catalog-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+  .catalog-card{background:#fffcf5;border:1px solid #d8d4c8;border-radius:14px;padding:clamp(22px,3vw,37px);display:flex;flex-direction:column;scroll-margin-top:115px}
+  .catalog-card-top{display:flex;align-items:center;justify-content:space-between;color:#6d8f40;font-size:.75rem;font-weight:800;letter-spacing:.1em}
+  .catalog-card-top span:last-child{font-size:1.35rem}
+  .catalog-card h2{font-size:clamp(1.7rem,2.8vw,2.4rem);line-height:1.13;margin:24px 0 12px}
+  .catalog-card>p{color:#656c63;line-height:1.7;margin:0 0 26px}
+  .catalog-lines{border-top:1px solid #dedcd1;margin-top:auto}
+  .catalog-line{display:flex;justify-content:space-between;align-items:baseline;gap:16px;border-bottom:1px solid #dedcd1;padding:13px 0;font-size:.89rem}
+  .catalog-line strong{flex:none;color:#456b1f;text-align:right;font-size:.9rem}
+  .catalog-card-link{display:flex;justify-content:space-between;gap:12px;padding-top:28px;color:#3d5b25;font-weight:800;font-size:.9rem}
+  .catalog-card-link:hover{color:#101411}
+  .catalog-footnote{max-width:920px;line-height:1.8;color:#656c63;margin-top:35px;font-size:.9rem}
+  @media(max-width:770px){.catalog-grid{grid-template-columns:1fr}.catalog-section{padding-bottom:65px}.catalog-jump a{font-size:.77rem}}
+  @media(max-width:410px){.catalog-line{font-size:.81rem}.catalog-line strong{font-size:.81rem}}
+</style>

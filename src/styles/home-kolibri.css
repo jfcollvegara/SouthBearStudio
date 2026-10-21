@@ -7,7 +7,7 @@ body.landing-page,body.landing-page main{background:#fafaf8;color:#101010}
 .kb-wordmark{padding:10px clamp(20px,3vw,52px) 20px;background:linear-gradient(to bottom,#DDFF9A 0%,#E9FFC0 30%,#FFFFFF 100%);overflow:hidden}
 .kb-wordmark-container{width:100%;height:auto;overflow:hidden}
 .kb-wordmark-container img{width:100%;height:auto;display:block;filter:none}
-.kb-top-nav{display:flex;justify-content:center;align-items:center;flex-wrap:wrap;column-gap:clamp(22px,3.2vw,52px);row-gap:8px;margin:0;padding:16px 0 22px;border-bottom:1px solid #c9c9c4}
+.kb-top-nav{display:flex;justify-content:center;align-items:center;flex-wrap:wrap;column-gap:clamp(22px,3.2vw,52px);row-gap:8px;margin:0;padding:16px 0 22px;border-bottom:none}
 .kb-top-nav a{color:#101010;font-size:clamp(.84rem,1.05vw,.98rem);line-height:1.4;white-space:nowrap;font-weight:750;text-decoration:none;border-bottom:2px solid transparent;padding:9px 1px 6px;transition:border-color .2s}
 .kb-top-nav a:hover,.kb-top-nav a:focus-visible{border-color:#101010;color:#101010}
 .kb-section,.kb-end-link{width:min(1520px,calc(100% - clamp(40px,7vw,140px)));margin:0 auto;display:grid;grid-template-columns:minmax(160px,24%) minmax(0,1fr);gap:clamp(30px,5vw,95px)}

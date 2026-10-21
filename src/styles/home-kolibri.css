@@ -130,3 +130,65 @@ body.landing-page,body.landing-page main{background:#fafaf8;color:#101010}
   .kb-text-link,.kb-project-caption>span,.kb-top-nav::before{transition:none}
   .kb-wordmark-container{will-change:auto}
 }
+
+
+/* SOUTHBEAR / efecto ovalo cinetico: hover, foco y seleccion.
+   Dos capas: estela negra difuminada y ovalo de tinta bajo el texto. */
+.kb-top-nav a{
+  position:relative;
+  isolation:isolate;
+  z-index:0;
+  border-bottom:0;
+  transition:color .22s ease,text-shadow .22s ease;
+}
+.kb-top-nav a::before,
+.kb-top-nav a::after{
+  content:"";
+  position:absolute;
+  left:50%;
+  pointer-events:none;
+  border-radius:999px;
+  opacity:0;
+  z-index:-1;
+  transform-origin:center;
+}
+.kb-top-nav a::before{
+  top:54%;
+  width:calc(100% + 24px);
+  height:34px;
+  background:radial-gradient(ellipse at center,#000 25%,rgba(0,0,0,.84) 65%,transparent 100%);
+  filter:blur(9px);
+  transform:translate(-80%,-40%) scaleX(.45);
+  transition:opacity .24s ease,transform .43s cubic-bezier(.16,1,.3,1),filter .4s ease;
+}
+.kb-top-nav a::after{
+  top:52%;
+  width:calc(100% + 17px);
+  height:31px;
+  background:#080808;
+  box-shadow:-10px 1px 9px -4px rgba(0,0,0,.38);
+  filter:blur(7px);
+  transform:translate(-85%,-40%) scaleX(.48);
+  transition:opacity .24s ease,transform .43s cubic-bezier(.16,1,.3,1),filter .4s ease;
+}
+.kb-top-nav a:is(:hover,:focus-visible,:active,[aria-current="page"]){
+  color:#DDFF9A;
+  text-shadow:0 1px 2px #0005;
+  border-bottom-color:transparent;
+}
+.kb-top-nav a:is(:hover,:focus-visible,:active,[aria-current="page"])::before,
+.kb-top-nav a:is(:hover,:focus-visible,:active,[aria-current="page"])::after{
+  opacity:1;
+  transform:translate(-50%,-40%) scaleX(1);
+}
+.kb-top-nav a:is(:hover,:focus-visible,:active,[aria-current="page"])::before{
+  filter:blur(7px);
+}
+.kb-top-nav a:is(:hover,:focus-visible,:active,[aria-current="page"])::after{
+  filter:blur(1.8px);
+}
+.kb-top-nav a:focus-visible{outline:2px solid #72984a;outline-offset:8px}
+@media(prefers-reduced-motion:reduce){
+  .kb-top-nav a,.kb-top-nav a::before,.kb-top-nav a::after{transition:none}
+  .kb-top-nav a::before,.kb-top-nav a::after{filter:blur(2px)}
+}

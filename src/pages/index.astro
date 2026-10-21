@@ -1,32 +1,152 @@
 ---
 import Base from '../layouts/Base.astro';
-const root=import.meta.env.BASE_URL.replace(/\/$/,'');
-const videoPath=root+'/southbear-film-pingpong.mp4';
+import '../styles/home-kolibri.css';
+import {catalog} from '../data/catalog.js';
+const base=import.meta.env.BASE_URL.replace(/\/$/,'');
+const url=(path)=>base+path;
+const video=url('/southbear-film-pingpong.mp4');
+const labels={
+  'diseno-web':'Diseño web',
+  'branding':'Branding e identidad',
+  'diseno-grafico':'Diseño gráfico',
+  'soluciones-qr':'Soluciones QR / NFC',
+  'audiovisual':'Producción audiovisual'
+};
+const descriptions={
+  'diseno-web':'Experiencias digitales que funcionan y dejan huella.',
+  'branding':'Una personalidad visual imposible de confundir.',
+  'diseno-grafico':'Diseño que comunica, en pantalla y en papel.',
+  'soluciones-qr':'Conexiones útiles entre tu negocio y tus clientes.',
+  'audiovisual':'Ideas e historias que cobran vida en movimiento.'
+};
+const euros=new Intl.NumberFormat('es-ES');
+const lowestPrice=(group)=>Math.min(...group.packages.filter(p=>p.price!==null).map(p=>p.price));
 ---
-<Base title="Diseño web, branding y audiovisual en Murcia, Alicante y Almería" landing={true} description="SOUTHBEAR STUDIO es un estudio creativo en Beniel (Murcia). Diseño web, branding, diseño gráfico y producción audiovisual para negocios de Murcia, Alicante y Almería.">
-  <h1 class="sr-only">SOUTHBEAR STUDIO: diseño web, branding y producción audiovisual</h1>
-  <section class="brand-film" aria-label="Presentación audiovisual de SOUTHBEAR STUDIO">
-    <video
-      class="brand-film-video"
-      autoplay
-      muted
-      loop
-      playsinline
-      preload="metadata"
-      aria-label="Vídeo de presentación de SOUTHBEAR STUDIO"
-      oncanplay="this.closest('.brand-film').classList.add('brand-film--playing')"
-      onerror="this.closest('.brand-film').classList.remove('brand-film--playing')"
-    >
-      <source src={videoPath} type="video/mp4"/>
-    </video>
-    <div class="brand-film-placeholder">
-      <div class="brand-film-orbit" aria-hidden="true"></div>
-      <div class="brand-film-content">
-        <span class="brand-film-overline">SOUTHBEAR STUDIO — BRAND FILM</span>
-        <p class="brand-film-headline">Diseñamos<br/><span>lo que viene.</span></p>
-        <span class="brand-film-caption">Presentación de marca</span>
+<Base title="Ideas que dejan huella" description="SOUTHBEAR STUDIO: diseño web, branding, diseño gráfico, soluciones QR/NFC y producción audiovisual desde Beniel (Murcia). Creatividad con personalidad." landing={true}>
+  <section class="sbk-hero">
+    <div class="sbk-wrap sbk-hero-top">
+      <span><span class="sbk-dot"></span> ESTUDIO CREATIVO INDEPENDIENTE</span>
+      <span>BENIEL / MURCIA — 2026</span>
+    </div>
+    <div class="sbk-wrap sbk-hero-grid">
+      <div class="sbk-hero-copy">
+        <h1>Ideas que<br/><em>dejan</em><br/>huella<span>.</span></h1>
+        <div class="sbk-hero-under">
+          <p>Diseño, tecnología y creatividad para negocios que no quieren pasar desapercibidos.</p>
+          <a class="sbk-scroll-circle" href="#sbk-universo" aria-label="Descubrir el estudio">↘</a>
+        </div>
       </div>
-      <div class="brand-film-edge" aria-hidden="true"><span>CREATIVE STUDIO</span><span>EST. 2026</span></div>
+      <div class="sbk-art" aria-label="Composición gráfica SOUTHBEAR">
+        <div class="sbk-art-sheet">
+          <div class="sbk-art-top"><span>SOUTHBEAR / STUDIO</span><span>VOL. 001</span></div>
+          <div class="sbk-art-rings" aria-hidden="true"><div class="sbk-art-ring"></div><div class="sbk-art-initials">S<span>B</span></div></div>
+          <div class="sbk-art-bottom">GOOD IDEAS.<br/>GREAT IMPACT.</div>
+          <span class="sbk-art-side">VISUAL RESEARCH / 2026</span>
+        </div>
+        <div class="sbk-art-stamp" aria-hidden="true"><span>✳</span> MAKE<br/>IT MATTER</div>
+        <div class="sbk-art-tag" aria-hidden="true">NO ORDINARY STUDIO ↗</div>
+      </div>
+    </div>
+    <div class="sbk-wrap sbk-hero-tail"><span>DISEÑO CON PROPÓSITO. PERSONALIDAD SIN LÍMITES.</span><span>DESLIZA PARA EXPLORAR ↓</span></div>
+  </section>
+
+  <div class="sbk-marquee" aria-label="Diseño. Identidad. Digital. Movimiento.">
+    <div class="sbk-marquee-track" aria-hidden="true">
+      {Array.from({length:4}).map(()=> <span>DISEÑO <b>✳</b> IDENTIDAD <b>✳</b> DIGITAL <b>✳</b> MOVIMIENTO <b>✳</b> </span>)}
+    </div>
+  </div>
+
+  <section id="sbk-universo" class="sbk-manifesto">
+    <div class="sbk-wrap sbk-two-columns">
+      <div class="sbk-section-label"><span></span>01 / LO QUE NOS MUEVE</div>
+      <div class="sbk-manifesto-main">
+        <h2>Diseñar no es<br/>decorar. <em>Es hacer<br/>que algo importe.</em></h2>
+        <div class="sbk-manifesto-foot"><p>Nos gustan las ideas con carácter, el trabajo bien pensado y los detalles que marcan la diferencia. De un logotipo a toda una experiencia digital.</p><a class="sbk-underlink" href={url('/nosotros/')}>Conoce el estudio <span>↗</span></a></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sbk-motion">
+    <div class="sbk-wrap sbk-motion-top"><div class="sbk-section-label"><span></span>02 / NUESTRO UNIVERSO</div><div>CREATIVE THINKING · MADE VISIBLE</div></div>
+    <div class="sbk-wrap sbk-motion-grid">
+      <div class="sbk-motion-copy">
+        <h2>Lo que<br/><em>imaginamos,</em><br/>lo hacemos.</h2>
+        <p>Un estudio, muchas formas de dar vida a las buenas ideas. Identidad, experiencias y movimiento con una misma filosofía.</p>
+        <a class="sbk-outline-link" href={url('/proyectos/')}>Explorar el portfolio <span>↗</span></a>
+      </div>
+      <div class="sbk-motion-video">
+        <video autoplay muted loop playsinline preload="metadata" aria-label="Vídeo de presentación de SOUTHBEAR STUDIO">
+          <source src={video} type="video/mp4"/>
+        </video>
+        <div class="sbk-motion-placeholder" aria-hidden="true">S<span>B</span></div>
+        <div class="sbk-motion-caption"><span>STUDIO MOTION / 001</span><span>● LOOP</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sbk-work">
+    <div class="sbk-wrap sbk-work-head">
+      <div><div class="sbk-section-label"><span></span>03 / EXPLORACIONES VISUALES</div><h2>El diseño<br/><em>se demuestra.</em></h2></div>
+      <div class="sbk-work-aside"><p>Estamos creando un universo visual propio. Estas piezas muestran distintas posibilidades de nuestro estudio.</p><small>CONCEPTOS ILUSTRATIVOS · NO SON PROYECTOS DE CLIENTES</small></div>
+    </div>
+    <div class="sbk-wrap sbk-showcases">
+      <a class="sbk-showcase" href={url('/servicios/branding/')} aria-label="Explorar servicios de branding">
+        <div class="sbk-showcase-art sbk-demo-brand">
+          <div class="sbk-demo-top">IDENTITY STUDIES <span>EST. 2026</span></div>
+          <div class="sbk-demo-mark">S<span>✳</span>B</div>
+          <div class="sbk-demo-bottom">CREATIVE PROCESS <span>001 / SB</span></div>
+        </div>
+        <div class="sbk-showcase-caption"><div><small>01 / IDENTIDAD · CONCEPTO</small><h3>Marcas con personalidad</h3></div><b>↗</b></div>
+      </a>
+      <a class="sbk-showcase" href={url('/servicios/diseno-web/')} aria-label="Explorar servicios de diseño web">
+        <div class="sbk-showcase-art sbk-demo-web">
+          <div class="sbk-demo-browser">
+            <div class="sbk-demo-browser-nav"><span>✳ / DIGITAL</span><span>WORK &nbsp; ABOUT &nbsp; CONTACT</span></div>
+            <div class="sbk-demo-browser-main"><small>THE CREATIVE EXPERIENCE — 2026</small><strong>MAKE<br/>YOUR<br/><em>MARK.</em></strong><div>LET'S EXPLORE ↗</div></div>
+          </div>
+          <div class="sbk-demo-pill">DIGITAL<br/>FIRST ✳</div>
+        </div>
+        <div class="sbk-showcase-caption"><div><small>02 / WEB · CONCEPTO</small><h3>Experiencias que conectan</h3></div><b>↗</b></div>
+      </a>
+      <a class="sbk-showcase sbk-showcase-wide" href={url('/servicios/soluciones-qr/')} aria-label="Explorar soluciones QR y NFC">
+        <div class="sbk-showcase-art sbk-demo-qr">
+          <div class="sbk-demo-qr-orbit" aria-hidden="true"></div>
+          <div class="sbk-demo-phone">
+            <span>DEMOSTRACIÓN / CARTA DIGITAL</span>
+            <strong>BUEN<br/>GUSTO.</strong>
+            <div>CAFÉS DE ESPECIALIDAD <span>↗</span></div>
+            <div>DESAYUNOS <span>↗</span></div>
+            <div>PARA COMPARTIR <span>↗</span></div>
+            <small>HECHO PARA DESCUBRIR</small>
+          </div>
+          <div class="sbk-demo-qr-text">SCAN <span>✳</span> DISCOVER</div>
+        </div>
+        <div class="sbk-showcase-caption"><div><small>03 / QR & NFC · CONCEPTO</small><h3>Conexiones sin fricción</h3></div><b>↗</b></div>
+      </a>
+    </div>
+    <div class="sbk-wrap sbk-work-footer"><a class="sbk-underlink" href={url('/proyectos/')}>Explorar el portfolio <span>↗</span></a></div>
+  </section>
+
+  <section class="sbk-services">
+    <div class="sbk-wrap sbk-two-columns sbk-services-heading">
+      <div class="sbk-section-label"><span></span>04 / QUÉ HACEMOS</div>
+      <div><h2>Muchas formas.<br/><em>Una misma idea.</em></h2><p>Dar vida a lo que hace único a tu negocio.</p></div>
+    </div>
+    <div class="sbk-wrap sbk-services-list">
+      {catalog.map((group,i)=><a href={url('/servicios/'+group.slug+'/')} class="sbk-service-row" aria-label={'Ver '+group.title}>
+        <span class="sbk-service-count">{String(i+1).padStart(2,'0')}</span>
+        <div class="sbk-service-name"><h3>{labels[group.slug]||group.title}</h3><p>{descriptions[group.slug]||group.intro}</p></div>
+        <span class="sbk-service-cost">Desde {euros.format(lowestPrice(group))} €</span>
+        <span class="sbk-service-arrow" aria-hidden="true">↗</span>
+      </a>)}
+    </div>
+    <div class="sbk-wrap sbk-services-footer"><span>Todos los precios incluyen IVA. Consulta cada paquete para conocer sus características.</span><a href={url('/servicios/')}>Todos los servicios ↗</a></div>
+  </section>
+
+  <section class="sbk-outro">
+    <div class="sbk-wrap sbk-two-columns">
+      <div class="sbk-section-label"><span></span>05 / TU PRÓXIMO PROYECTO</div>
+      <div><h2>Hagamos<br/><em>algo grande.</em></h2><p>Una marca por construir, una web que renovar o una idea a punto de despegar. Cuéntanosla.</p><a class="sbk-outro-button" href={url('/presupuesto/')}>Empezar un proyecto <span>↗</span></a></div>
     </div>
   </section>
 </Base>

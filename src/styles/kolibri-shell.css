@@ -163,3 +163,77 @@
 .landing-page .sb-footer-nav a:hover,.landing-page .sb-footer-bottom a:hover{color:#101010;text-decoration:underline}
 .landing-page .sb-footer-bottom a span{color:#101010}
 .landing-page .sb-footer-brand p{margin-top:25px}
+
+
+/* SOUTHBEAR / mismo ovalo cinetico al navegar por paginas interiores.
+   El destino actual queda marcado mediante aria-current="page". */
+.site-header.southbear-nav .sb-nav-desktop a,
+.site-header.southbear-nav .sb-nav-desktop a:last-child{
+  position:relative;
+  isolation:isolate;
+  z-index:0;
+  border:0;
+  border-radius:0;
+  padding:9px 0;
+  background:transparent;
+  color:#101010;
+  transition:color .22s ease,text-shadow .22s ease;
+}
+.site-header.southbear-nav .sb-nav-desktop a::before,
+.site-header.southbear-nav .sb-nav-desktop a::after{
+  content:"";
+  position:absolute;
+  left:50%;
+  pointer-events:none;
+  border-radius:999px;
+  opacity:0;
+  z-index:-1;
+  transform-origin:center;
+}
+.site-header.southbear-nav .sb-nav-desktop a::before{
+  top:54%;
+  width:calc(100% + 24px);
+  height:34px;
+  background:radial-gradient(ellipse at center,#000 25%,rgba(0,0,0,.84) 65%,transparent 100%);
+  filter:blur(9px);
+  transform:translate(-80%,-40%) scaleX(.45);
+  transition:opacity .24s ease,transform .43s cubic-bezier(.16,1,.3,1),filter .4s ease;
+}
+.site-header.southbear-nav .sb-nav-desktop a::after{
+  top:52%;
+  width:calc(100% + 17px);
+  height:31px;
+  background:#080808;
+  box-shadow:-10px 1px 9px -4px rgba(0,0,0,.38);
+  filter:blur(7px);
+  transform:translate(-85%,-40%) scaleX(.48);
+  transition:opacity .24s ease,transform .43s cubic-bezier(.16,1,.3,1),filter .4s ease;
+}
+.site-header.southbear-nav .sb-nav-desktop a:is(:hover,:focus-visible,:active,[aria-current="page"]),
+.site-header.southbear-nav .sb-nav-desktop a:last-child:is(:hover,:focus-visible,:active,[aria-current="page"]){
+  background:transparent;
+  color:#DDFF9A;
+  text-shadow:0 1px 2px #0005;
+}
+.site-header.southbear-nav .sb-nav-desktop a:is(:hover,:focus-visible,:active,[aria-current="page"])::before,
+.site-header.southbear-nav .sb-nav-desktop a:is(:hover,:focus-visible,:active,[aria-current="page"])::after{
+  opacity:1;
+  transform:translate(-50%,-40%) scaleX(1);
+}
+.site-header.southbear-nav .sb-nav-desktop a:is(:hover,:focus-visible,:active,[aria-current="page"])::before{filter:blur(7px)}
+.site-header.southbear-nav .sb-nav-desktop a:is(:hover,:focus-visible,:active,[aria-current="page"])::after{filter:blur(1.8px)}
+.site-header.southbear-nav .sb-nav-desktop a:focus-visible{outline:2px solid #72984a;outline-offset:8px}
+
+/* En menus desplegables, marca la pagina activa sin ocultar el texto. */
+.site-header.southbear-nav .nav .menu-panel a[aria-current="page"],
+.site-header.southbear-nav .nav .menu-panel a:last-child[aria-current="page"]{
+  background:#101010;
+  color:#DDFF9A;
+  padding-left:12px;
+  padding-right:12px;
+}
+@media(prefers-reduced-motion:reduce){
+  .site-header.southbear-nav .sb-nav-desktop a,
+  .site-header.southbear-nav .sb-nav-desktop a::before,
+  .site-header.southbear-nav .sb-nav-desktop a::after{transition:none}
+}

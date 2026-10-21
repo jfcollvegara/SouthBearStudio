@@ -22,11 +22,16 @@ const eur=new Intl.NumberFormat('es-ES');
     </div>
   </section>
   <nav class="kb-top-nav" aria-label="Navegación principal">
-    <a href={link('/servicios/')}>Servicios</a>
-    <a href={link('/proyectos/')}>Proyectos</a>
-    <a href={link('/nosotros/')}>Estudio</a>
-    <a href={link('/contacto/')}>Contacto</a>
-    <a href={link('/presupuesto/')}>Presupuesto</a>
+    <button class="kb-menu-toggle" type="button" aria-expanded="false" aria-controls="kb-nav-links" aria-label="Abrir menú">
+      <span></span><span></span><span></span>
+    </button>
+    <div class="kb-nav-links" id="kb-nav-links">
+      <a href={link('/servicios/')}>Servicios</a>
+      <a href={link('/proyectos/')}>Proyectos</a>
+      <a href={link('/nosotros/')}>Estudio</a>
+      <a href={link('/contacto/')}>Contacto</a>
+      <a href={link('/presupuesto/')}>Presupuesto</a>
+    </div>
   </nav>
 
   <section class="kb-section kb-intro" aria-labelledby="kb-title">
@@ -113,6 +118,15 @@ const eur=new Intl.NumberFormat('es-ES');
   const logo = document.querySelector('.kb-wordmark-container');
   const nav = document.querySelector('.kb-top-nav');
   if (logo && nav) {
+    const toggle = nav.querySelector('.kb-menu-toggle');
+    const setMenu = (open) => {
+      nav.classList.toggle('kb-menu-open', open);
+      toggle?.setAttribute('aria-expanded', String(open));
+      toggle?.setAttribute('aria-label', open ? 'Cerrar menú' : 'Abrir menú');
+    };
+    toggle?.addEventListener('click', () => setMenu(!nav.classList.contains('kb-menu-open')));
+    document.addEventListener('click', (event) => {if (!nav.contains(event.target)) setMenu(false);});
+    document.addEventListener('keydown', (event) => {if (event.key === 'Escape') {setMenu(false);toggle?.focus();}});
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
     let queued = false;
 
@@ -124,8 +138,9 @@ const eur=new Intl.NumberFormat('es-ES');
         : Math.max(0, Math.min(1, (window.scrollY - 8) / travel));
       logo.style.setProperty('--kb-logo-fade', progress.toFixed(3));
       logo.style.setProperty('--kb-logo-blur', (progress * 8).toFixed(2) + 'px');
-      nav.classList.toggle('kb-top-nav--stuck',
-        window.scrollY > 0 && nav.getBoundingClientRect().top <= 0.5);
+      const compact = window.scrollY > 8;
+      nav.classList.toggle('kb-top-nav--stuck', compact);
+      if (!compact) setMenu(false);
     }
 
     function scheduleScroll() {

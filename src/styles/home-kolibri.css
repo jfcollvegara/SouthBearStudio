@@ -442,3 +442,76 @@ body.landing-page,body.landing-page main{background:#FFFFFF;color:#101010}
   .kb-top-nav .kb-nav-links a{font-size:clamp(.59rem,2.3vw,.68rem)}
 }
 @media(prefers-reduced-motion:reduce){.kb-top-nav{transition:none}}
+
+
+/* Menú desplegado: la misma barra de cristal crece hacia abajo. */
+.kb-top-nav.kb-top-nav--stuck{
+  align-items:flex-start;
+  overflow:hidden;
+  transition:width .75s cubic-bezier(.22,1,.36,1),height .55s cubic-bezier(.22,1,.36,1),border-radius .55s ease,background .4s ease;
+}
+.kb-top-nav.kb-top-nav--stuck.kb-menu-open{
+  height:clamp(310px,55vh,380px);
+  max-height:calc(100svh - 24px);
+  border-radius:28px;
+  background:rgba(255,255,255,.44);
+}
+.kb-top-nav--stuck .kb-compact-brand{
+  top:29px;
+}
+.kb-top-nav--stuck .kb-menu-toggle{
+  top:29px;
+}
+.kb-top-nav--stuck.kb-menu-open .kb-nav-links,
+.kb-top-nav--stuck.kb-menu-open .kb-nav-links{
+  position:absolute;
+  display:flex;
+  top:75px;
+  right:18px;
+  bottom:15px;
+  left:18px;
+  width:auto;
+  max-width:none;
+  min-width:0;
+  margin:0;
+  padding:5px 0;
+  flex-direction:column;
+  flex-wrap:nowrap;
+  align-items:center;
+  justify-content:center;
+  gap:5px;
+  text-align:center;
+  white-space:normal;
+  border:0;
+  border-radius:0;
+  background:transparent;
+  -webkit-backdrop-filter:none;
+  backdrop-filter:none;
+  box-shadow:none;
+  opacity:1;
+  visibility:visible;
+  pointer-events:auto;
+  transform:none;
+  transition:opacity .32s ease .16s,visibility 0s;
+}
+.kb-top-nav--stuck.kb-menu-open .kb-nav-links a{
+  width:100%;
+  padding:11px 6px;
+  text-align:center;
+  font-size:clamp(.94rem,2vw,1.1rem);
+}
+.kb-top-nav--stuck:not(.kb-menu-open) .kb-nav-links{
+  pointer-events:none;
+}
+.kb-top-nav--stuck.kb-menu-open .kb-menu-toggle{
+  z-index:2;
+}
+@media(max-width:730px){
+  .kb-top-nav.kb-top-nav--stuck.kb-menu-open{height:335px;border-radius:26px}
+  .kb-top-nav--stuck .kb-compact-brand,
+  .kb-top-nav--stuck .kb-menu-toggle{top:27px}
+  .kb-top-nav--stuck.kb-menu-open .kb-nav-links{top:68px;bottom:12px}
+}
+@media(prefers-reduced-motion:reduce){
+  .kb-top-nav.kb-top-nav--stuck,.kb-top-nav--stuck.kb-menu-open .kb-nav-links{transition:none}
+}

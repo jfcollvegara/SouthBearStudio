@@ -6,17 +6,18 @@ import sharp from 'sharp';
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const pub = resolve(root, 'public');
 
-// Todas las variantes, ordenador, iOS y Android, comparten el mismo monograma.
-const iconSvg = await readFile(resolve(pub, 'favicon.svg'));
+// Nuevo monograma de cristal ahumado aportado por el cliente, común a TODOS los iconos.
+const iconImage = await readFile(resolve(pub, 'sbs-glass-icon.jpg'));
 const green = '#DDFF9A';
 
 async function png(size) {
-  return sharp(iconSvg).resize(size, size).png().toBuffer();
+  return sharp(iconImage).resize(size, size).png().toBuffer();
 }
 
+// Seguridad Android: el monograma queda dentro del área central visible
+// incluso con máscaras circulares o con esquinas muy redondeadas.
 async function maskablePng() {
-  return sharp(iconSvg)
-    .resize(380, 380)
+  return sharp(iconImage).resize(380, 380)
     .extend({top: 66, bottom: 66, left: 66, right: 66, background: green})
     .png().toBuffer();
 }
@@ -25,23 +26,22 @@ for (const [file, size] of [
   ['favicon-16x16.png', 16],
   ['favicon-32x32.png', 32],
   ['apple-touch-icon.png', 180],
-  ['apple-touch-icon-v3.png', 180],
+  ['apple-touch-icon-v4.png', 180],
   ['android-chrome-192x192.png', 192],
-  ['android-chrome-192x192-v3.png', 192],
+  ['android-chrome-192x192-v4.png', 192],
   ['android-chrome-512x512.png', 512],
-  ['android-chrome-512x512-v3.png', 512]
+  ['android-chrome-512x512-v4.png', 512]
 ]) {
   await writeFile(resolve(pub, file), await png(size));
 }
-
 for (const file of [
   'android-chrome-maskable-512x512.png',
-  'android-chrome-maskable-512x512-v3.png'
+  'android-chrome-maskable-512x512-v4.png'
 ]) {
   await writeFile(resolve(pub, file), await maskablePng());
 }
 
-// Favicon ICO clásico con la misma imagen en 16, 32 y 48 píxeles.
+// Favicon ICO para PC: contiene 16, 32 y 48 píxeles del mismo monograma.
 const icoSizes = [16, 32, 48];
 const images = await Promise.all(icoSizes.map(png));
 const header = Buffer.alloc(6 + 16 * images.length);
@@ -62,4 +62,4 @@ for (let i = 0; i < images.length; i++) {
   offset += images[i].length;
 }
 await writeFile(resolve(pub, 'favicon.ico'), Buffer.concat([header, ...images]));
-console.log('Monograma SBS de cristal generado para todos los dispositivos.');
+console.log('Monograma SBS de cristal generado para PC, iOS y Android.');

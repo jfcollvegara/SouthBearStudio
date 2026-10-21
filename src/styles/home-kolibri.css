@@ -541,3 +541,34 @@ body.landing-page,body.landing-page main{background:#FFFFFF;color:#101010}
   .kb-top-nav .kb-compact-brand,
   .kb-top-nav.kb-top-nav--stuck .kb-compact-brand{transition:none}
 }
+
+
+/* Capas de la portada: navegación > logo > degradado > vídeo. */
+.kb-wordmark{
+  position:relative;
+  isolation:isolate;
+  background:transparent;
+}
+.kb-hero-bear-video{
+  position:absolute;
+  inset:0;
+  z-index:-2;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  object-position:center;
+  pointer-events:none;
+}
+.kb-wordmark::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:-1;
+  pointer-events:none;
+  background:linear-gradient(to bottom,rgba(221,255,154,.93) 0%,rgba(233,255,192,.78) 30%,rgba(255,255,255,.82) 75%,rgba(255,255,255,.94) 100%);
+}
+.kb-wordmark-container{
+  position:relative;
+  z-index:1;
+}
+.kb-top-nav{z-index:100}

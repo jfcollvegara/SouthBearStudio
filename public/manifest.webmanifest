@@ -1,0 +1,30 @@
+{
+  "name": "SouthBear Studio",
+  "short_name": "SouthBear",
+  "description": "Diseño web, branding y creatividad digital.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#DDFF9A",
+  "theme_color": "#DDFF9A",
+  "icons": [
+    {
+      "src": "/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/android-chrome-maskable-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

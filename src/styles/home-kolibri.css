@@ -2,7 +2,7 @@
    Misma lógica compositiva: gran marca superior, índice lateral, titular a la derecha,
    galería de proyectos, servicios sobrios y cierre de contacto.
    Elementos de marca y ejemplos 100% SOUTHBEAR. */
-body.landing-page,body.landing-page main{background:#fafaf8;color:#101010}
+body.landing-page,body.landing-page main{background:#FFFFFF;color:#101010}
 .landing-page main{min-height:0}
 .kb-wordmark{padding:10px clamp(20px,3vw,52px) 20px;background:linear-gradient(to bottom,#DDFF9A 0%,#E9FFC0 30%,#FFFFFF 100%);overflow:hidden}
 .kb-wordmark-container{width:100%;height:auto;overflow:hidden;opacity:calc(1 - var(--kb-logo-fade, 0));will-change:opacity}

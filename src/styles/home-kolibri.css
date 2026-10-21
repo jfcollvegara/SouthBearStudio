@@ -572,3 +572,28 @@ body.landing-page,body.landing-page main{background:#FFFFFF;color:#101010}
   z-index:1;
 }
 .kb-top-nav{z-index:100}
+
+
+/* Retorno al inicio: logo y hamburguesa se apagan antes de cruzar las categorías.
+   Se conserva su desplazamiento y la duración de expansión/contracción de la barra. */
+.kb-top-nav:not(.kb-top-nav--stuck) .kb-compact-brand{
+  opacity:0;
+  visibility:hidden;
+  pointer-events:none;
+  transition:opacity .16s ease,transform .75s cubic-bezier(.22,1,.36,1),left .75s cubic-bezier(.22,1,.36,1),visibility 0s linear .18s;
+}
+.kb-top-nav:not(.kb-top-nav--stuck) .kb-menu-toggle{
+  opacity:0;
+  visibility:hidden;
+  pointer-events:none;
+  transition:opacity .14s ease,transform .75s cubic-bezier(.22,1,.36,1),visibility 0s linear .16s;
+}
+/* Las categorías esperan un instante al regreso, evitando el solapamiento. */
+.kb-top-nav:not(.kb-top-nav--stuck) .kb-nav-links{
+  transition:opacity .36s ease .19s,transform .75s cubic-bezier(.22,1,.36,1),visibility 0s linear .19s;
+}
+@media(prefers-reduced-motion:reduce){
+  .kb-top-nav:not(.kb-top-nav--stuck) .kb-compact-brand,
+  .kb-top-nav:not(.kb-top-nav--stuck) .kb-menu-toggle,
+  .kb-top-nav:not(.kb-top-nav--stuck) .kb-nav-links{transition:none}
+}

@@ -123,6 +123,7 @@ const eur=new Intl.NumberFormat('es-ES');
         ? 0
         : Math.max(0, Math.min(1, (window.scrollY - 8) / travel));
       logo.style.setProperty('--kb-logo-fade', progress.toFixed(3));
+      logo.style.setProperty('--kb-logo-blur', (progress * 8).toFixed(2) + 'px');
       nav.classList.toggle('kb-top-nav--stuck',
         window.scrollY > 0 && nav.getBoundingClientRect().top <= 0.5);
     }

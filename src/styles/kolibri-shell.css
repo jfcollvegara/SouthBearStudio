@@ -169,19 +169,20 @@
 .site-header.southbear-nav{
   background:transparent;
   border-bottom:0;
+  box-shadow:none;
 }
 .site-header.southbear-nav .nav{
-  width:max-content;
-  max-width:calc(100% - 24px);
+  width:100%;
+  max-width:none;
   min-height:0;
-  margin:0 auto;
+  margin:0;
   padding:14px clamp(18px,2.6vw,36px);
   border:1px solid rgba(255,255,255,.72);
   border-radius:999px;
-  background:rgba(255,255,255,.56);
+  background:rgba(255,255,255,.27);
   -webkit-backdrop-filter:blur(22px) saturate(170%);
   backdrop-filter:blur(22px) saturate(170%);
-  box-shadow:0 8px 28px rgba(25,35,25,.09),inset 0 1px 0 rgba(255,255,255,.75);
+  box-shadow:none;
 }
 .site-header.southbear-nav .sb-nav-desktop a,
 .site-header.southbear-nav .sb-nav-desktop a:last-child{

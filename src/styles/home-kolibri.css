@@ -7,7 +7,9 @@ body.landing-page,body.landing-page main{background:#fafaf8;color:#101010}
 .kb-wordmark{padding:10px clamp(20px,3vw,52px) 0;background:#fafaf8;overflow:hidden}
 .kb-wordmark-container{width:100%;height:auto;overflow:hidden}
 .kb-wordmark-container img{width:100%;height:auto;display:block;filter:none}
-.kb-wordmark-bottom{display:flex;justify-content:space-between;gap:20px;align-items:center;margin:0;padding:14px 0 19px;border-bottom:1px solid #c9c9c4;font-size:.67rem;font-weight:750;letter-spacing:.075em}
+.kb-top-nav{display:flex;justify-content:center;align-items:center;flex-wrap:wrap;column-gap:clamp(22px,3.2vw,52px);row-gap:8px;margin:0;padding:16px 0 22px;border-bottom:1px solid #c9c9c4}
+.kb-top-nav a{color:#101010;font-size:clamp(.84rem,1.05vw,.98rem);line-height:1.4;white-space:nowrap;font-weight:750;text-decoration:none;border-bottom:2px solid transparent;padding:9px 1px 6px;transition:border-color .2s}
+.kb-top-nav a:hover,.kb-top-nav a:focus-visible{border-color:#101010;color:#101010}
 .kb-section,.kb-end-link{width:min(1520px,calc(100% - clamp(40px,7vw,140px)));margin:0 auto;display:grid;grid-template-columns:minmax(160px,24%) minmax(0,1fr);gap:clamp(30px,5vw,95px)}
 .kb-section-kicker{font-size:.74rem;font-weight:650;line-height:1.5;color:#4c4c48;letter-spacing:-.01em;text-transform:none}
 .kb-section-body{min-width:0}
@@ -83,7 +85,8 @@ body.landing-page,body.landing-page main{background:#fafaf8;color:#101010}
 }
 @media(max-width:730px){
   .kb-wordmark{padding-inline:18px}
-  .kb-wordmark-bottom{font-size:.54rem;padding:11px 0 15px}
+  .kb-top-nav{column-gap:clamp(12px,3.3vw,28px);row-gap:2px;padding:12px 0 16px}
+  .kb-top-nav a{font-size:.81rem;padding:6px 0 5px}
   .kb-section,.kb-end-link{width:calc(100% - 38px);grid-template-columns:1fr;gap:26px}
   .kb-intro{padding-top:85px;padding-bottom:135px}
   .kb-intro h1{font-size:clamp(3.3rem,10.5vw,5.5rem)}
@@ -101,7 +104,8 @@ body.landing-page,body.landing-page main{background:#fafaf8;color:#101010}
   .kb-end-link{padding-bottom:100px}
 }
 @media(max-width:480px){
-  .kb-wordmark-bottom{letter-spacing:.01em}
+  .kb-top-nav{column-gap:17px}
+  .kb-top-nav a{font-size:.78rem}
   .kb-intro h1{font-size:clamp(3rem,11vw,5rem)}
   .kb-project-image{min-height:280px}
   .kb-digital-content strong{font-size:clamp(3rem,10.5vw,5rem)}

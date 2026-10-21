@@ -165,75 +165,47 @@
 .landing-page .sb-footer-brand p{margin-top:25px}
 
 
-/* SOUTHBEAR / mismo ovalo cinetico al navegar por paginas interiores.
-   El destino actual queda marcado mediante aria-current="page". */
+/* SOUTHBEAR / barra interior liquid glass, sin óvalos en los enlaces. */
+.site-header.southbear-nav{
+  background:transparent;
+  border-bottom:0;
+}
+.site-header.southbear-nav .nav{
+  width:max-content;
+  max-width:calc(100% - 24px);
+  min-height:0;
+  margin:0 auto;
+  padding:14px clamp(18px,2.6vw,36px);
+  border:1px solid rgba(255,255,255,.72);
+  border-radius:999px;
+  background:rgba(255,255,255,.56);
+  -webkit-backdrop-filter:blur(22px) saturate(170%);
+  backdrop-filter:blur(22px) saturate(170%);
+  box-shadow:0 8px 28px rgba(25,35,25,.09),inset 0 1px 0 rgba(255,255,255,.75);
+}
 .site-header.southbear-nav .sb-nav-desktop a,
 .site-header.southbear-nav .sb-nav-desktop a:last-child{
   position:relative;
-  isolation:isolate;
-  z-index:0;
+  isolation:auto;
   border:0;
   border-radius:0;
   padding:9px 0;
   background:transparent;
   color:#101010;
-  transition:color .22s ease,text-shadow .22s ease;
+  text-shadow:none;
+  transition:color .22s ease;
 }
 .site-header.southbear-nav .sb-nav-desktop a::before,
-.site-header.southbear-nav .sb-nav-desktop a::after{
-  content:"";
-  position:absolute;
-  left:50%;
-  pointer-events:none;
-  border-radius:999px;
-  opacity:0;
-  z-index:-1;
-  transform-origin:center;
-}
-.site-header.southbear-nav .sb-nav-desktop a::before{
-  top:54%;
-  width:calc(100% + 56px);
-  height:49px;
-  background:radial-gradient(ellipse at center,rgba(0,0,0,.48) 0%,rgba(0,0,0,.27) 34%,rgba(0,0,0,.10) 61%,transparent 86%);
-  filter:blur(13px);
-  transform:translate(-80%,-40%) scaleX(.45);
-  transition:opacity .24s ease,transform .43s cubic-bezier(.16,1,.3,1),filter .4s ease;
-}
-.site-header.southbear-nav .sb-nav-desktop a::after{
-  top:52%;
-  width:calc(100% + 36px);
-  height:41px;
-  background:radial-gradient(ellipse at center,rgba(0,0,0,.92) 0%,rgba(0,0,0,.67) 26%,rgba(0,0,0,.33) 49%,rgba(0,0,0,.07) 74%,transparent 93%);
-  box-shadow:none;
-  filter:blur(11px);
-  transform:translate(-85%,-40%) scaleX(.48);
-  transition:opacity .24s ease,transform .43s cubic-bezier(.16,1,.3,1),filter .4s ease;
-}
+.site-header.southbear-nav .sb-nav-desktop a::after{content:none!important;display:none!important}
 .site-header.southbear-nav .sb-nav-desktop a:is(:hover,:focus-visible,:active,[aria-current="page"]),
 .site-header.southbear-nav .sb-nav-desktop a:last-child:is(:hover,:focus-visible,:active,[aria-current="page"]){
   background:transparent;
-  color:#DDFF9A;
-  text-shadow:0 1px 2px #0005;
+  color:#658f37;
+  text-shadow:none;
 }
-.site-header.southbear-nav .sb-nav-desktop a:is(:hover,:focus-visible,:active,[aria-current="page"])::before,
-.site-header.southbear-nav .sb-nav-desktop a:is(:hover,:focus-visible,:active,[aria-current="page"])::after{
-  opacity:1;
-  transform:translate(-50%,-40%) scaleX(1);
+.site-header.southbear-nav .sb-nav-desktop a:focus-visible{outline:2px solid #72984a;outline-offset:7px}
+.site-header.southbear-nav .nav .menu-panel a[aria-current="page"]{color:#658f37}
+@media(max-width:800px){
+  .site-header.southbear-nav .nav{min-height:0;padding:10px 15px}
 }
-.site-header.southbear-nav .sb-nav-desktop a:is(:hover,:focus-visible,:active,[aria-current="page"])::before{filter:blur(12px)}
-.site-header.southbear-nav .sb-nav-desktop a:is(:hover,:focus-visible,:active,[aria-current="page"])::after{filter:blur(6px)}
-.site-header.southbear-nav .sb-nav-desktop a:focus-visible{outline:2px solid #72984a;outline-offset:8px}
-
-/* En menus desplegables, marca la pagina activa sin ocultar el texto. */
-.site-header.southbear-nav .nav .menu-panel a[aria-current="page"],
-.site-header.southbear-nav .nav .menu-panel a:last-child[aria-current="page"]{
-  background:#101010;
-  color:#DDFF9A;
-  padding-left:12px;
-  padding-right:12px;
-}
-@media(prefers-reduced-motion:reduce){
-  .site-header.southbear-nav .sb-nav-desktop a,
-  .site-header.southbear-nav .sb-nav-desktop a::before,
-  .site-header.southbear-nav .sb-nav-desktop a::after{transition:none}
-}
+@media(prefers-reduced-motion:reduce){.site-header.southbear-nav .sb-nav-desktop a{transition:none}}

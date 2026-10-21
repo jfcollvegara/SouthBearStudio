@@ -1,0 +1,55 @@
+name: Preparar vídeo del oso en bucle de ida y vuelta
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'public/southbear-film.mp4'
+      - '.github/workflows/prepare-bear-video.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  pingpong:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar repositorio
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Instalar FFmpeg si falta
+        shell: bash
+        run: |
+          if ! command -v ffmpeg >/dev/null 2>&1 || ! command -v ffprobe >/dev/null 2>&1; then
+            sudo apt-get update
+            sudo apt-get install -y ffmpeg
+          fi
+      - name: Generar reproducción adelante y atrás sin fotogramas extremos duplicados
+        shell: bash
+        run: |
+          set -euo pipefail
+          SOURCE="public/southbear-film.mp4"
+          OUTPUT="public/southbear-film-pingpong.mp4"
+          FRAMES="$(ffprobe -v error -select_streams v:0 -count_frames -show_entries stream=nb_read_frames -of default=nw=1:nk=1 "$SOURCE")"
+          if ! [[ "$FRAMES" =~ ^[0-9]+$ ]] || [ "$FRAMES" -lt 3 ]; then
+            echo "No se pudo contar los fotogramas del vídeo del oso"
+            exit 1
+          fi
+          LAST="$((FRAMES-1))"
+          ffmpeg -hide_banner -loglevel error -y -i "$SOURCE" \
+            -filter_complex "[0:v]split=2[f][r];[f]setpts=PTS-STARTPTS[forward];[r]reverse,trim=start_frame=1:end_frame=${LAST},setpts=PTS-STARTPTS[backward];[forward][backward]concat=n=2:v=1:a=0,format=yuv420p[v]" \
+            -map "[v]" -an -c:v libx264 -preset fast -crf 27 \
+            -movflags +faststart "$OUTPUT"
+          test -s "$OUTPUT"
+      - name: Guardar vídeo generado en el repositorio
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/southbear-film-pingpong.mp4
+          if ! git diff --cached --quiet; then
+            git commit -m "Generar vídeo del oso en bucle de ida y vuelta"
+            git push
+          fi

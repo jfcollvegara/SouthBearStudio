@@ -20,10 +20,13 @@ const eur=new Intl.NumberFormat('es-ES');
     <div class="kb-wordmark-container">
       <img src={link('/southbear-logo.svg')} alt="SOUTHBEAR STUDIO"/>
     </div>
-    <div class="kb-wordmark-bottom">
-      <span>ESTUDIO CREATIVO INDEPENDIENTE</span>
-      <span>MURCIA · ESPAÑA</span>
-    </div>
+    <nav class="kb-top-nav" aria-label="Navegación principal">
+      <a href={link('/servicios/')}>Servicios</a>
+      <a href={link('/proyectos/')}>Proyectos</a>
+      <a href={link('/nosotros/')}>Estudio</a>
+      <a href={link('/contacto/')}>Contacto</a>
+      <a href={link('/presupuesto/')}>Presupuesto</a>
+    </nav>
   </section>
 
   <section class="kb-section kb-intro" aria-labelledby="kb-title">

@@ -277,3 +277,59 @@ body.landing-page,body.landing-page main{background:#FFFFFF;color:#101010}
 @media(prefers-reduced-motion:reduce){
   .kb-top-nav,.kb-menu-toggle span{transition:none}
 }
+
+
+/* Transición fluida de cápsula completa a botón circular. */
+.kb-top-nav{
+  box-sizing:border-box;
+  width:var(--kb-nav-expanded-width,max-content);
+  min-height:50px;
+  overflow:visible;
+  transition:width .75s cubic-bezier(.22,1,.36,1),padding .75s cubic-bezier(.22,1,.36,1),background .5s ease;
+}
+.kb-top-nav .kb-nav-links{
+  opacity:1;
+  visibility:visible;
+  transform:translateX(0) scale(1);
+  transform-origin:right center;
+  transition:opacity .32s ease,transform .65s cubic-bezier(.22,1,.36,1),visibility 0s;
+}
+.kb-top-nav .kb-menu-toggle{
+  display:flex;
+  position:absolute;
+  top:50%;
+  right:0;
+  transform:translateY(-50%) scale(.65) rotate(-30deg);
+  opacity:0;
+  visibility:hidden;
+  pointer-events:none;
+  transition:opacity .45s ease .08s,transform .7s cubic-bezier(.22,1,.36,1),visibility 0s linear .5s;
+}
+.kb-top-nav.kb-top-nav--stuck{
+  width:50px;
+  padding:0;
+}
+.kb-top-nav--stuck .kb-nav-links{
+  opacity:0;
+  visibility:hidden;
+  pointer-events:none;
+  transform:translateX(12px) scale(.83);
+  transition:opacity .28s ease,transform .65s cubic-bezier(.22,1,.36,1),visibility 0s linear .3s;
+}
+.kb-top-nav--stuck .kb-menu-toggle{
+  opacity:1;
+  visibility:visible;
+  pointer-events:auto;
+  transform:translateY(-50%) scale(1) rotate(0);
+  transition:opacity .42s ease .22s,transform .75s cubic-bezier(.22,1,.36,1),visibility 0s;
+}
+.kb-top-nav--stuck.kb-menu-open .kb-nav-links{
+  opacity:1;
+  visibility:visible;
+  pointer-events:auto;
+  transform:translateX(0) scale(1);
+  transition:opacity .25s ease,transform .3s ease,visibility 0s;
+}
+@media(prefers-reduced-motion:reduce){
+  .kb-top-nav,.kb-top-nav .kb-nav-links,.kb-top-nav .kb-menu-toggle{transition:none}
+}

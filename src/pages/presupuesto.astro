@@ -3,22 +3,139 @@ import Base from '../layouts/Base.astro';
 import {catalog} from '../data/catalog.js';
 import {site} from '../data/site.js';
 ---
-<Base title="Solicitar presupuesto" description="Prepara una solicitud de presupuesto para diseño web, branding, diseño gráfico, tiendas online o soluciones digitales en SOUTHBEAR STUDIO."><section class="container page-head"><div class="eyebrow">Presupuestos</div><h1>Cuéntanos tu proyecto.</h1><p class="lead">Selecciona el servicio y prepara los detalles de tu solicitud. No se enviará ningún dato automáticamente.</p></section>
-<section class="container section"><div class="form-panel">
-<form id="quote-form">
-<label for="service">Servicio</label><select id="service" name="service" required><option value="">Selecciona un servicio</option>{catalog.map(c=><option value={c.slug}>{c.title}</option>)}</select>
-<label for="package">Modalidad</label><select id="package" name="package" required><option value="">Elige primero un servicio</option></select>
-<label for="name">Nombre o empresa</label><input id="name" name="name" required maxlength="120" placeholder="Nombre o empresa"/>
-<label for="email">Correo de contacto</label><input id="email" name="email" type="email" required placeholder="correo@ejemplo.es"/>
-<label for="description">Describe el proyecto</label><textarea id="description" name="description" rows="6" maxlength="3000" required placeholder="¿Qué necesitas? ¿Tienes ya textos e imágenes?"></textarea>
-<label class="check-label"><input id="consent" type="checkbox" required/> Entiendo que este formulario solo prepara un texto para copiarlo; no transmite mis datos a la agencia.</label>
-<button class="button" type="submit">Preparar solicitud ↗</button></form>
-<div id="quote-result" class="result-panel" hidden><h2>Solicitud preparada</h2><p class="muted">Copia este texto y envíalo cuando el estudio tenga disponible su correo de contacto.</p><textarea id="quote-text" rows="12" readonly></textarea><button id="copy-quote" class="button" type="button">Copiar solicitud</button><span id="copy-status" role="status"></span>{site.email&&<a class="button secondary" id="send-quote" href={'mailto:'+site.email}>Abrir correo</a>}</div>
-</div></section>
-<script define:vars={{catalog,contactEmail:site.email}}>
-const form=document.querySelector('#quote-form');const service=form.querySelector('#service');const pkg=form.querySelector('#package');const params=new URLSearchParams(location.search);
-function renderPackages(){const c=catalog.find(x=>x.slug===service.value);pkg.replaceChildren();const placeholder=new Option('Selecciona una modalidad','');pkg.add(placeholder);if(c)for(const p of c.packages)pkg.add(new Option(p.name+' — desde '+p.price+' €'+(p.period||''),p.name));}
-service.addEventListener('change',renderPackages);if(params.get('servicio')){service.value=params.get('servicio');renderPackages();pkg.value=params.get('paquete')||'';}
-form.addEventListener('submit',e=>{e.preventDefault();if(!form.reportValidity())return;const c=catalog.find(x=>x.slug===service.value);const p=c?.packages.find(x=>x.name===pkg.value);const message=['SOLICITUD DE PRESUPUESTO','Servicio: '+(c?.title||''),'Modalidad: '+(p?.name||''),'Precio orientativo: '+(p?.price||'')+' €'+(p?.period||'')+' (sin IVA)','Nombre/empresa: '+form.elements.namedItem('name').value,'Correo: '+form.elements.namedItem('email').value,'Descripción:',form.elements.namedItem('description').value].join('\n');document.querySelector('#quote-text').value=message;document.querySelector('#quote-result').hidden=false;const send=document.querySelector('#send-quote');if(send&&contactEmail)send.href='mailto:'+contactEmail+'?subject='+encodeURIComponent('Solicitud de presupuesto')+'&body='+encodeURIComponent(message);document.querySelector('#quote-result').scrollIntoView({behavior:'smooth'});});document.querySelector('#copy-quote').addEventListener('click',async()=>{const value=document.querySelector('#quote-text').value;try{await navigator.clipboard.writeText(value);document.querySelector('#copy-status').textContent='Copiado';}catch{document.querySelector('#quote-text').select();document.querySelector('#copy-status').textContent='Selecciona y copia el texto';}});
-</script>
+<Base title="Solicitar presupuesto" description="Prepara una solicitud para diseño web, branding, diseño gráfico, soluciones QR/NFC o vídeo de SOUTHBEAR STUDIO. Precios con IVA incluido.">
+  <section class="container page-head">
+    <div class="eyebrow">Presupuestos</div>
+    <h1>Cuéntanos tu proyecto.</h1>
+    <p class="lead">Elige una de nuestras cinco categorías, selecciona un paquete y añade los extras que te interesen. Todos los precios indicados incluyen IVA.</p>
+  </section>
+  <section class="container section">
+    <div class="form-panel">
+      <form id="quote-form">
+        <label for="service">Categoría de servicio</label>
+        <select id="service" name="service" required><option value="">Selecciona una categoría</option>{catalog.map(c=><option value={c.slug}>{c.title}</option>)}</select>
+        <label for="package">Paquete o producto principal</label>
+        <select id="package" name="package" required><option value="">Elige primero una categoría</option></select>
+        <fieldset id="extras-fieldset" class="extras-fieldset" hidden>
+          <legend>Complementos opcionales</legend>
+          <p class="muted">Marca los extras que quieras consultar. Su disponibilidad y el importe final se confirmarán en el presupuesto.</p>
+          <div id="extras-options" class="extras-options"></div>
+        </fieldset>
+        <label for="name">Nombre o empresa</label>
+        <input id="name" name="name" required maxlength="120" placeholder="Nombre o empresa"/>
+        <label for="email">Correo de contacto</label>
+        <input id="email" name="email" type="email" required placeholder="correo@ejemplo.es"/>
+        <label for="description">Describe el proyecto</label>
+        <textarea id="description" name="description" rows="6" maxlength="3000" required placeholder="¿Qué necesitas? ¿Dispones ya de textos, fotos o materiales?"></textarea>
+        <label class="check-label"><input id="consent" type="checkbox" required/> Entiendo que este formulario prepara una solicitud para copiar o enviar desde mi programa de correo; no transmite mis datos automáticamente.</label>
+        <button class="button" type="submit">Preparar solicitud ↗</button>
+      </form>
+      <div id="quote-result" class="result-panel" hidden>
+        <h2>Solicitud preparada</h2>
+        <p class="muted">Copia el texto o abre tu programa de correo para enviarlo a SOUTHBEAR STUDIO. No se envía nada automáticamente.</p>
+        <textarea id="quote-text" rows="16" readonly></textarea>
+        <div class="quote-actions">
+          <button id="copy-quote" class="button" type="button">Copiar solicitud</button>
+          {site.email&&<a class="button secondary" id="send-quote" href={'mailto:'+site.email}>Abrir correo</a>}
+          <span id="copy-status" role="status"></span>
+        </div>
+      </div>
+    </div>
+  </section>
+  <script define:vars={{catalog,contactEmail:site.email}}>
+    const form=document.querySelector('#quote-form');
+    const service=form.querySelector('#service');
+    const pkg=form.querySelector('#package');
+    const extraContainer=document.querySelector('#extras-options');
+    const extrasFieldset=document.querySelector('#extras-fieldset');
+    const params=new URLSearchParams(location.search);
+    const euros=new Intl.NumberFormat('es-ES',{minimumFractionDigits:0,maximumFractionDigits:2});
+    let availableExtras=[];
+    function priceText(item){
+      return item.price===null?'Bajo presupuesto':(item.from?'Desde ':'')+euros.format(item.price)+' €'+(item.unit||'');
+    }
+    function renderPackages(){
+      const c=catalog.find(x=>x.slug===service.value);
+      pkg.replaceChildren();
+      pkg.add(new Option(c?'Selecciona un paquete o producto':'Elige primero una categoría',''));
+      if(c)for(const p of c.packages)pkg.add(new Option(p.name+' — '+priceText(p),p.name));
+      renderExtras(c);
+    }
+    function renderExtras(c){
+      availableExtras=[];
+      extraContainer.replaceChildren();
+      if(!c){extrasFieldset.hidden=true;return;}
+      for(const item of (c.extras||[]))availableExtras.push(item);
+      for(const section of (c.extraSections||[])){
+        // Las aplicaciones incluidas en los paquetes de branding no son extras independientes.
+        if(c.slug==='branding' && section.title==='Aplicaciones de identidad visual')continue;
+        for(const item of section.items){if(item.price!==0)availableExtras.push(item);}
+      }
+      extrasFieldset.hidden=availableExtras.length===0;
+      availableExtras.forEach((item,index)=>{
+        const label=document.createElement('label');
+        label.className='extra-option';
+        const input=document.createElement('input');
+        input.type='checkbox';
+        input.name='extra';
+        input.value=item.name;
+        const span=document.createElement('span');
+        span.textContent=item.name+' · '+priceText(item);
+        label.append(input,span);
+        extraContainer.append(label);
+        if(params.get('extra')===item.name)input.checked=true;
+      });
+    }
+    service.addEventListener('change',renderPackages);
+    if(params.get('servicio')){
+      service.value=params.get('servicio');
+      renderPackages();
+      pkg.value=params.get('paquete')||'';
+    }
+    form.addEventListener('submit',e=>{
+      e.preventDefault();
+      if(!form.reportValidity())return;
+      const c=catalog.find(x=>x.slug===service.value);
+      const p=c?.packages.find(x=>x.name===pkg.value);
+      const extras=[...extraContainer.querySelectorAll('input:checked')].map(x=>{
+        const item=availableExtras.find(e=>e.name===x.value);
+        return item?'- '+item.name+' ('+priceText(item)+')':'- '+x.value;
+      });
+      const message=[
+        'SOLICITUD DE PRESUPUESTO · SOUTHBEAR STUDIO',
+        'Categoría: '+(c?.title||''),
+        'Paquete/producto: '+(p?.name||''),
+        'Tarifa publicada: '+(p?priceText(p):'')+' (IVA incluido)',
+        'Extras solicitados:',
+        ...(extras.length?extras:['- Ninguno']),
+        'Nombre/empresa: '+form.elements.namedItem('name').value,
+        'Correo: '+form.elements.namedItem('email').value,
+        'Descripción:',
+        form.elements.namedItem('description').value,
+        '',
+        'El precio final y el alcance se confirmarán en presupuesto.'
+      ].join('\n');
+      document.querySelector('#quote-text').value=message;
+      document.querySelector('#quote-result').hidden=false;
+      const send=document.querySelector('#send-quote');
+      if(send&&contactEmail)send.href='mailto:'+contactEmail+'?subject='+encodeURIComponent('Solicitud de presupuesto · SOUTHBEAR STUDIO')+'&body='+encodeURIComponent(message);
+      document.querySelector('#quote-result').scrollIntoView({behavior:'smooth'});
+    });
+    document.querySelector('#copy-quote').addEventListener('click',async()=>{
+      const value=document.querySelector('#quote-text').value;
+      try{await navigator.clipboard.writeText(value);document.querySelector('#copy-status').textContent='Copiado';}
+      catch{document.querySelector('#quote-text').select();document.querySelector('#copy-status').textContent='Selecciona y copia el texto';}
+    });
+  </script>
 </Base>
+<style>
+  .extras-fieldset{border:1px solid #d8d8ca;padding:18px;border-radius:9px;margin:14px 0 0}
+  .extras-fieldset[hidden]{display:none}
+  .extras-fieldset legend{font-size:.92rem;font-weight:800;padding-inline:5px}
+  .extras-fieldset .muted{font-size:.82rem;line-height:1.6;margin:2px 0 14px}
+  .extras-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+  .extra-option{display:flex;align-items:flex-start;gap:9px;border:1px solid #e4e1d9;background:#fffcf5;border-radius:8px;padding:11px;line-height:1.5;font-size:.82rem;margin:0!important;cursor:pointer}
+  .extra-option input{accent-color:#5c8034;margin-top:3px}
+  .quote-actions{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin-top:12px}
+  @media(max-width:600px){.extras-options{grid-template-columns:1fr}}
+</style>

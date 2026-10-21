@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import '../styles/kolibri-shell.css';
 import {site} from '../data/site.js';
 const {
   title='Estudio creativo',
@@ -35,7 +36,7 @@ const nav=[
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <meta name="description" content={description}/>
-    <meta name="theme-color" content="#101411"/>
+    <meta name="theme-color" content="#F8F8F5"/>
     <title>{fullTitle}</title>
     <link rel="canonical" href={canonicalUrl}/>
     <link rel="sitemap" type="application/xml" href="/sitemap-index.xml"/>
@@ -51,18 +52,21 @@ const nav=[
     {landing && <script type="application/ld+json" set:html={JSON.stringify(organization)} />}
   </head>
   <body class:list={[{'landing-page':landing}]}>
-    <header class="site-header">
+    <header class="site-header southbear-nav">
       <div class="container nav">
         <a class="wordmark brand-lockup" aria-label="SOUTHBEAR STUDIO — inicio" href={route()}>
           <span class="brand-logo-frame">
             <img class="brand-logo" src={root + "/southbear-logo.svg"} alt="SOUTHBEAR STUDIO"/>
           </span>
         </a>
-        <details class="site-menu">
+        <nav class="sb-nav-desktop" aria-label="Navegación principal">
+          {nav.slice(1).map(([url,label])=><a href={route(url)}>{label}</a>)}
+        </nav>
+        <details class="site-menu sb-nav-mobile">
           <summary class="menu-toggle" aria-label="Abrir menú de navegación">
             <span class="menu-toggle-lines" aria-hidden="true"><span></span><span></span></span>
           </summary>
-          <nav class="menu-panel" aria-label="Navegación principal">
+          <nav class="menu-panel" aria-label="Menú móvil">
             {nav.map(([url,label],i)=><a href={route(url)}><span class="menu-index">0{i+1}</span>{label}<span class="menu-arrow" aria-hidden="true">↗</span></a>)}
           </nav>
         </details>

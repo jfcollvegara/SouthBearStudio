@@ -15,7 +15,7 @@ body.landing-page,body.landing-page main{background:#FFFFFF;color:#101010}
 .kb-section,.kb-end-link{width:min(1520px,calc(100% - clamp(40px,7vw,140px)));margin:0 auto;display:grid;grid-template-columns:minmax(160px,24%) minmax(0,1fr);gap:clamp(30px,5vw,95px)}
 .kb-section-kicker{font-size:.74rem;font-weight:650;line-height:1.5;color:#4c4c48;letter-spacing:-.01em;text-transform:none}
 .kb-section-body{min-width:0}
-.kb-section-body h1,.kb-section-body h2,.kb-end-link h2{font-family:'Gotham','Gotham Book',Arial,Helvetica,sans-serif;font-weight:800;color:#080808;letter-spacing:-.072em;line-height:1.04;margin:0}
+.kb-section-body h1,.kb-section-body h2,.kb-end-link h2{font-family:var(--font-heading);font-weight:800;color:#080808;letter-spacing:-.072em;line-height:1.04;margin:0}
 .kb-intro{padding-top:clamp(95px,9vw,170px);padding-bottom:clamp(190px,20vw,340px)}
 .kb-intro h1{font-size:clamp(4.3rem,7.6vw,8rem);max-width:1050px}
 .kb-intro .kb-section-body>p{font-size:clamp(1.06rem,1.34vw,1.3rem);line-height:1.65;max-width:640px;margin:45px 0 28px}

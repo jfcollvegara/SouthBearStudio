@@ -69,7 +69,6 @@ const serviceDescriptions={
           <h3>{serviceLabels[service.slug]||service.title}</h3>
           <p>{serviceDescriptions[service.slug]||service.intro}</p>
         </div>
-        <span class="kb-services-tile-arrow" aria-hidden="true">↗</span>
       </a>
     ))}
   </section>
@@ -247,24 +246,6 @@ const serviceDescriptions={
     line-height:1.55;
     opacity:.86;
   }
-  .kb-services-tile-arrow{
-    position:absolute;
-    z-index:1;
-    top:clamp(37px,4.3vw,73px);
-    right:clamp(38px,4.3vw,75px);
-    display:grid;
-    place-items:center;
-    width:clamp(44px,4vw,61px);
-    height:clamp(44px,4vw,61px);
-    border:1px solid rgba(255,255,255,.47);
-    border-radius:50%;
-    background:rgba(255,255,255,.2);
-    -webkit-backdrop-filter:blur(13px);
-    backdrop-filter:blur(13px);
-    color:inherit;
-    font-size:clamp(1.25rem,1.8vw,1.7rem);
-    transition:transform .28s ease,background .3s ease,box-shadow .3s ease;
-  }
   .kb-services-tile:hover,
   .kb-services-tile:focus-visible{
     color:var(--kb-tile-text);
@@ -277,12 +258,6 @@ const serviceDescriptions={
     border-color:rgba(255,255,255,.69);
     box-shadow:inset 0 1px 0 rgba(255,255,255,.65),0 0 0 2px rgba(255,255,255,.2),0 20px 55px rgba(0,0,0,.12);
   }
-  .kb-services-tile:hover .kb-services-tile-arrow,
-  .kb-services-tile:focus-visible .kb-services-tile-arrow{
-    transform:translate(4px,-4px);
-    background:rgba(255,255,255,.33);
-    box-shadow:0 0 18px rgba(255,255,255,.2);
-  }
   .kb-services-tile:focus-visible{outline:3px solid #121212}
   @media(max-width:980px){
     .kb-services-tile{
@@ -291,10 +266,6 @@ const serviceDescriptions={
     }
     .kb-services-tile h3{font-size:clamp(1.85rem,4.3vw,3.8rem)}
     .kb-services-tile p{font-size:.94rem}
-    .kb-services-tile-arrow{
-      top:clamp(36px,4.2vw,57px);
-      right:clamp(36px,4.2vw,57px);
-    }
   }
   @media(max-width:680px){
     .kb-services-mosaic{grid-template-columns:minmax(0,1fr)}
@@ -310,16 +281,14 @@ const serviceDescriptions={
     }
     .kb-services-tile h3{font-size:clamp(2.15rem,8.3vw,4rem)}
     .kb-services-tile p{font-size:clamp(.93rem,3.2vw,1.1rem)}
-    .kb-services-tile-arrow{top:32px;right:32px}
   }
   @media(max-width:390px){
     .kb-services-tile{padding:28px;min-height:330px}
     .kb-services-tile h3{font-size:clamp(1.9rem,8.5vw,2.8rem)}
     .kb-services-tile p{font-size:.94rem}
-    .kb-services-tile-arrow{top:27px;right:27px}
   }
   @media(prefers-reduced-motion:reduce){
-    .kb-services-tile,.kb-services-tile::before,.kb-services-tile-arrow{transition:none}
+    .kb-services-tile,.kb-services-tile::before{transition:none}
   }
 
   /* Bloque 02: imagen panorámica 16:9 a ras del borde DERECHO,

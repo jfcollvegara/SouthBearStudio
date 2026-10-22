@@ -38,13 +38,13 @@ const eur=new Intl.NumberFormat('es-ES');
 
   <section class="kb-section kb-intro kb-intro-reveal" aria-labelledby="kb-title">
     <div class="kb-intro-layout">
-      <div class="kb-intro-visual" aria-hidden="true">
-        <div class="kb-intro-image-placeholder"></div>
-      </div>
       <div class="kb-intro-copy">
         <h1 id="kb-title">Dejamos huella<br/>en tus proyectos.</h1>
         <p>Transformamos tus ideas más locas en realidad. No importa lo que sueñes, no hay límites. Diseño funcional, con personalidad y carácter.</p>
         <a class="kb-intro-button" href={link('/servicios/')}>Descubre</a>
+      </div>
+      <div class="kb-intro-visual" aria-hidden="true">
+        <div class="kb-intro-image-placeholder"></div>
       </div>
     </div>
   </section>
@@ -120,11 +120,11 @@ const eur=new Intl.NumberFormat('es-ES');
 </Base>
 
 <style>
-  /* Bloque 02: imagen panorámica 16:9 a ras del borde IZQUIERDO,
-     sobresale sobre y bajo la banda negra; contenidos centrados a la derecha.
+  /* Bloque 02: imagen panorámica 16:9 a ras del borde DERECHO,
+     sobresale sobre y bajo la banda negra; textos alineados a la izquierda.
      La apertura de izquierda a derecha depende del scroll y se revierte al subir. */
   .kb-section.kb-intro{
-    --kb-intro-visual-w:clamp(520px,56vw,860px);
+    --kb-intro-visual-w:clamp(440px,51vw,770px);
     --kb-intro-visual-h:calc(var(--kb-intro-visual-w) * .5625);
     --kb-intro-overlap:clamp(28px,3.2vw,52px);
     --kb-intro-vertical-pad:clamp(38px,5vw,80px);
@@ -156,7 +156,7 @@ const eur=new Intl.NumberFormat('es-ES');
     z-index:1;
     box-sizing:border-box;
     display:grid;
-    grid-template-columns:var(--kb-intro-visual-w) minmax(0,1fr);
+    grid-template-columns:minmax(0,1fr) var(--kb-intro-visual-w);
     align-items:center;
     column-gap:0;
     width:100%;
@@ -173,7 +173,7 @@ const eur=new Intl.NumberFormat('es-ES');
     height:var(--kb-intro-visual-h);
     min-width:0;
     align-items:center;
-    justify-content:flex-start;
+    justify-content:flex-end;
   }
   .kb-intro-image-placeholder{
     display:block;
@@ -190,36 +190,36 @@ const eur=new Intl.NumberFormat('es-ES');
     box-sizing:border-box;
     display:flex;
     flex-direction:column;
-    align-items:center;
+    align-items:flex-start;
     justify-content:center;
     min-width:0;
     width:100%;
     max-width:none;
     margin:0;
-    padding:22px clamp(25px,3.5vw,62px);
-    text-align:center;
+    padding:22px clamp(20px,3.25vw,60px);
+    text-align:left;
   }
   .kb-intro .kb-intro-copy h1{
     width:100%;
     max-width:650px;
-    margin:0 auto;
+    margin:0;
     color:#DDFF9A;
     font-family:var(--font-heading);
     font-size:clamp(2.1rem,3.15vw,4.25rem);
     font-weight:700;
     letter-spacing:-.07em;
     line-height:1.07;
-    text-align:center;
+    text-align:left;
   }
   .kb-intro .kb-intro-copy p{
     max-width:570px;
-    margin:clamp(18px,2.3vw,28px) auto 0;
+    margin:clamp(18px,2.3vw,28px) 0 0;
     color:#FFFFFF;
     font-family:var(--font-body);
     font-size:clamp(.92rem,1.03vw,1.1rem);
     line-height:1.6;
     font-weight:400;
-    text-align:center;
+    text-align:left;
   }
   .kb-intro-button{
     display:inline-flex;
@@ -228,7 +228,7 @@ const eur=new Intl.NumberFormat('es-ES');
     justify-content:center;
     min-width:186px;
     gap:0;
-    margin:clamp(18px,2.25vw,29px) auto 0;
+    margin:clamp(18px,2.25vw,29px) 0 0;
     padding:15px 26px;
     background:#DDFF9A;
     color:#101010;
@@ -270,7 +270,7 @@ const eur=new Intl.NumberFormat('es-ES');
 
   @media(max-width:1100px) and (min-width:791px){
     .kb-section.kb-intro{
-      --kb-intro-visual-w:55vw;
+      --kb-intro-visual-w:51vw;
       --kb-intro-overlap:clamp(15px,2.25vw,28px);
     }
     .kb-intro-copy{padding:18px 22px}
@@ -287,7 +287,7 @@ const eur=new Intl.NumberFormat('es-ES');
     }
     .kb-intro::before{
       top:calc(var(--kb-intro-vertical-pad) + 20px);
-      bottom:22px;
+      bottom:clamp(92px,20vw,135px);
     }
     .kb-intro-layout{
       grid-template-columns:minmax(0,1fr);
@@ -296,13 +296,14 @@ const eur=new Intl.NumberFormat('es-ES');
     .kb-intro-visual{
       width:100vw;
       height:var(--kb-intro-visual-h);
-      justify-content:flex-start;
+      justify-content:flex-end;
     }
     .kb-intro-image-placeholder{width:100%;height:100%}
     .kb-intro-copy{
       padding:34px clamp(20px,6vw,45px) 14px;
       margin:0;
-      text-align:center;
+      text-align:left;
+      align-items:flex-start;
     }
     .kb-intro .kb-intro-copy h1{
       font-size:clamp(2.5rem,7.3vw,4.1rem);
@@ -400,7 +401,7 @@ const eur=new Intl.NumberFormat('es-ES');
       intro.style.setProperty('--kb-intro-copy-opacity',copyProgress.toFixed(3));
       intro.style.setProperty('--kb-intro-copy-y',((1 - copyProgress) * 32).toFixed(2) + 'px');
       intro.style.setProperty('--kb-intro-image-opacity',imageProgress.toFixed(3));
-      intro.style.setProperty('--kb-intro-image-x',((1 - imageProgress) * -42).toFixed(2) + 'px');
+      intro.style.setProperty('--kb-intro-image-x',((1 - imageProgress) * 42).toFixed(2) + 'px');
     }
     function requestIntroRender() {
       if (introFrameRequested) return;

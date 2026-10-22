@@ -167,6 +167,9 @@ const eur=new Intl.NumberFormat('es-ES');
   }
   .kb-intro-visual{
     position:relative;
+    /* La banda negra tiene un margen superior e inferior distinto:
+       se compensa la mitad de esa diferencia para centrar la imagen. */
+    top:clamp(-14.5px,-1vw,-10px);
     z-index:2;
     display:flex;
     width:100%;
@@ -275,6 +278,7 @@ const eur=new Intl.NumberFormat('es-ES');
       --kb-intro-visual-w:51vw;
       --kb-intro-overlap:clamp(15px,2.25vw,28px);
     }
+    .kb-intro-visual{top:-6px}
     .kb-intro-copy{padding:18px 22px}
     .kb-intro .kb-intro-copy h1{font-size:clamp(1.9rem,3.15vw,3rem)}
     .kb-intro .kb-intro-copy p{font-size:.9rem;line-height:1.48;margin-top:15px}
@@ -296,6 +300,7 @@ const eur=new Intl.NumberFormat('es-ES');
       row-gap:18px;
     }
     .kb-intro-visual{
+      top:0;
       width:100vw;
       height:var(--kb-intro-visual-h);
       justify-content:flex-end;

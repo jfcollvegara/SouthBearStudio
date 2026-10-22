@@ -626,21 +626,74 @@
 }
 
 
-/* Herramientas del estudio: tira tipográfica, pendiente de los cuatro logos originales. */
+/* Logos de las seis herramientas: franja equilibrada y responsive.
+   Iconos originales optimizados en un único sprite WebP. */
 .sb-site-footer .sb-footer-tools{
-  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;
-  gap:16px 28px;padding-top:25px;padding-bottom:24px;border-top:1px solid rgba(16,16,16,.22);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:24px 30px;
+  padding-top:26px;
+  padding-bottom:25px;
+  border-top:1px solid rgba(16,16,16,.22);
 }
 .sb-site-footer .sb-footer-tools-label{
-  color:#344330;font-size:.67rem;font-weight:750;letter-spacing:.13em;line-height:1.55;
+  flex:0 0 auto;
+  max-width:285px;
+  color:#344330;
+  font-size:.69rem;
+  font-weight:750;
+  letter-spacing:.105em;
+  line-height:1.55;
 }
 .sb-site-footer .sb-footer-tools-list{
-  display:flex;flex-wrap:wrap;gap:10px 22px;align-items:center;list-style:none;margin:0;padding:0;
+  flex:1 1 0;
+  min-width:0;
+  display:grid;
+  grid-template-columns:repeat(6,minmax(0,1fr));
+  align-items:center;
+  gap:clamp(6px,.85vw,13px);
+  list-style:none;
+  margin:0;
+  padding:0;
 }
-.sb-site-footer .sb-footer-tools-list li{
-  color:#283421;font-size:.79rem;font-weight:750;line-height:1.45;white-space:nowrap;
+.sb-site-footer .sb-footer-tool{
+  display:flex;
+  box-sizing:border-box;
+  align-items:center;
+  justify-content:center;
+  min-width:0;
+  height:clamp(45px,4.6vw,58px);
+  padding:6px 5px;
+  border:1px solid rgba(18,34,15,.11);
+  border-radius:14px;
+  background:rgba(255,255,255,.55);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.55);
+  transition:background .25s ease,transform .25s ease;
+}
+.sb-site-footer .sb-footer-tool-logo{
+  display:block;
+  width:100%;
+  height:100%;
+  overflow:visible;
+}
+.sb-site-footer .sb-footer-tool:hover{
+  background:rgba(255,255,255,.82);
+  transform:translateY(-2px);
+}
+@media(max-width:1080px){
+  .sb-site-footer .sb-footer-tools{flex-direction:column;align-items:flex-start;gap:14px}
+  .sb-site-footer .sb-footer-tools-list{flex:none;width:100%}
+  .sb-site-footer .sb-footer-tool{height:58px}
 }
 @media(max-width:680px){
-  .sb-site-footer .sb-footer-tools{align-items:flex-start;flex-direction:column;gap:14px;padding-top:22px;padding-bottom:20px}
-  .sb-site-footer .sb-footer-tools-list{gap:12px 18px}
+  .sb-site-footer .sb-footer-tools{gap:16px;padding-top:22px;padding-bottom:22px}
+  .sb-site-footer .sb-footer-tools-list{grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+  .sb-site-footer .sb-footer-tool{height:53px;border-radius:12px;padding:6px 4px}
+}
+@media(max-width:380px){
+  .sb-site-footer .sb-footer-tool{height:49px}
+}
+@media(prefers-reduced-motion:reduce){
+  .sb-site-footer .sb-footer-tool{transition:none}
 }

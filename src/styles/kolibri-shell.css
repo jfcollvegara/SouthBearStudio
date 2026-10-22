@@ -618,3 +618,9 @@
     transform:none;
   }
 }
+
+/* Tipografía de prueba: Space Grotesk en categorías y menú desplegado interiores. */
+.site-header.southbear-nav .sb-nav-desktop a,
+.site-header.southbear-nav .sb-interior-nav .menu-panel a{
+  font-family:var(--font-heading);
+}

@@ -64,6 +64,19 @@ const serviceDescriptions={
         class={'kb-services-tile kb-services-tile--'+service.slug+(i===4?' kb-services-tile--wide':'')}
         aria-label={'Ver '+(serviceLabels[service.slug]||service.title)}
       >
+        {service.slug === 'diseno-web' && (
+          <div class="kb-web-stage" aria-hidden="true">
+            <svg class="kb-web-preview kb-web-preview--pc1" viewBox="0 0 420 236" preserveAspectRatio="xMidYMid meet">
+              <image href={link('/southbear-web-mockups.webp')} x="0" y="0" width="420" height="863" />
+            </svg>
+            <svg class="kb-web-preview kb-web-preview--pc2" viewBox="0 236 420 236" preserveAspectRatio="xMidYMid meet">
+              <image href={link('/southbear-web-mockups.webp')} x="0" y="0" width="420" height="863" />
+            </svg>
+            <svg class="kb-web-preview kb-web-preview--mobile" viewBox="0 472 210 391" preserveAspectRatio="xMidYMid meet">
+              <image href={link('/southbear-web-mockups.webp')} x="0" y="0" width="420" height="863" />
+            </svg>
+          </div>
+        )}
         <div class="kb-services-tile-content">
           <h3>{serviceLabels[service.slug]||service.title}</h3>
           <p>{serviceDescriptions[service.slug]||service.intro}</p>
@@ -173,6 +186,71 @@ const serviceDescriptions={
     transition:filter .32s ease;
   }
   .kb-services-tile--diseno-web{background-color:#DDFF9A}
+  /* Primer servicio: tres capturas reales a distintas profundidades.
+     Con el scroll caen desde arriba y quedan antes del título. */
+  .kb-services-tile--diseno-web .kb-services-tile-content{
+    z-index:3;
+  }
+  .kb-web-stage{
+    position:absolute;
+    inset:0;
+    z-index:1;
+    pointer-events:none;
+    perspective:1100px;
+  }
+  .kb-web-preview{
+    position:absolute;
+    display:block;
+    height:auto;
+    overflow:hidden;
+    border:1px solid rgba(255,255,255,.75);
+    border-radius:clamp(10px,1.65vw,22px);
+    background:#111;
+    -webkit-backface-visibility:hidden;
+    backface-visibility:hidden;
+    transform-style:preserve-3d;
+    transform-origin:50% 45%;
+    box-shadow:0 20px 45px rgba(13,35,28,.24),0 5px 14px rgba(13,35,28,.14),inset 0 1px 0 rgba(255,255,255,.4);
+    will-change:transform,opacity;
+  }
+  .kb-web-preview--pc1{
+    width:53%;
+    aspect-ratio:420 / 236;
+    top:8%;
+    left:7%;
+    z-index:1;
+    opacity:var(--kb-web-opacity-1,1);
+    transform:perspective(1100px) translate3d(0,var(--kb-web-y-1,0px),0) rotateX(8deg) rotateY(-12deg) rotateZ(var(--kb-web-rotation-1,-7deg));
+  }
+  .kb-web-preview--pc2{
+    width:47%;
+    aspect-ratio:420 / 236;
+    top:24%;
+    right:7%;
+    z-index:2;
+    opacity:var(--kb-web-opacity-2,1);
+    transform:perspective(1100px) translate3d(0,var(--kb-web-y-2,0px),28px) rotateX(5deg) rotateY(9deg) rotateZ(var(--kb-web-rotation-2,9deg));
+  }
+  .kb-web-preview--mobile{
+    width:19%;
+    aspect-ratio:210 / 391;
+    top:16%;
+    left:43%;
+    z-index:3;
+    opacity:var(--kb-web-opacity-3,1);
+    transform:perspective(1100px) translate3d(0,var(--kb-web-y-3,0px),65px) rotateX(5deg) rotateY(-8deg) rotateZ(var(--kb-web-rotation-3,-5deg));
+  }
+  @media(max-width:680px){
+    .kb-web-preview--pc1{width:44%;top:7%;left:6%}
+    .kb-web-preview--pc2{width:42%;top:17%;right:7%}
+    .kb-web-preview--mobile{width:17%;top:10%;left:45%}
+  }
+  @media(prefers-reduced-motion:reduce){
+    .kb-web-preview{will-change:auto;opacity:1}
+    .kb-web-preview--pc1{transform:rotateZ(-7deg)}
+    .kb-web-preview--pc2{transform:rotateZ(9deg)}
+    .kb-web-preview--mobile{transform:rotateZ(-5deg)}
+  }
   .kb-services-tile--branding{background-color:#C3B4EF}
   .kb-services-tile--diseno-grafico{background-color:#EFB3A0}
   .kb-services-tile--soluciones-qr{background-color:#96D4D9}
@@ -618,4 +696,46 @@ const serviceDescriptions={
     window.addEventListener('pageshow',requestIntroRender);
     renderIntro();
   }
+  // Cuadrado 01: las tres capturas descienden y giran con la posición real
+  // del scroll. La animación se invierte al subir y respeta movimiento reducido.
+  const webShowcaseTile = document.querySelector('.kb-services-tile--diseno-web');
+  if (webShowcaseTile) {
+    const webReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let webAnimationQueued = false;
+    const webClamp = (v) => Math.max(0, Math.min(1, v));
+    const webEase = (v) => v * v * (3 - 2 * v);
+    const webCards = [
+      {delay:0, rise:330, start:-26, end:-7},
+      {delay:.1, rise:410, start:27, end:9},
+      {delay:.22, rise:470, start:-22, end:-5}
+    ];
+
+    function updateWebShowcase() {
+      webAnimationQueued = false;
+      const rect = webShowcaseTile.getBoundingClientRect();
+      const travel = Math.max(320,Math.min(650,window.innerHeight * .78));
+      const progress = webReducedMotion.matches
+        ? 1
+        : webClamp((window.innerHeight * .93 - rect.top) / travel);
+      webCards.forEach(({delay,rise,start,end},index) => {
+        const current = webEase(webClamp((progress - delay) / (1 - delay)));
+        const hidden = 1 - current;
+        const n = index + 1;
+        webShowcaseTile.style.setProperty('--kb-web-y-' + n,(-hidden * rise).toFixed(1) + 'px');
+        webShowcaseTile.style.setProperty('--kb-web-rotation-' + n,(end + (start - end) * hidden).toFixed(2) + 'deg');
+        webShowcaseTile.style.setProperty('--kb-web-opacity-' + n,(webReducedMotion.matches ? 1 : webClamp(current * 3)).toFixed(3));
+      });
+    }
+    function queueWebShowcase() {
+      if(webAnimationQueued)return;
+      webAnimationQueued=true;
+      requestAnimationFrame(updateWebShowcase);
+    }
+    window.addEventListener('scroll',queueWebShowcase,{passive:true});
+    window.addEventListener('resize',queueWebShowcase,{passive:true});
+    window.addEventListener('pageshow',queueWebShowcase);
+    webReducedMotion.addEventListener('change',queueWebShowcase);
+    updateWebShowcase();
+  }
+
 </script>

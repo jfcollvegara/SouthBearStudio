@@ -83,7 +83,7 @@ const isCurrentCategory = (url) => {
               <span class="menu-toggle-lines" aria-hidden="true"><span></span><span></span></span>
             </summary>
             <nav class="menu-panel" aria-label="Menú de categorías">
-              {nav.map(([url,label],i)=><a href={route(url)} aria-current={isCurrentCategory(url) ? 'page' : undefined}><span class="menu-index">0{i+1}</span>{label}<span class="menu-arrow" aria-hidden="true">↗</span></a>)}
+              {nav.map(([url,label])=><a href={route(url)} aria-current={isCurrentCategory(url) ? 'page' : undefined}>{label}</a>)}
             </nav>
           </details>
         </div>
@@ -174,6 +174,8 @@ const isCurrentCategory = (url) => {
           narrow.addEventListener('change', requestNavUpdate);
           reduced.addEventListener('change', requestNavUpdate);
           menu.addEventListener('toggle', () => {
+            // Se expande la propia barra, nunca se abre una tarjeta flotante.
+            bar.classList.toggle('sb-menu-open', menu.open);
             toggle.setAttribute('aria-label',
               menu.open ? 'Cerrar menú de navegación' : 'Abrir menú de navegación');
           });

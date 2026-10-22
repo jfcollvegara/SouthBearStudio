@@ -193,10 +193,11 @@ const eur=new Intl.NumberFormat('es-ES');
     flex-direction:column;
     align-items:flex-start;
     justify-content:center;
+    justify-self:center;
     min-width:0;
-    width:100%;
-    max-width:none;
-    margin:0;
+    width:min(100%,690px);
+    max-width:690px;
+    margin:0 auto;
     padding:22px clamp(20px,3.25vw,60px);
     text-align:left;
   }

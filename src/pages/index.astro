@@ -12,8 +12,13 @@ const serviceLabels={
   'soluciones-qr':'Cartas digitales y soluciones QR/NFC',
   'audiovisual':'Producción audiovisual'
 };
-const fromPrice=(service)=>Math.min(...service.packages.filter(p=>p.price!==null).map(p=>p.price));
-const eur=new Intl.NumberFormat('es-ES');
+const serviceDescriptions={
+  'diseno-web':'Páginas web rápidas, adaptadas a todos los dispositivos y creadas para conectar con tus clientes.',
+  'branding':'Logotipos e identidades visuales con personalidad, pensados para que tu marca deje huella.',
+  'diseno-grafico':'Cartelería, papelería y piezas publicitarias que comunican tus ideas con fuerza.',
+  'soluciones-qr':'Cartas digitales y soluciones QR/NFC para conectar tu negocio con sus clientes.',
+  'audiovisual':'Vídeos promocionales, grabación y edición para contar historias que merecen ser vistas.'
+};
 ---
 <Base title="SOUTHBEAR STUDIO" description="SOUTHBEAR STUDIO. Diseño web, branding, diseño gráfico, soluciones QR/NFC y producción audiovisual desde Murcia." landing={true}>
   <section class="kb-wordmark" aria-label="SOUTHBEAR STUDIO">
@@ -47,6 +52,26 @@ const eur=new Intl.NumberFormat('es-ES');
         <img class="kb-intro-image" src={link("/southbear-intro-tabernas.webp")} alt="Paisaje del desierto de Tabernas al atardecer" loading="lazy" decoding="async" width="1200" height="675" />
       </div>
     </div>
+  </section>
+
+  <!-- Bloque 03: cinco categorías a sangre, sin separaciones. Animaciones de
+       imágenes pendientes hasta recibir el material del estudio. -->
+  <section class="kb-services-mosaic" aria-labelledby="kb-services-title">
+    <h2 id="kb-services-title" class="kb-services-accessible-title">Nuestros servicios</h2>
+    {catalog.map((service,i)=>(
+      <a
+        href={link('/servicios/'+service.slug+'/')}
+        class={'kb-services-tile kb-services-tile--'+service.slug+(i===4?' kb-services-tile--wide':'')}
+        aria-label={'Ver '+(serviceLabels[service.slug]||service.title)}
+      >
+        <div class="kb-services-tile-content">
+          <span class="kb-services-tile-index">{String(i+1).padStart(2,'0')} / 05</span>
+          <h3>{serviceLabels[service.slug]||service.title}</h3>
+          <p>{serviceDescriptions[service.slug]||service.intro}</p>
+        </div>
+        <span class="kb-services-tile-arrow" aria-hidden="true">↗</span>
+      </a>
+    ))}
   </section>
 
   <section class="kb-section kb-heading" aria-labelledby="kb-work-title">
@@ -93,26 +118,6 @@ const eur=new Intl.NumberFormat('es-ES');
     <a class="kb-text-link" href={link('/proyectos/')}>Ver portfolio <span aria-hidden="true">↗</span></a>
   </div>
 
-  <section class="kb-section kb-services" aria-labelledby="kb-services-title">
-    <div class="kb-section-kicker">NUESTROS SERVICIOS</div>
-    <div class="kb-section-body">
-      <h2 id="kb-services-title">Ideas, diseño<br/>y soluciones.</h2>
-      <p>Desde una pieza gráfica hasta una identidad completa. Estos son los servicios que podemos preparar para tu negocio.</p>
-      <div class="kb-service-list">
-        {catalog.map((service,i)=><a href={link('/servicios/'+service.slug+'/')} class="kb-service">
-          <span class="kb-service-number">{String(i+1).padStart(2,'0')}</span>
-          <span class="kb-service-name">{serviceLabels[service.slug]||service.title}</span>
-          <span class="kb-service-price">Desde {eur.format(fromPrice(service))} €</span>
-          <span class="kb-service-arrow" aria-hidden="true">↗</span>
-        </a>)}
-      </div>
-      <div class="kb-services-under">
-        <small>Todos los precios incluyen IVA.</small>
-        <a class="kb-text-link" href={link('/servicios/')}>Ver todos los servicios <span aria-hidden="true">↗</span></a>
-      </div>
-    </div>
-  </section>
-
   <section class="kb-end-link">
     <div class="kb-section-kicker">¿TIENES UNA IDEA?</div>
     <div class="kb-section-body"><h2>Hablemos de<br/>tu proyecto.</h2><a href={link('/presupuesto/')} class="kb-contact-link">Solicitar presupuesto <span aria-hidden="true">↗</span></a></div>
@@ -120,6 +125,203 @@ const eur=new Intl.NumberFormat('es-ES');
 </Base>
 
 <style>
+  /* Bloque 03 — cinco servicios en mosaico 2 + 2 + 1.
+     Las superficies van pegadas entre sí y llegan a ambos bordes de pantalla.
+     No se añade ninguna animación asociada al desplazamiento por ahora. */
+  .kb-services-mosaic{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:0;
+    width:100%;
+    max-width:none;
+    margin:0 0 clamp(95px,11vw,170px);
+    padding:0;
+    overflow:hidden;
+  }
+  .kb-services-accessible-title{
+    position:absolute;
+    width:1px;
+    height:1px;
+    padding:0;
+    margin:-1px;
+    overflow:hidden;
+    clip:rect(0,0,0,0);
+    white-space:nowrap;
+    border:0;
+  }
+  .kb-services-tile{
+    --kb-tile-text:#15201A;
+    position:relative;
+    isolation:isolate;
+    display:flex;
+    box-sizing:border-box;
+    flex-direction:column;
+    justify-content:flex-end;
+    align-items:flex-start;
+    width:100%;
+    min-width:0;
+    min-height:360px;
+    aspect-ratio:1 / 1;
+    margin:0;
+    padding:clamp(30px,4vw,72px);
+    border:0;
+    border-radius:0;
+    overflow:hidden;
+    color:var(--kb-tile-text);
+    background-color:#DDFF9A;
+    background-image:radial-gradient(circle at 15% 9%,rgba(255,255,255,.34),transparent 49%),radial-gradient(circle at 90% 80%,rgba(24,28,25,.10),transparent 52%);
+    text-decoration:none;
+    outline-offset:-5px;
+    transition:filter .32s ease;
+  }
+  .kb-services-tile--diseno-web{background-color:#DDFF9A}
+  .kb-services-tile--branding{background-color:#C3B4EF}
+  .kb-services-tile--diseno-grafico{background-color:#EFB3A0}
+  .kb-services-tile--soluciones-qr{background-color:#96D4D9}
+  .kb-services-tile--audiovisual{--kb-tile-text:#FFFFFF;background-color:#374441}
+  .kb-services-tile--wide{
+    grid-column:1 / -1;
+    aspect-ratio:2 / 1;
+    min-height:420px;
+  }
+  /* Capa de cristal esmerilado con reflejos, lista para recibir
+     las futuras imágenes/animaciones sin modificar el esquema. */
+  .kb-services-tile::before{
+    content:"";
+    position:absolute;
+    z-index:0;
+    inset:clamp(14px,2vw,30px);
+    border:1px solid rgba(255,255,255,.34);
+    border-radius:clamp(20px,2.2vw,36px);
+    background:linear-gradient(142deg,rgba(255,255,255,.21),rgba(255,255,255,.065) 48%,rgba(255,255,255,.12));
+    -webkit-backdrop-filter:blur(18px) saturate(160%);
+    backdrop-filter:blur(18px) saturate(160%);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.42),inset 0 -1px 0 rgba(255,255,255,.10),0 18px 50px rgba(0,0,0,.07);
+    pointer-events:none;
+    transition:background .35s ease,border-color .35s ease,box-shadow .35s ease;
+  }
+  .kb-services-tile::after{
+    content:"";
+    position:absolute;
+    z-index:0;
+    top:clamp(15px,2vw,31px);
+    left:clamp(15px,2vw,31px);
+    width:45%;
+    height:28%;
+    border-radius:40px;
+    background:radial-gradient(ellipse at top left,rgba(255,255,255,.16),transparent 70%);
+    pointer-events:none;
+  }
+  .kb-services-tile-content{
+    position:relative;
+    z-index:1;
+    width:100%;
+    max-width:700px;
+    min-width:0;
+  }
+  .kb-services-tile-index{
+    display:block;
+    margin-bottom:clamp(16px,2vw,29px);
+    font-size:clamp(.65rem,.9vw,.83rem);
+    font-weight:750;
+    letter-spacing:.12em;
+    opacity:.7;
+  }
+  .kb-services-tile h3{
+    max-width:95%;
+    margin:0;
+    color:inherit;
+    font-family:var(--font-heading);
+    font-size:clamp(2.1rem,4.2vw,5.5rem);
+    font-weight:750;
+    letter-spacing:-.075em;
+    line-height:1.06;
+    text-wrap:balance;
+  }
+  .kb-services-tile p{
+    max-width:510px;
+    margin:clamp(18px,2.1vw,30px) 0 0;
+    color:inherit;
+    font-size:clamp(.95rem,1.2vw,1.2rem);
+    font-weight:450;
+    line-height:1.55;
+    opacity:.86;
+  }
+  .kb-services-tile-arrow{
+    position:absolute;
+    z-index:1;
+    top:clamp(37px,4.3vw,73px);
+    right:clamp(38px,4.3vw,75px);
+    display:grid;
+    place-items:center;
+    width:clamp(44px,4vw,61px);
+    height:clamp(44px,4vw,61px);
+    border:1px solid rgba(255,255,255,.47);
+    border-radius:50%;
+    background:rgba(255,255,255,.2);
+    -webkit-backdrop-filter:blur(13px);
+    backdrop-filter:blur(13px);
+    color:inherit;
+    font-size:clamp(1.25rem,1.8vw,1.7rem);
+    transition:transform .28s ease,background .3s ease,box-shadow .3s ease;
+  }
+  .kb-services-tile:hover,
+  .kb-services-tile:focus-visible{
+    color:var(--kb-tile-text);
+    filter:brightness(1.055) saturate(1.06);
+    z-index:2;
+  }
+  .kb-services-tile:hover::before,
+  .kb-services-tile:focus-visible::before{
+    background:linear-gradient(142deg,rgba(255,255,255,.30),rgba(255,255,255,.105) 48%,rgba(255,255,255,.20));
+    border-color:rgba(255,255,255,.69);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.65),0 0 0 2px rgba(255,255,255,.2),0 20px 55px rgba(0,0,0,.12);
+  }
+  .kb-services-tile:hover .kb-services-tile-arrow,
+  .kb-services-tile:focus-visible .kb-services-tile-arrow{
+    transform:translate(4px,-4px);
+    background:rgba(255,255,255,.33);
+    box-shadow:0 0 18px rgba(255,255,255,.2);
+  }
+  .kb-services-tile:focus-visible{outline:3px solid #121212}
+  @media(max-width:980px){
+    .kb-services-tile{
+      padding:clamp(25px,3.5vw,44px);
+      min-height:330px;
+    }
+    .kb-services-tile h3{font-size:clamp(1.85rem,4.3vw,3.8rem)}
+    .kb-services-tile p{font-size:.94rem}
+    .kb-services-tile-arrow{
+      top:clamp(36px,4.2vw,57px);
+      right:clamp(36px,4.2vw,57px);
+    }
+  }
+  @media(max-width:680px){
+    .kb-services-mosaic{grid-template-columns:minmax(0,1fr)}
+    .kb-services-tile{
+      aspect-ratio:1 / 1;
+      min-height:340px;
+      padding:clamp(30px,6.5vw,49px);
+    }
+    .kb-services-tile--wide{
+      grid-column:auto;
+      aspect-ratio:1 / 1;
+      min-height:370px;
+    }
+    .kb-services-tile h3{font-size:clamp(2.15rem,8.3vw,4rem)}
+    .kb-services-tile p{font-size:clamp(.93rem,3.2vw,1.1rem)}
+    .kb-services-tile-arrow{top:32px;right:32px}
+  }
+  @media(max-width:390px){
+    .kb-services-tile{padding:28px;min-height:330px}
+    .kb-services-tile h3{font-size:clamp(1.9rem,8.5vw,2.8rem)}
+    .kb-services-tile p{font-size:.94rem}
+    .kb-services-tile-arrow{top:27px;right:27px}
+  }
+  @media(prefers-reduced-motion:reduce){
+    .kb-services-tile,.kb-services-tile::before,.kb-services-tile-arrow{transition:none}
+  }
+
   /* Bloque 02: imagen panorámica 16:9 a ras del borde DERECHO,
      sobresale sobre y bajo la banda negra; textos alineados a la izquierda.
      La apertura de izquierda a derecha depende del scroll y se revierte al subir. */

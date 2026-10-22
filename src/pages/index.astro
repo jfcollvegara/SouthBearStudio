@@ -43,8 +43,8 @@ const eur=new Intl.NumberFormat('es-ES');
         <p>Transformamos tus ideas más locas en realidad. No importa lo que sueñes, no hay límites. Diseño funcional, con personalidad y carácter.</p>
         <a class="kb-intro-button" href={link('/servicios/')}>Descubre</a>
       </div>
-      <div class="kb-intro-visual" aria-hidden="true">
-        <div class="kb-intro-image-placeholder"></div>
+      <div class="kb-intro-visual">
+        <img class="kb-intro-image" src={link("/southbear-intro-tabernas.webp")} alt="Paisaje del desierto de Tabernas al atardecer" loading="lazy" decoding="async" width="1200" height="675" />
       </div>
     </div>
   </section>
@@ -143,7 +143,7 @@ const eur=new Intl.NumberFormat('es-ES');
   .kb-intro::before{
     content:"";
     position:absolute;
-    top:calc(var(--kb-intro-vertical-pad) + var(--kb-intro-overlap));
+    top:calc(var(--kb-intro-vertical-pad) + max(10px, calc(var(--kb-intro-overlap) - clamp(18px,2vw,29px))));
     bottom:calc(var(--kb-intro-vertical-pad) + var(--kb-intro-overlap));
     left:0;
     right:0;
@@ -175,13 +175,14 @@ const eur=new Intl.NumberFormat('es-ES');
     align-items:center;
     justify-content:flex-end;
   }
-  .kb-intro-image-placeholder{
+  .kb-intro-image{
     display:block;
     flex:0 0 auto;
     width:100%;
     height:100%;
     aspect-ratio:16 / 9;
-    background:#DDFF9A;
+    object-fit:cover;
+    object-position:center;
     transform:none;
   }
   .kb-intro-copy{
@@ -298,7 +299,7 @@ const eur=new Intl.NumberFormat('es-ES');
       height:var(--kb-intro-visual-h);
       justify-content:flex-end;
     }
-    .kb-intro-image-placeholder{width:100%;height:100%}
+    .kb-intro-image{width:100%;height:100%}
     .kb-intro-copy{
       padding:34px clamp(20px,6vw,45px) 14px;
       margin:0;

@@ -36,12 +36,17 @@ const eur=new Intl.NumberFormat('es-ES');
     </div>
   </nav>
 
-  <section class="kb-section kb-intro" aria-labelledby="kb-title">
-    <div class="kb-section-kicker">¿QUÉ HACE SOUTHBEAR?</div>
-    <div class="kb-section-body">
-      <h1 id="kb-title">Diseño digital<br/>con carácter.</h1>
-      <p>Convertimos ideas en identidades, páginas web y experiencias que comunican de verdad. Diseño bien pensado, funcional y con personalidad.</p>
-      <a class="kb-text-link" href={link('/servicios/')}>Ver servicios <span aria-hidden="true">↗</span></a>
+  <section class="kb-section kb-intro kb-intro-reveal" aria-labelledby="kb-title">
+    <div class="kb-intro-layout">
+      <div class="kb-intro-copy">
+        <span class="kb-intro-eyebrow">ESTUDIO CREATIVO · SOUTHBEAR</span>
+        <h1 id="kb-title">Dejamos huella<br/>en tus proyectos.</h1>
+        <p>Transformamos tus ideas más locas en realidad. No importa lo que sueñes, no hay límites. Diseño funcional, con personalidad y carácter.</p>
+        <a class="kb-intro-button" href={link('/servicios/')}>Descubre <span aria-hidden="true">↗</span></a>
+      </div>
+      <div class="kb-intro-visual" aria-hidden="true">
+        <div class="kb-intro-image-placeholder"></div>
+      </div>
     </div>
   </section>
 
@@ -114,6 +119,204 @@ const eur=new Intl.NumberFormat('es-ES');
     <div class="kb-section-body"><h2>Hablemos de<br/>tu proyecto.</h2><a href={link('/presupuesto/')} class="kb-contact-link">Solicitar presupuesto <span aria-hidden="true">↗</span></a></div>
   </section>
 </Base>
+
+<style>
+  /* Bloque 02 — presentación de SouthBear.
+     Fondo negro que se revela de izquierda a derecha al entrar en pantalla.
+     La caja verde se reserva para una futura imagen. */
+  .kb-section.kb-intro{
+    display:block;
+    width:100%;
+    max-width:none;
+    margin:0;
+    position:relative;
+    isolation:isolate;
+    overflow:hidden;
+    padding:clamp(92px,10vw,172px) 0;
+    min-height:clamp(570px,54vw,790px);
+    background:transparent;
+  }
+  .kb-intro::before{
+    content:"";
+    position:absolute;
+    top:0;
+    bottom:0;
+    left:0;
+    right:clamp(28px,4.5vw,76px);
+    z-index:0;
+    background:#0B0B0B;
+    clip-path:inset(0 0 0 0);
+  }
+  .kb-intro-layout{
+    position:relative;
+    z-index:1;
+    width:min(1480px,calc(100% - clamp(52px,11vw,190px)));
+    min-height:clamp(390px,35vw,510px);
+    margin-inline:auto;
+    display:grid;
+    grid-template-columns:minmax(0,1.35fr) minmax(250px,.8fr);
+    align-items:center;
+    column-gap:clamp(24px,4vw,80px);
+  }
+  .kb-intro-copy{
+    position:relative;
+    z-index:2;
+    min-width:0;
+    text-align:left;
+  }
+  .kb-intro-eyebrow{
+    display:block;
+    color:#B6C1B3;
+    font-family:var(--font-body);
+    font-size:clamp(.66rem,.9vw,.78rem);
+    font-weight:700;
+    letter-spacing:.16em;
+    margin-bottom:clamp(25px,4vw,55px);
+  }
+  .kb-intro .kb-intro-copy h1{
+    max-width:850px;
+    margin:0;
+    color:#DDFF9A;
+    font-family:var(--font-heading);
+    font-size:clamp(3.1rem,5.4vw,6.5rem);
+    font-weight:700;
+    letter-spacing:-.075em;
+    line-height:1.06;
+    overflow-wrap:normal;
+  }
+  .kb-intro .kb-intro-copy p{
+    max-width:610px;
+    margin:clamp(24px,3.4vw,48px) 0 0;
+    color:#FFFFFF;
+    font-family:var(--font-body);
+    font-size:clamp(1.02rem,1.28vw,1.22rem);
+    line-height:1.73;
+    font-weight:400;
+  }
+  .kb-intro-button{
+    display:inline-flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:clamp(34px,5vw,72px);
+    margin-top:clamp(28px,3.5vw,50px);
+    padding:16px 20px 16px 23px;
+    background:#DDFF9A;
+    color:#101010;
+    font-family:var(--font-heading);
+    font-size:1rem;
+    font-weight:700;
+    line-height:1.2;
+    border:1px solid #DDFF9A;
+    border-radius:0;
+    text-decoration:none;
+    transition:background .25s ease,color .25s ease,transform .25s ease;
+  }
+  .kb-intro-button:hover,
+  .kb-intro-button:focus-visible{
+    background:transparent;
+    color:#DDFF9A;
+    transform:translateY(-3px);
+  }
+  .kb-intro-button:focus-visible{
+    outline:2px solid #DDFF9A;
+    outline-offset:4px;
+  }
+  .kb-intro-button span{font-size:1.35rem;line-height:.8}
+  .kb-intro-visual{
+    display:flex;
+    width:100%;
+    align-items:center;
+    justify-content:flex-end;
+    min-width:0;
+    position:relative;
+    z-index:2;
+  }
+  .kb-intro-image-placeholder{
+    display:block;
+    flex:0 0 auto;
+    width:min(100%,440px);
+    aspect-ratio:1 / 1;
+    background:#DDFF9A;
+    transform:translateX(clamp(24px,5.3vw,86px));
+  }
+
+  /* Solo se oculta la sección durante la animación si JavaScript está activo:
+     sin JS los contenidos y el fondo permanecen visibles. */
+  .kb-intro.kb-intro-animate::before{
+    clip-path:inset(0 100% 0 0);
+    transition:clip-path 1.05s cubic-bezier(.22,1,.36,1);
+  }
+  .kb-intro.kb-intro-animate.kb-intro-visible::before{
+    clip-path:inset(0 0 0 0);
+  }
+  .kb-intro.kb-intro-animate .kb-intro-copy{
+    opacity:0;
+    transform:translateY(32px);
+    transition:opacity .68s ease .57s,transform .8s cubic-bezier(.22,1,.36,1) .57s;
+  }
+  .kb-intro.kb-intro-animate.kb-intro-visible .kb-intro-copy{
+    opacity:1;
+    transform:translateY(0);
+  }
+  .kb-intro.kb-intro-animate .kb-intro-visual{
+    opacity:0;
+    transform:translateX(52px);
+    transition:opacity .72s ease .7s,transform .85s cubic-bezier(.22,1,.36,1) .7s;
+  }
+  .kb-intro.kb-intro-animate.kb-intro-visible .kb-intro-visual{
+    opacity:1;
+    transform:translateX(0);
+  }
+
+  @media(max-width:900px){
+    .kb-intro-layout{
+      width:calc(100% - 68px);
+      grid-template-columns:minmax(0,1.1fr) minmax(190px,.7fr);
+      column-gap:24px;
+    }
+    .kb-intro .kb-intro-copy h1{font-size:clamp(2.65rem,5.5vw,4.3rem)}
+    .kb-intro-image-placeholder{transform:translateX(30px)}
+  }
+  @media(max-width:650px){
+    .kb-section.kb-intro{
+      min-height:0;
+      padding:80px 0 96px;
+    }
+    .kb-intro::before{right:18px}
+    .kb-intro-layout{
+      width:calc(100% - 58px);
+      min-height:0;
+      grid-template-columns:minmax(0,1fr);
+      gap:54px;
+    }
+    .kb-intro .kb-intro-copy h1{
+      font-size:clamp(2.8rem,10vw,4.7rem);
+      line-height:1.07;
+      letter-spacing:-.07em;
+    }
+    .kb-intro .kb-intro-copy p{font-size:1rem;line-height:1.7}
+    .kb-intro-eyebrow{margin-bottom:28px}
+    .kb-intro-visual{justify-content:flex-end}
+    .kb-intro-image-placeholder{
+      width:min(76vw,360px);
+      transform:translateX(20px);
+    }
+    .kb-intro-button{margin-top:32px}
+  }
+  @media(prefers-reduced-motion:reduce){
+    .kb-intro.kb-intro-animate::before{
+      clip-path:inset(0 0 0 0);
+      transition:none;
+    }
+    .kb-intro.kb-intro-animate .kb-intro-copy,
+    .kb-intro.kb-intro-animate .kb-intro-visual{
+      opacity:1;
+      transform:none;
+      transition:none;
+    }
+  }
+</style>
+
 <script>
   // El menú necesita ser hermano de la sección del logo para que
   // position: sticky funcione y se mantenga visible durante el scroll.
@@ -164,5 +367,20 @@ const eur=new Intl.NumberFormat('es-ES');
     window.addEventListener('pageshow', scheduleScroll);
     reducedMotion.addEventListener('change', scheduleScroll);
     scheduleScroll();
+  }
+
+  // Entrada del bloque 02: primero se despliega el negro de izquierda a
+  // derecha; después aparecen el texto y la reserva de imagen verde.
+  const intro = document.querySelector('.kb-intro-reveal');
+  if (intro && 'IntersectionObserver' in window &&
+      !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    intro.classList.add('kb-intro-animate');
+    const introObserver = new IntersectionObserver((entries) => {
+      if (entries.some((entry) => entry.isIntersecting)) {
+        intro.classList.add('kb-intro-visible');
+        introObserver.disconnect();
+      }
+    }, {threshold:0.12,rootMargin:'0px 0px -6% 0px'});
+    introObserver.observe(intro);
   }
 </script>

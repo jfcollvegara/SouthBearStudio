@@ -65,7 +65,6 @@ const serviceDescriptions={
         aria-label={'Ver '+(serviceLabels[service.slug]||service.title)}
       >
         <div class="kb-services-tile-content">
-          <span class="kb-services-tile-index">{String(i+1).padStart(2,'0')} / 05</span>
           <h3>{serviceLabels[service.slug]||service.title}</h3>
           <p>{serviceDescriptions[service.slug]||service.intro}</p>
         </div>
@@ -217,14 +216,6 @@ const serviceDescriptions={
     width:100%;
     max-width:700px;
     min-width:0;
-  }
-  .kb-services-tile-index{
-    display:block;
-    margin-bottom:clamp(16px,2vw,29px);
-    font-size:clamp(.65rem,.9vw,.83rem);
-    font-weight:750;
-    letter-spacing:.12em;
-    opacity:.7;
   }
   .kb-services-tile h3{
     max-width:95%;

@@ -4,7 +4,7 @@
    Elementos de marca y ejemplos 100% SOUTHBEAR. */
 body.landing-page,body.landing-page main{background:#FFFFFF;color:#101010}
 .landing-page main{min-height:0}
-.kb-wordmark{padding:10px clamp(20px,3vw,52px) 20px;background:linear-gradient(to bottom,#DDFF9A 0%,#E9FFC0 30%,#FFFFFF 100%);overflow:hidden}
+.kb-wordmark{padding:10px clamp(20px,3vw,52px) 20px;background:radial-gradient(ellipse at 75% 11%,rgba(255,245,139,.62),transparent 45%),radial-gradient(ellipse at 9% 6%,rgba(252,255,220,.85),transparent 48%),linear-gradient(to bottom,#DDFF9A 0%,#E9F9AE 28%,#FFFFFF 100%);overflow:hidden}
 .kb-wordmark-container{width:100%;height:auto;overflow:hidden;opacity:calc(1 - var(--kb-logo-fade, 0));will-change:opacity}
 .kb-wordmark-container img{width:100%;height:auto;display:block;filter:blur(var(--kb-logo-blur,0px))}
 .kb-top-nav{position:sticky;top:0;z-index:100;isolation:isolate;display:flex;justify-content:center;align-items:center;flex-wrap:wrap;column-gap:clamp(22px,3.2vw,52px);row-gap:8px;margin:0;padding:16px clamp(20px,3vw,52px) 22px;border-bottom:none;background:transparent}
@@ -51,7 +51,7 @@ body.landing-page,body.landing-page main{background:#FFFFFF;color:#101010}
 .kb-digital-content strong{font-size:clamp(3.2rem,5.3vw,7.3rem);letter-spacing:-.09em;line-height:.95}
 .kb-digital-content strong i{color:#55795c;font-style:normal}
 .kb-digital-content>span{font-size:.7rem;letter-spacing:.08em;font-weight:900;margin-top:27px;padding-bottom:7px;border-bottom:1px solid}
-.kb-project-qr{background:#ddff9a;display:grid;grid-template-columns:1fr .7fr;align-items:center;gap:0;color:#101810;padding:5% 6%;overflow:hidden}
+.kb-project-qr{background:var(--brand-gradient);display:grid;grid-template-columns:1fr .7fr;align-items:center;gap:0;color:#101810;padding:5% 6%;overflow:hidden}
 .kb-qr-info{align-self:center;min-width:0}.kb-qr-info small{font-size:.61rem;letter-spacing:.09em;font-weight:900}
 .kb-qr-info strong{display:block;margin-top:32px;font-size:clamp(2.3rem,4.4vw,5.2rem);line-height:1.04;letter-spacing:-.095em}
 .kb-qr-info em{font-style:normal;color:#729b46}
@@ -66,7 +66,7 @@ body.landing-page,body.landing-page main{background:#FFFFFF;color:#101010}
 .kb-services .kb-section-body>p{max-width:620px;font-size:1.15rem;line-height:1.65;margin:36px 0 80px}
 .kb-service-list{border-top:1px solid #161616}
 .kb-service{display:grid;grid-template-columns:48px minmax(0,1fr) 138px 24px;gap:18px;align-items:center;padding:27px 6px;border-bottom:1px solid #aaa;color:#101010}
-.kb-service:hover{background:#ddff9a;color:#101010}
+.kb-service:hover{background:var(--brand-gradient);color:#101010}
 .kb-service-number{font-size:.72rem;font-weight:750;color:#61675a}
 .kb-service-name{font-size:clamp(1.2rem,2.1vw,2.35rem);line-height:1.2;letter-spacing:-.04em;font-weight:800}
 .kb-service-price{font-size:.87rem;text-align:right;color:#414141}

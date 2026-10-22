@@ -192,7 +192,7 @@ const serviceDescriptions={
     outline-offset:-5px;
     transition:filter .32s ease;
   }
-  .kb-services-tile--diseno-web{background-color:#DDFF9A}
+  .kb-services-tile--diseno-web{background-color:#DDFF9A;background-image:var(--brand-gradient)}
   /* Primer servicio: tres capturas reales a distintas profundidades.
      Con el scroll caen desde arriba y quedan antes del título. */
   .kb-services-tile--diseno-web .kb-services-tile-content{
@@ -809,6 +809,18 @@ const serviceDescriptions={
     }
   }
 
+  
+  /* El mismo tono cálido se utiliza en titulares grandes; etiquetas pequeñas
+     y bordes conservan el color plano para una lectura nítida. */
+  .kb-process-intro h2 .kb-process-green,
+  .kb-intro .kb-intro-copy h1{
+    color:#DDFF9A;
+    background-image:var(--brand-text-gradient);
+    -webkit-background-clip:text;
+    background-clip:text;
+    -webkit-text-fill-color:transparent;
+  }
+
   /* Bloque 04 — apertura tipográfica y cierre de contacto; fases retiradas. */
   .kb-process{--kb-process-lime:#DDFF9A;position:relative;width:100%;overflow:clip;background:#0E100F;color:#fff}
   .kb-process-intro{
@@ -829,14 +841,14 @@ const serviceDescriptions={
   .kb-process-intro-bottom{display:flex;align-items:flex-end;justify-content:space-between;gap:38px;margin-top:clamp(36px,5.8vw,75px)}
   .kb-process-intro-bottom p{max-width:410px;margin:0;color:#D0D4CF;font-size:clamp(.96rem,1.25vw,1.16rem);line-height:1.65}
   .kb-process-watermark{position:absolute;bottom:13px;right:clamp(24px,6vw,110px);color:#5A635A;font-size:.59rem;letter-spacing:.18em}
-  .kb-process-final{position:relative;padding:clamp(50px,6vw,95px) clamp(24px,6vw,110px) clamp(70px,8vw,130px);background:var(--kb-process-lime);color:#101610}
+  .kb-process-final{position:relative;padding:clamp(50px,6vw,95px) clamp(24px,6vw,110px) clamp(70px,8vw,130px);background:var(--brand-gradient);color:#101610}
   .kb-process-final-top{padding-bottom:clamp(70px,10vw,160px);color:#222E1C}
   .kb-process-final h2{color:#121A11;font-size:clamp(3.3rem,8.6vw,11rem)}
   .kb-process-final h2 em{color:#688C42}
   .kb-process-final-bottom{display:flex;align-items:end;justify-content:space-between;gap:40px;margin-top:clamp(44px,7vw,110px)}
   .kb-process-final-bottom p{max-width:450px;margin:0;font-size:clamp(1rem,1.35vw,1.26rem);line-height:1.65}
   .kb-process-contact{display:inline-flex;justify-content:space-between;align-items:center;gap:44px;min-width:280px;max-width:100%;box-sizing:border-box;border:1px solid #141B11;border-radius:100px;padding:18px 22px 18px 28px;background:#141B11;color:#fff!important;text-decoration:none;font-size:1rem;font-weight:750;transition:transform .25s ease,background .25s ease}
-  .kb-process-contact>span{display:inline-flex;align-items:center;justify-content:center;width:37px;height:37px;border-radius:50%;background:var(--kb-process-lime);color:#141B11}
+  .kb-process-contact>span{display:inline-flex;align-items:center;justify-content:center;width:37px;height:37px;border-radius:50%;background:var(--brand-gradient);color:#141B11}
   .kb-process-contact:hover,.kb-process-contact:focus-visible{background:#263622;transform:translateY(-3px)}
   @media(max-width:900px){
     .kb-process-intro{min-height:80svh}

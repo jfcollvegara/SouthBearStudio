@@ -114,53 +114,73 @@ const serviceDescriptions={
     ))}
   </section>
 
-  <section class="kb-section kb-heading" aria-labelledby="kb-work-title">
-    <div class="kb-section-kicker">MUESTRAS SELECCIONADAS</div>
-    <div class="kb-section-body"><h2 id="kb-work-title">Una mirada a<br/>nuestro universo.</h2></div>
-  </section>
+  <!-- Bloque 04: nuestra forma de trabajar. El portfolio tiene su propia página. -->
+  <section class="kb-process" aria-labelledby="kb-process-title">
+    <div class="kb-process-intro">
+      <div class="kb-process-kicker">
+        <span>04 / NUESTRA FORMA DE TRABAJAR</span>
+        <span>SOUTHBEAR STUDIO &nbsp;✳&nbsp; ASÍ LO HACEMOS</span>
+      </div>
+      <div class="kb-process-intro-main">
+        <h2 id="kb-process-title">
+          <span>TODO EMPIEZA</span>
+          <span>CON UNA <em>IDEA.</em></span>
+          <span class="kb-process-green">LO DEMÁS ES</span>
+          <span class="kb-process-green">COSA NUESTRA.</span>
+        </h2>
+        <div class="kb-process-intro-bottom">
+          <p>Transformamos lo que imaginas en algo real. Con método, creatividad y mucha personalidad.</p>
+          <span aria-hidden="true">DESLIZA PARA DESCUBRIR EL PROCESO ↓</span>
+        </div>
+      </div>
+      <span class="kb-process-watermark" aria-hidden="true">DE LA IDEA A LA HUELLA</span>
+    </div>
 
-  <section class="kb-projects" aria-label="Conceptos y muestras de SOUTHBEAR STUDIO">
-    <a class="kb-project kb-project-feature" href={link('/servicios/audiovisual/')}>
-      <div class="kb-project-image kb-project-film">
-        <video autoplay muted loop playsinline preload="metadata" aria-label="Vídeo de identidad SOUTHBEAR STUDIO">
-          <source src={coverVideo} type="video/mp4"/>
-        </video>
-        <div class="kb-project-film-fallback"><span>SOUTHBEAR</span><small>STUDIO / MOTION</small></div>
-        <div class="kb-project-image-meta">SOUTHBEAR STUDIO <span>FILM 001</span></div>
+    <div class="kb-process-story" aria-label="Nuestras cuatro fases de trabajo">
+      <div class="kb-process-sticky">
+        <div class="kb-process-story-top"><span>EL PROCESO / PASO A PASO</span><span class="kb-process-count">01 <small>/ 04</small></span></div>
+        <div class="kb-process-story-stage">
+          <ol class="kb-process-steps">
+            <li class="kb-process-step">
+              <span class="kb-process-step-label">FASE 01 — EL PUNTO DE PARTIDA</span>
+              <h3>ESCUCHAMOS<span>.</span></h3>
+              <p>Entendemos tu idea, tus objetivos y qué hace diferente a tu proyecto. Todo comienza con una buena conversación.</p>
+            </li>
+            <li class="kb-process-step">
+              <span class="kb-process-step-label">FASE 02 — CONECTAMOS IDEAS</span>
+              <h3>IMAGINAMOS<span>.</span></h3>
+              <p>Exploramos posibilidades y encontramos una dirección creativa que encaje contigo y con tu marca.</p>
+            </li>
+            <li class="kb-process-step">
+              <span class="kb-process-step-label">FASE 03 — MANOS A LA OBRA</span>
+              <h3>CREAMOS<span>.</span></h3>
+              <p>Damos forma a tu proyecto, cuidando cada elemento hasta que diseño, funcionalidad y personalidad hablan el mismo idioma.</p>
+            </li>
+            <li class="kb-process-step">
+              <span class="kb-process-step-label">FASE 04 — LISTOS PARA DESPEGAR</span>
+              <h3>LANZAMOS<span>.</span></h3>
+              <p>Revisamos, ajustamos y ponemos todo en marcha. Ahora sí: es el momento de dejar huella.</p>
+            </li>
+          </ol>
+          <span class="kb-process-decoration" aria-hidden="true">✳</span>
+        </div>
+        <div class="kb-process-timeline">
+          <div class="kb-process-progress" aria-hidden="true"><span></span></div>
+          <div class="kb-process-phase-names" aria-hidden="true">
+            <span class="kb-phase-active">01 ESCUCHAMOS</span><span>02 IMAGINAMOS</span><span>03 CREAMOS</span><span>04 LANZAMOS</span>
+          </div>
+        </div>
       </div>
-      <div class="kb-project-caption"><div><h3>Identidad en movimiento</h3><p>Pieza propia del estudio · Audiovisual</p></div><span aria-hidden="true">↗</span></div>
-    </a>
-    <a class="kb-project" href={link('/servicios/branding/')}>
-      <div class="kb-project-image kb-project-brand">
-        <div class="kb-brand-header">EXPLORACIONES DE IDENTIDAD <span>001 / 026</span></div>
-        <div class="kb-brand-art">QUE<br/>SE <em>NOTE.</em></div>
-        <div class="kb-brand-bottom"><span>VISUAL<br/>IDENTITY</span><span>IDEAS CON PERSONALIDAD ✳</span></div>
-      </div>
-      <div class="kb-project-caption"><div><h3>Una marca con personalidad</h3><p>Concepto de muestra · Identidad visual</p></div><span aria-hidden="true">↗</span></div>
-    </a>
-    <a class="kb-project" href={link('/servicios/diseno-web/')}>
-      <div class="kb-project-image kb-project-digital">
-        <div class="kb-digital-nav"><span>S / B</span><span>WORK &nbsp;&nbsp; STUDIO &nbsp;&nbsp; CONTACT</span></div>
-        <div class="kb-digital-content"><small>DESIGN THAT WORKS</small><strong>GOOD<br/>IDEAS<br/><i>LIVE</i> HERE.</strong><span>SEE WHAT'S POSSIBLE&nbsp; ↗</span></div>
-      </div>
-      <div class="kb-project-caption"><div><h3>Diseño que conecta</h3><p>Concepto de muestra · Diseño web</p></div><span aria-hidden="true">↗</span></div>
-    </a>
-    <a class="kb-project" href={link('/servicios/soluciones-qr/')}>
-      <div class="kb-project-image kb-project-qr">
-        <div class="kb-qr-info"><small>DEMO / DIGITAL MENU</small><strong>MENOS<br/>PAPEL.<br/><em>MÁS FÁCIL.</em></strong></div>
-        <div class="kb-qr-device"><small>MENÚ DIGITAL</small><strong>La carta,<br/>a un toque.</strong><div>Para desayunar <span>↗</span></div><div>Para compartir <span>↗</span></div><div>Para brindar <span>↗</span></div></div>
-      </div>
-      <div class="kb-project-caption"><div><h3>Lo digital, más cerca</h3><p>Concepto de muestra · Soluciones QR/NFC</p></div><span aria-hidden="true">↗</span></div>
-    </a>
-  </section>
-  <div class="kb-projects-note">
-    <p>Las piezas señaladas como «concepto de muestra» son demostraciones gráficas creadas para ilustrar servicios; no son encargos reales de clientes.</p>
-    <a class="kb-text-link" href={link('/proyectos/')}>Ver portfolio <span aria-hidden="true">↗</span></a>
-  </div>
+    </div>
 
-  <section class="kb-end-link">
-    <div class="kb-section-kicker">¿TIENES UNA IDEA?</div>
-    <div class="kb-section-body"><h2>Hablemos de<br/>tu proyecto.</h2><a href={link('/presupuesto/')} class="kb-contact-link">Solicitar presupuesto <span aria-hidden="true">↗</span></a></div>
+    <div class="kb-process-final">
+      <div class="kb-process-final-top"><span>EL SIGUIENTE PASO ES TUYO</span><span aria-hidden="true">04 / 04 ↗</span></div>
+      <h2>¿HACEMOS<br/><em>ALGO GRANDE</em><br/>JUNTOS?</h2>
+      <div class="kb-process-final-bottom">
+        <p>Tú pones la idea. Nosotros, todo lo que hace falta para convertirla en realidad.</p>
+        <a class="kb-process-contact" href={link('/presupuesto/')}>Hablemos de tu proyecto <span aria-hidden="true">↗</span></a>
+      </div>
+    </div>
   </section>
 </Base>
 
@@ -830,6 +850,107 @@ const serviceDescriptions={
       transform:none;
     }
   }
+
+  /* Bloque 04 — Manifiesto, recorrido cinematográfico y contacto. */
+  .kb-process{--kb-process-lime:#DDFF9A;position:relative;width:100%;overflow:clip;background:#0E100F;color:#fff}
+  .kb-process-intro{
+    box-sizing:border-box;display:flex;flex-direction:column;justify-content:space-between;
+    min-height:100svh;padding:clamp(30px,4.2vw,70px) clamp(24px,6vw,110px) clamp(42px,5vw,88px);
+    position:relative;overflow:hidden;
+    background:radial-gradient(ellipse at 81% 60%,rgba(221,255,154,.07),transparent 48%),#0E100F;
+  }
+  .kb-process-kicker,.kb-process-story-top,.kb-process-final-top{
+    display:flex;justify-content:space-between;gap:22px;align-items:center;
+    font-size:clamp(.68rem,.83vw,.86rem);font-weight:750;letter-spacing:.13em;line-height:1.5
+  }
+  .kb-process-kicker{color:var(--kb-process-lime)}
+  .kb-process-kicker span:last-child{color:#939b94}
+  .kb-process-intro-main{position:relative;z-index:1;width:100%;margin:auto 0;padding:clamp(50px,10vh,130px) 0 45px}
+  .kb-process-intro h2,.kb-process-final h2{margin:0;font-family:var(--font-heading);font-size:clamp(3.25rem,7.9vw,10rem);font-weight:800;line-height:.94;letter-spacing:-.083em;color:#fff}
+  .kb-process-intro h2>span{display:block;white-space:nowrap}
+  .kb-process-intro h2 em,.kb-process-final h2 em{font-style:normal}
+  .kb-process-intro h2 .kb-process-green{color:var(--kb-process-lime)}
+  .kb-process-intro-bottom{display:flex;align-items:flex-end;justify-content:space-between;gap:38px;margin-top:clamp(36px,5.8vw,75px)}
+  .kb-process-intro-bottom p{max-width:410px;margin:0;color:#D0D4CF;font-size:clamp(.96rem,1.25vw,1.16rem);line-height:1.65}
+  .kb-process-intro-bottom>span{color:#9DA79E;font-size:.66rem;font-weight:750;letter-spacing:.12em;white-space:nowrap}
+  .kb-process-watermark{position:absolute;bottom:13px;right:clamp(24px,6vw,110px);color:#5A635A;font-size:.59rem;letter-spacing:.18em}
+  .kb-process-story{position:relative;background:#0E100F;padding:20px clamp(24px,6vw,110px) 85px}
+  .kb-process-sticky{display:flex;flex-direction:column;justify-content:space-between;min-height:560px}
+  .kb-process-story-top{color:var(--kb-process-lime)}
+  .kb-process-count{font-family:var(--font-heading);font-size:1.25rem;letter-spacing:-.04em;font-weight:750}
+  .kb-process-count small{font-size:.8rem;font-weight:600;color:#7D887F}
+  .kb-process-story-stage{flex:1;display:flex;align-items:center;position:relative;padding:85px 0}
+  .kb-process-steps{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:55px 8%;margin:0;padding:0;list-style:none;width:100%;max-width:1200px}
+  .kb-process-step{min-width:0}
+  .kb-process-step-label{display:block;color:var(--kb-process-lime);font-size:.73rem;font-weight:700;letter-spacing:.13em;margin-bottom:23px}
+  .kb-process-step h3{margin:0;font-family:var(--font-heading);font-size:clamp(2.75rem,7vw,8rem);font-weight:800;letter-spacing:-.082em;line-height:1.02;color:#fff}
+  .kb-process-step h3 span{color:var(--kb-process-lime)}
+  .kb-process-step p{max-width:550px;margin:29px 0 0;font-size:clamp(1rem,1.35vw,1.27rem);line-height:1.65;color:#D0D7D0}
+  .kb-process-decoration{position:absolute;right:0;top:34%;font-size:clamp(70px,15vw,260px);line-height:1;color:rgba(221,255,154,.14);pointer-events:none}
+  .kb-process-timeline{width:100%}
+  .kb-process-progress{height:2px;width:100%;background:#596059;overflow:hidden}
+  .kb-process-progress>span{display:block;width:100%;height:100%;background:var(--kb-process-lime)}
+  .kb-process-phase-names{display:flex;gap:12px;justify-content:space-between;padding-top:22px;font-size:clamp(.63rem,.8vw,.78rem);font-weight:700;letter-spacing:.04em;color:#9CA59E}
+  .kb-phase-active{color:var(--kb-process-lime)!important}
+  .kb-process.is-enhanced .kb-process-story{height:390svh;padding-top:0;padding-bottom:0}
+  .kb-process.is-enhanced .kb-process-sticky{position:sticky;top:0;min-height:0;height:100svh;box-sizing:border-box;padding:clamp(25px,4vw,58px) 0 clamp(34px,4vw,56px)}
+  .kb-process.is-enhanced .kb-process-story-stage{min-height:0;flex:1;padding:0}
+  .kb-process.is-enhanced .kb-process-steps{display:block;position:relative;max-width:none;height:100%}
+  .kb-process.is-enhanced .kb-process-step{position:absolute;top:50%;left:0;width:min(100%,1120px);opacity:0;transform:translateY(calc(-50% + 42px));pointer-events:none;will-change:transform,opacity}
+  .kb-process.is-enhanced .kb-process-step:first-child{opacity:1;transform:translateY(-50%)}
+  .kb-process.is-enhanced .kb-process-progress>span{width:var(--kb-process-progress,0%)}
+  .kb-process-final{position:relative;padding:clamp(50px,6vw,95px) clamp(24px,6vw,110px) clamp(70px,8vw,130px);background:var(--kb-process-lime);color:#101610}
+  .kb-process-final-top{padding-bottom:clamp(70px,10vw,160px);color:#222E1C}
+  .kb-process-final h2{color:#121A11;font-size:clamp(3.3rem,8.6vw,11rem)}
+  .kb-process-final h2 em{color:#688C42}
+  .kb-process-final-bottom{display:flex;align-items:end;justify-content:space-between;gap:40px;margin-top:clamp(44px,7vw,110px)}
+  .kb-process-final-bottom p{max-width:450px;margin:0;font-size:clamp(1rem,1.35vw,1.26rem);line-height:1.65}
+  .kb-process-contact{display:inline-flex;justify-content:space-between;align-items:center;gap:44px;min-width:280px;max-width:100%;box-sizing:border-box;border:1px solid #141B11;border-radius:100px;padding:18px 22px 18px 28px;background:#141B11;color:#fff!important;text-decoration:none;font-size:1rem;font-weight:750;transition:transform .25s ease,background .25s ease}
+  .kb-process-contact>span{display:inline-flex;align-items:center;justify-content:center;width:37px;height:37px;border-radius:50%;background:var(--kb-process-lime);color:#141B11}
+  .kb-process-contact:hover,.kb-process-contact:focus-visible{background:#263622;transform:translateY(-3px)}
+  @media(max-width:900px){
+    .kb-process-intro{min-height:80svh}
+    .kb-process-intro h2,.kb-process-final h2{font-size:clamp(2.75rem,9vw,6.6rem)}
+    .kb-process-step h3{font-size:clamp(3rem,9.1vw,6rem)}
+    .kb-process-phase-names{font-size:.6rem}
+    .kb-process-intro-bottom>span{white-space:normal;text-align:right}
+  }
+  @media(max-width:680px){
+    .kb-process-intro{min-height:76svh;padding:27px 20px 47px}
+    .kb-process-kicker span:last-child{display:none}
+    .kb-process-intro-main{padding:65px 0 26px}
+    .kb-process-intro h2{font-size:clamp(2.23rem,9.15vw,4.5rem);letter-spacing:-.073em;line-height:.99}
+    .kb-process-intro-bottom{display:block;margin-top:35px}
+    .kb-process-intro-bottom p{font-size:.95rem;max-width:350px}
+    .kb-process-intro-bottom>span{display:block;text-align:left;margin-top:28px;font-size:.6rem}
+    .kb-process-watermark{right:20px;font-size:.55rem}
+    .kb-process-story{padding:50px 20px 75px}
+    .kb-process-steps{grid-template-columns:1fr;gap:64px}
+    .kb-process-step h3{font-size:clamp(2.5rem,10.4vw,5rem)}
+    .kb-process-step p{font-size:1rem;margin-top:20px}
+    .kb-process-decoration{font-size:85px;opacity:.45;top:17%}
+    .kb-process.is-enhanced .kb-process-story{height:340svh;padding:0 20px}
+    .kb-process.is-enhanced .kb-process-sticky{height:100svh;padding:30px 0 34px}
+    .kb-process.is-enhanced .kb-process-step{width:100%}
+    .kb-process-phase-names{flex-wrap:wrap;justify-content:flex-start;column-gap:21px;row-gap:13px;font-size:.56rem}
+    .kb-process-final{padding:32px 20px 75px}
+    .kb-process-final-top{padding-bottom:100px;font-size:.65rem}
+    .kb-process-final h2{font-size:clamp(2.8rem,10.9vw,5.4rem)}
+    .kb-process-final-bottom{display:block;margin-top:50px}
+    .kb-process-final-bottom p{font-size:1rem;max-width:370px}
+    .kb-process-contact{margin-top:31px;min-width:0;width:100%}
+  }
+  @media(max-width:380px){
+    .kb-process-intro h2{font-size:8.6vw}
+    .kb-process-step h3{font-size:9.2vw}
+    .kb-process-final h2{font-size:10vw}
+    .kb-process-phase-names{column-gap:14px}
+  }
+  @media(prefers-reduced-motion:reduce){
+    .kb-process-contact{transition:none}
+    .kb-process.is-enhanced .kb-process-step{will-change:auto}
+  }
+
 </style>
 
 <script>
@@ -1047,4 +1168,53 @@ const serviceDescriptions={
     renderQrShowcase();
   }
 
+
+  // Bloque 04: cuatro fases que avanzan al desplazar, reversibles al subir.
+  // Sin JS o con movimiento reducido quedan todas las fases visibles en cuadrícula.
+  const processSection=document.querySelector('.kb-process');
+  const processReduced=window.matchMedia('(prefers-reduced-motion: reduce)');
+  if(processSection && !processReduced.matches){
+    const story=processSection.querySelector('.kb-process-story');
+    const steps=[...processSection.querySelectorAll('.kb-process-step')];
+    const nav=[...processSection.querySelectorAll('.kb-process-phase-names span')];
+    const number=processSection.querySelector('.kb-process-count');
+    let processQueued=false;
+    const clampProcess=(v)=>Math.max(0,Math.min(1,v));
+    function drawProcess(){
+      processQueued=false;
+      const rect=story.getBoundingClientRect();
+      const range=Math.max(1,rect.height-window.innerHeight);
+      const progress=clampProcess(-rect.top/range);
+      const point=progress*3;
+      const active=Math.min(3,Math.round(point));
+      steps.forEach((el,i)=>{
+        const opacity=clampProcess(1-Math.abs(point-i));
+        el.style.opacity=opacity.toFixed(3);
+        el.style.transform='translateY(calc(-50% + '+((1-opacity)*42).toFixed(2)+'px))';
+        el.style.visibility=opacity<.02?'hidden':'visible';
+      });
+      nav.forEach((el,i)=>el.classList.toggle('kb-phase-active',i===active));
+      number.innerHTML=String(active+1).padStart(2,'0')+' <small>/ 04</small>';
+      story.style.setProperty('--kb-process-progress',(progress*100).toFixed(2)+'%');
+    }
+    function queueProcess(){
+      if(processQueued)return;
+      processQueued=true;
+      requestAnimationFrame(drawProcess);
+    }
+    processSection.classList.add('is-enhanced');
+    window.addEventListener('scroll',queueProcess,{passive:true});
+    window.addEventListener('resize',queueProcess,{passive:true});
+    window.addEventListener('pageshow',queueProcess);
+    drawProcess();
+    processReduced.addEventListener('change',()=>{
+      if(processReduced.matches){
+        processSection.classList.remove('is-enhanced');
+        steps.forEach(el=>{el.style.removeProperty('opacity');el.style.removeProperty('transform');el.style.removeProperty('visibility');});
+      } else {
+        processSection.classList.add('is-enhanced');
+        drawProcess();
+      }
+    });
+  }
 </script>

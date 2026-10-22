@@ -100,9 +100,11 @@ const serviceDescriptions={
           </div>
         )}
         {service.slug === 'audiovisual' && (
-          <video class="kb-services-bear-video" autoplay muted loop playsinline preload="metadata" aria-hidden="true">
-            <source src={coverVideo} type="video/mp4" />
-          </video>
+          <div class="kb-services-audiovisual-frame" aria-hidden="true">
+            <video class="kb-services-bear-video" autoplay muted loop playsinline preload="metadata">
+              <source src={coverVideo} type="video/mp4" />
+            </video>
+          </div>
         )}
         <div class="kb-services-tile-content">
           <h3>{serviceLabels[service.slug]||service.title}</h3>
@@ -410,38 +412,60 @@ const serviceDescriptions={
     .kb-qr-object--stand{transform:rotateZ(-5deg)}
     .kb-qr-object--code{transform:rotateZ(6deg)}
   }
-  /* Audiovisual: vídeo del oso a sangre con el cristal por encima. */
+  /* Audiovisual: el vídeo llena el interior redondeado, con el Liquid Glass
+     restringido a un fino anillo perimetral para no desenfocar la imagen. */
   .kb-services-tile--audiovisual{
     --kb-tile-text:#FFFFFF;
+    --kb-av-frame-inset:clamp(14px,2vw,30px);
+    --kb-av-frame-radius:clamp(20px,2.2vw,36px);
     background-color:#131b19;
   }
-  .kb-services-bear-video{
+  .kb-services-audiovisual-frame{
     position:absolute;
-    inset:0;
-    z-index:0;
+    inset:var(--kb-av-frame-inset);
+    z-index:1;
+    display:block;
+    overflow:hidden;
+    border-radius:var(--kb-av-frame-radius);
+    background:#111917;
+    box-shadow:0 15px 40px rgba(0,0,0,.16);
+    pointer-events:none;
+  }
+  .kb-services-bear-video{
     display:block;
     width:100%;
     height:100%;
     object-fit:cover;
     object-position:center;
-    pointer-events:none;
   }
+  /* La máscara vacía el centro del cristal: brillo y blur solo en el borde. */
   .kb-services-tile.kb-services-tile--audiovisual::before{
-    z-index:2;
-    background:linear-gradient(145deg,rgba(255,255,255,.17),rgba(255,255,255,.03) 57%,rgba(255,255,255,.09));
-    border-color:rgba(255,255,255,.42);
+    box-sizing:border-box;
+    z-index:3;
+    inset:var(--kb-av-frame-inset);
+    padding:clamp(9px,.95vw,16px);
+    border:1px solid rgba(255,255,255,.58);
+    border-radius:var(--kb-av-frame-radius);
+    background:linear-gradient(142deg,rgba(255,255,255,.42),rgba(255,255,255,.09) 50%,rgba(255,255,255,.28));
+    -webkit-backdrop-filter:blur(12px) saturate(155%);
+    backdrop-filter:blur(12px) saturate(155%);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.62),inset 0 -1px 0 rgba(255,255,255,.16);
+    -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+    -webkit-mask-composite:xor;
+    mask-composite:exclude;
   }
+  /* Degradado muy discreto solo para la legibilidad del texto inferior. */
   .kb-services-tile.kb-services-tile--audiovisual::after{
     z-index:2;
-    inset:0;
+    inset:var(--kb-av-frame-inset);
     width:auto;
     height:auto;
-    border-radius:0;
-    background:linear-gradient(180deg,rgba(0,0,0,.01) 5%,rgba(0,0,0,.10) 46%,rgba(0,0,0,.72) 100%);
+    border-radius:var(--kb-av-frame-radius);
+    background:linear-gradient(180deg,transparent 55%,rgba(0,0,0,.10) 75%,rgba(0,0,0,.46) 100%);
   }
   .kb-services-tile--audiovisual .kb-services-tile-content{
-    z-index:3;
-    text-shadow:0 2px 16px rgba(0,0,0,.35);
+    z-index:4;
+    text-shadow:0 2px 16px rgba(0,0,0,.7);
   }
   .kb-services-tile--wide{
     grid-column:1 / -1;
@@ -884,6 +908,16 @@ const serviceDescriptions={
     window.addEventListener('pageshow',requestIntroRender);
     renderIntro();
   }
+  // En móvil, las imágenes de los servicios se revelan antes y recorren
+  // menos distancia de scroll; en escritorio se mantiene el cálculo original.
+  function serviceScrollReveal(rect, desktopTravel) {
+    if (window.matchMedia('(max-width: 680px)').matches) {
+      const mobileTravel = Math.max(170,Math.min(275,window.innerHeight * .36));
+      return Math.max(0,Math.min(1,(window.innerHeight * 1.04 - rect.top) / mobileTravel));
+    }
+    return Math.max(0,Math.min(1,(window.innerHeight * .93 - rect.top) / desktopTravel));
+  }
+
   // Cuadrado 01: las tres capturas descienden y giran con la posición real
   // del scroll. La animación se invierte al subir y respeta movimiento reducido.
   const webShowcaseTile = document.querySelector('.kb-services-tile--diseno-web');
@@ -904,7 +938,7 @@ const serviceDescriptions={
       const travel = Math.max(320,Math.min(650,window.innerHeight * .78));
       const progress = webReducedMotion.matches
         ? 1
-        : webClamp((window.innerHeight * .93 - rect.top) / travel);
+        : serviceScrollReveal(rect,travel);
       webCards.forEach(({delay,rise,start,end},index) => {
         const current = webEase(webClamp((progress - delay) / (1 - delay)));
         const hidden = 1 - current;
@@ -946,7 +980,7 @@ const serviceDescriptions={
       const travel = Math.max(310,Math.min(650,window.innerHeight * .78));
       const progress = brandReducedMotion.matches
         ? 1
-        : brandClamp((window.innerHeight * .93 - rect.top) / travel);
+        : serviceScrollReveal(rect,travel);
       brandCards.forEach(({delay,rise,start,end},index) => {
         const current = brandEase(brandClamp((progress - delay) / (1 - delay)));
         const hidden = 1 - current;
@@ -985,7 +1019,7 @@ const serviceDescriptions={
       const travel = Math.max(300,Math.min(650,window.innerHeight * .78));
       const progress = qrReducedMotion.matches
         ? 1
-        : qrClamp((window.innerHeight * .93 - rect.top) / travel);
+        : serviceScrollReveal(rect,travel);
       qrCards.forEach(({delay,rise,start,end},index) => {
         const current = qrEase(qrClamp((progress - delay) / (1 - delay)));
         const hidden = 1 - current;

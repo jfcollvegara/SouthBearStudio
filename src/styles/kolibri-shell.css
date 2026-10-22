@@ -216,8 +216,12 @@
    convergen hacia el menú hamburguesa del extremo derecho con el scroll.
    No se aplica a la portada (su cabecera es kb-top-nav). */
 .site-header.southbear-nav .sb-interior-nav{
-  --sb-nav-progress:0;
-  --sb-nav-travel:0px;
+  --sb-nav-offset:0px;
+  --sb-nav-scale:1;
+  --sb-nav-label-opacity:1;
+  --sb-nav-blur:0px;
+  --sb-nav-icon-opacity:0;
+  --sb-nav-icon-scale:.72;
   position:relative;
   display:flex;
   align-items:center;
@@ -267,10 +271,9 @@
   padding:0;
   white-space:nowrap;
   transform-origin:center center;
-  transform:translate3d(calc(var(--sb-nav-travel) * var(--sb-nav-progress)),0,0)
-    scale(calc(1 - .84 * var(--sb-nav-progress)));
-  opacity:clamp(0,calc(1 - 1.25 * var(--sb-nav-progress)),1);
-  filter:blur(calc(6px * var(--sb-nav-progress)));
+  transform:translate3d(var(--sb-nav-offset),0,0) scale(var(--sb-nav-scale));
+  opacity:var(--sb-nav-label-opacity);
+  filter:blur(var(--sb-nav-blur);
   will-change:transform,opacity,filter;
 }
 .site-header.southbear-nav .sb-nav-desktop a,
@@ -302,8 +305,8 @@
   height:48px;
   margin:0 0 0 auto;
   z-index:4;
-  opacity:clamp(0,calc((var(--sb-nav-progress) - .48) * 1.923),1);
-  transform:scale(calc(.72 + .28 * var(--sb-nav-progress)));
+  opacity:var(--sb-nav-icon-opacity);
+  transform:scale(var(--sb-nav-icon-scale));
   transform-origin:center;
   pointer-events:auto;
 }

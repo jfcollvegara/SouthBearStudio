@@ -673,3 +673,8 @@ body.landing-page,body.landing-page main{background:#FFFFFF;color:#101010}
 @media(prefers-reduced-motion:reduce){
   .kb-top-nav.kb-top-nav--stuck{transition:none}
 }
+
+/* Tipografía de prueba: Space Grotesk en categorías de navegación de la portada. */
+.kb-top-nav .kb-nav-links a{
+  font-family:var(--font-heading);
+}

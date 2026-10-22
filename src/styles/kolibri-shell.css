@@ -626,20 +626,21 @@
 }
 
 
-/* Logos de las seis herramientas: franja equilibrada y responsive.
-   Iconos originales optimizados en un único sprite WebP. */
+/* Herramientas del estudio: seis logotipos sueltos, sin recuadros.
+   Se recorta una sola celda del sprite por logotipo usando background-position,
+   evitando que el SVG original se desborde y repita todos los logos. */
 .sb-site-footer .sb-footer-tools{
   display:flex;
   align-items:center;
   justify-content:space-between;
-  gap:24px 30px;
-  padding-top:26px;
-  padding-bottom:25px;
+  gap:20px 30px;
+  padding-top:27px;
+  padding-bottom:26px;
   border-top:1px solid rgba(16,16,16,.22);
 }
 .sb-site-footer .sb-footer-tools-label{
   flex:0 0 auto;
-  max-width:285px;
+  max-width:270px;
   color:#344330;
   font-size:.69rem;
   font-weight:750;
@@ -652,48 +653,60 @@
   display:grid;
   grid-template-columns:repeat(6,minmax(0,1fr));
   align-items:center;
-  gap:clamp(6px,.85vw,13px);
+  gap:clamp(8px,1.3vw,22px);
   list-style:none;
   margin:0;
   padding:0;
 }
 .sb-site-footer .sb-footer-tool{
   display:flex;
-  box-sizing:border-box;
   align-items:center;
   justify-content:center;
   min-width:0;
-  height:clamp(45px,4.6vw,58px);
-  padding:6px 5px;
-  border:1px solid rgba(18,34,15,.11);
-  border-radius:14px;
-  background:rgba(255,255,255,.55);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.55);
-  transition:background .25s ease,transform .25s ease;
+  margin:0;
+  padding:0;
+  border:0;
+  border-radius:0;
+  background:none;
+  box-shadow:none;
 }
 .sb-site-footer .sb-footer-tool-logo{
   display:block;
-  width:100%;
-  height:100%;
-  overflow:visible;
+  width:min(100%,142px);
+  height:auto;
+  aspect-ratio:320 / 116;
+  background-image:url('/southbear-footer-logos-v1.webp');
+  background-repeat:no-repeat;
+  background-size:600% 100%;
+  background-position:0% 50%;
+  transition:opacity .23s ease,transform .23s ease;
 }
-.sb-site-footer .sb-footer-tool:hover{
-  background:rgba(255,255,255,.82);
+.sb-site-footer .sb-footer-tool-logo--supabase{background-position:0% 50%}
+.sb-site-footer .sb-footer-tool-logo--cloudflare{background-position:20% 50%}
+.sb-site-footer .sb-footer-tool-logo--github{background-position:40% 50%}
+.sb-site-footer .sb-footer-tool-logo--davinci{background-position:60% 50%}
+.sb-site-footer .sb-footer-tool-logo--affinity{background-position:80% 50%}
+.sb-site-footer .sb-footer-tool-logo--hostalia{background-position:100% 50%}
+.sb-site-footer .sb-footer-tool:hover .sb-footer-tool-logo{
+  opacity:.85;
   transform:translateY(-2px);
 }
 @media(max-width:1080px){
-  .sb-site-footer .sb-footer-tools{flex-direction:column;align-items:flex-start;gap:14px}
+  .sb-site-footer .sb-footer-tools{
+    flex-direction:column;
+    align-items:flex-start;
+    gap:17px;
+  }
   .sb-site-footer .sb-footer-tools-list{flex:none;width:100%}
-  .sb-site-footer .sb-footer-tool{height:58px}
 }
 @media(max-width:680px){
-  .sb-site-footer .sb-footer-tools{gap:16px;padding-top:22px;padding-bottom:22px}
-  .sb-site-footer .sb-footer-tools-list{grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
-  .sb-site-footer .sb-footer-tool{height:53px;border-radius:12px;padding:6px 4px}
-}
-@media(max-width:380px){
-  .sb-site-footer .sb-footer-tool{height:49px}
+  .sb-site-footer .sb-footer-tools{gap:13px;padding-top:22px;padding-bottom:22px}
+  .sb-site-footer .sb-footer-tools-list{
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:9px 18px;
+  }
+  .sb-site-footer .sb-footer-tool-logo{width:min(100%,126px)}
 }
 @media(prefers-reduced-motion:reduce){
-  .sb-site-footer .sb-footer-tool{transition:none}
+  .sb-site-footer .sb-footer-tool-logo{transition:none}
 }

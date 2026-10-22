@@ -77,6 +77,22 @@ const serviceDescriptions={
             </svg>
           </div>
         )}
+        {service.slug === 'branding' && (
+          <div class="kb-branding-stage" aria-hidden="true">
+            <svg class="kb-branding-card kb-branding-card--1" viewBox="0 0 340 202" preserveAspectRatio="xMidYMid meet">
+              <image href={link('/southbear-branding-logos.webp')} x="0" y="0" width="340" height="808" />
+            </svg>
+            <svg class="kb-branding-card kb-branding-card--2" viewBox="0 202 340 202" preserveAspectRatio="xMidYMid meet">
+              <image href={link('/southbear-branding-logos.webp')} x="0" y="0" width="340" height="808" />
+            </svg>
+            <svg class="kb-branding-card kb-branding-card--3" viewBox="0 404 340 202" preserveAspectRatio="xMidYMid meet">
+              <image href={link('/southbear-branding-logos.webp')} x="0" y="0" width="340" height="808" />
+            </svg>
+            <svg class="kb-branding-card kb-branding-card--4" viewBox="0 606 340 202" preserveAspectRatio="xMidYMid meet">
+              <image href={link('/southbear-branding-logos.webp')} x="0" y="0" width="340" height="808" />
+            </svg>
+          </div>
+        )}
         <div class="kb-services-tile-content">
           <h3>{serviceLabels[service.slug]||service.title}</h3>
           <p>{serviceDescriptions[service.slug]||service.intro}</p>
@@ -252,6 +268,79 @@ const serviceDescriptions={
     .kb-web-preview--mobile{transform:rotateZ(-5deg)}
   }
   .kb-services-tile--branding{background-color:#C3B4EF}
+  /* Logotipos: composición editorial de cuatro ejemplos sobre cristal.
+     Un sprite optimizado conserva las cuatro imágenes del cliente. */
+  .kb-services-tile--branding .kb-services-tile-content{
+    position:relative;
+    z-index:3;
+  }
+  .kb-branding-stage{
+    position:absolute;
+    inset:0;
+    z-index:2;
+    pointer-events:none;
+    perspective:1100px;
+  }
+  .kb-branding-card{
+    position:absolute;
+    display:block;
+    height:auto;
+    aspect-ratio:340 / 202;
+    overflow:hidden;
+    border:1px solid rgba(255,255,255,.62);
+    border-radius:clamp(12px,1.5vw,21px);
+    background:rgba(255,255,255,.43);
+    -webkit-backdrop-filter:blur(12px) saturate(145%);
+    backdrop-filter:blur(12px) saturate(145%);
+    box-shadow:0 13px 29px rgba(35,27,70,.14),inset 0 1px 0 rgba(255,255,255,.55);
+    -webkit-backface-visibility:hidden;
+    backface-visibility:hidden;
+    transform-style:preserve-3d;
+    transform-origin:center;
+    will-change:transform,opacity;
+  }
+  .kb-branding-card--1{
+    width:37%;top:7%;left:8%;z-index:1;
+    opacity:var(--kb-brand-opacity-1,1);
+    transform:perspective(1100px) translate3d(0,var(--kb-brand-y-1,0px),0) rotateX(4deg) rotateY(-5deg) rotateZ(var(--kb-brand-rotation-1,-3deg));
+  }
+  .kb-branding-card--2{
+    width:34%;top:12%;right:9%;z-index:2;
+    background:rgba(25,23,45,.88);
+    border-color:rgba(255,255,255,.32);
+    opacity:var(--kb-brand-opacity-2,1);
+    transform:perspective(1100px) translate3d(0,var(--kb-brand-y-2,0px),18px) rotateX(4deg) rotateY(5deg) rotateZ(var(--kb-brand-rotation-2,3deg));
+  }
+  .kb-branding-card--3{
+    width:29%;top:30%;left:16%;z-index:3;
+    opacity:var(--kb-brand-opacity-3,1);
+    transform:perspective(1100px) translate3d(0,var(--kb-brand-y-3,0px),28px) rotateX(3deg) rotateY(-5deg) rotateZ(var(--kb-brand-rotation-3,-2deg));
+  }
+  .kb-branding-card--4{
+    width:28%;top:33%;right:14%;z-index:4;
+    opacity:var(--kb-brand-opacity-4,1);
+    transform:perspective(1100px) translate3d(0,var(--kb-brand-y-4,0px),39px) rotateX(3deg) rotateY(5deg) rotateZ(var(--kb-brand-rotation-4,2deg));
+  }
+  @media(max-width:980px){
+    .kb-branding-card--1{width:36%;top:5%;left:7%}
+    .kb-branding-card--2{width:33%;top:8%;right:7%}
+    .kb-branding-card--3{width:27%;top:20%;left:15%}
+    .kb-branding-card--4{width:26%;top:22%;right:13%}
+  }
+  @media(max-width:680px){
+    .kb-branding-card{border-radius:13px}
+    .kb-branding-card--1{width:35%;top:4%;left:7%}
+    .kb-branding-card--2{width:33%;top:5%;right:7%}
+    .kb-branding-card--3{width:26%;top:17%;left:16%}
+    .kb-branding-card--4{width:25%;top:18%;right:14%}
+  }
+  @media(prefers-reduced-motion:reduce){
+    .kb-branding-card{will-change:auto;opacity:1}
+    .kb-branding-card--1{transform:rotateZ(-3deg)}
+    .kb-branding-card--2{transform:rotateZ(3deg)}
+    .kb-branding-card--3{transform:rotateZ(-2deg)}
+    .kb-branding-card--4{transform:rotateZ(2deg)}
+  }
   .kb-services-tile--diseno-grafico{background-color:#EFB3A0}
   .kb-services-tile--soluciones-qr{background-color:#96D4D9}
   .kb-services-tile--audiovisual{--kb-tile-text:#FFFFFF;background-color:#374441}
@@ -736,6 +825,48 @@ const serviceDescriptions={
     window.addEventListener('pageshow',queueWebShowcase);
     webReducedMotion.addEventListener('change',queueWebShowcase);
     updateWebShowcase();
+  }
+
+  // Cuadrado 02: cuatro logotipos flotan con un descenso progresivo,
+  // retrasos suaves y ligera rotación; al subir, regresan a su origen.
+  const brandTile = document.querySelector('.kb-services-tile--branding');
+  if (brandTile) {
+    const brandReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const brandCards = [
+      {delay:0, rise:290, start:-11, end:-3},
+      {delay:.10, rise:345, start:11, end:3},
+      {delay:.18, rise:375, start:-10, end:-2},
+      {delay:.26, rise:410, start:9, end:2}
+    ];
+    const brandClamp = (value) => Math.max(0,Math.min(1,value));
+    const brandEase = (value) => value * value * (3 - 2 * value);
+    let brandFrameRequested = false;
+    function renderBrandLogos() {
+      brandFrameRequested = false;
+      const rect = brandTile.getBoundingClientRect();
+      const travel = Math.max(310,Math.min(650,window.innerHeight * .78));
+      const progress = brandReducedMotion.matches
+        ? 1
+        : brandClamp((window.innerHeight * .93 - rect.top) / travel);
+      brandCards.forEach(({delay,rise,start,end},index) => {
+        const current = brandEase(brandClamp((progress - delay) / (1 - delay)));
+        const hidden = 1 - current;
+        const n = index + 1;
+        brandTile.style.setProperty('--kb-brand-y-' + n,(-hidden * rise).toFixed(1) + 'px');
+        brandTile.style.setProperty('--kb-brand-rotation-' + n,(end + (start - end) * hidden).toFixed(2) + 'deg');
+        brandTile.style.setProperty('--kb-brand-opacity-' + n,(brandReducedMotion.matches ? 1 : brandClamp(current * 3)).toFixed(3));
+      });
+    }
+    function requestBrandLogos() {
+      if (brandFrameRequested) return;
+      brandFrameRequested = true;
+      requestAnimationFrame(renderBrandLogos);
+    }
+    window.addEventListener('scroll',requestBrandLogos,{passive:true});
+    window.addEventListener('resize',requestBrandLogos,{passive:true});
+    window.addEventListener('pageshow',requestBrandLogos);
+    brandReducedMotion.addEventListener('change',requestBrandLogos);
+    renderBrandLogos();
   }
 
 </script>

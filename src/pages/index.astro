@@ -341,11 +341,17 @@ const serviceDescriptions={
     .kb-branding-card--4{width:26%;top:28%;right:13%}
   }
   @media(max-width:680px){
+    /* Dos filas separadas y más espacio vertical: ninguna tarjeta tapa otra
+       ni invade el titular en pantallas pequeñas. El escritorio no cambia. */
+    .kb-services-tile.kb-services-tile--branding{
+      aspect-ratio:auto;
+      min-height:clamp(500px,132vw,580px);
+    }
     .kb-branding-card{border-radius:13px}
-    .kb-branding-card--1{width:35%;top:9%;left:7%}
-    .kb-branding-card--2{width:33%;top:10%;right:7%}
-    .kb-branding-card--3{width:26%;top:19%;left:16%}
-    .kb-branding-card--4{width:25%;top:20%;right:14%}
+    .kb-branding-card--1{width:33%;top:8%;left:10%}
+    .kb-branding-card--2{width:31%;top:11%;right:10%}
+    .kb-branding-card--3{width:27%;top:27%;left:15%}
+    .kb-branding-card--4{width:27%;top:30%;right:13%}
   }
   @media(prefers-reduced-motion:reduce){
     .kb-branding-card{will-change:auto;opacity:1}

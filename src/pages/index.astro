@@ -128,6 +128,10 @@ const eur=new Intl.NumberFormat('es-ES');
     --kb-intro-visual-h:calc(var(--kb-intro-visual-w) * .5625);
     --kb-intro-overlap:clamp(28px,3.2vw,52px);
     --kb-intro-vertical-pad:clamp(38px,5vw,80px);
+    /* Un poco más de negro debajo del botón; imagen y copy
+       se desplazan la mitad para seguir centrados en la franja. */
+    --kb-intro-bottom-extra:34px;
+    --kb-intro-center-shift:17px;
     display:block;
     position:relative;
     isolation:isolate;
@@ -144,7 +148,7 @@ const eur=new Intl.NumberFormat('es-ES');
     content:"";
     position:absolute;
     top:calc(var(--kb-intro-vertical-pad) + max(10px, calc(var(--kb-intro-overlap) - clamp(18px,2vw,29px))));
-    bottom:calc(var(--kb-intro-vertical-pad) + var(--kb-intro-overlap));
+    bottom:calc(var(--kb-intro-vertical-pad) + var(--kb-intro-overlap) - var(--kb-intro-bottom-extra));
     left:0;
     right:0;
     z-index:0;
@@ -167,9 +171,9 @@ const eur=new Intl.NumberFormat('es-ES');
   }
   .kb-intro-visual{
     position:relative;
-    /* La banda negra tiene un margen superior e inferior distinto:
-       se compensa la mitad de esa diferencia para centrar la imagen. */
-    top:clamp(-14.5px,-1vw,-10px);
+    /* Compensar el antiguo desfase y la mayor extensión inferior
+       del negro, dejando la fotografía centrada verticalmente. */
+    top:calc(clamp(-14.5px,-1vw,-10px) + var(--kb-intro-center-shift));
     z-index:2;
     display:flex;
     width:100%;
@@ -190,6 +194,7 @@ const eur=new Intl.NumberFormat('es-ES');
   }
   .kb-intro-copy{
     position:relative;
+    top:var(--kb-intro-center-shift);
     z-index:2;
     box-sizing:border-box;
     display:flex;
@@ -303,8 +308,10 @@ const eur=new Intl.NumberFormat('es-ES');
     .kb-section.kb-intro{
       --kb-intro-visual-w:51vw;
       --kb-intro-overlap:clamp(15px,2.25vw,28px);
+      --kb-intro-bottom-extra:18px;
+      --kb-intro-center-shift:9px;
     }
-    .kb-intro-visual{top:-6px}
+    .kb-intro-visual{top:3px}
     .kb-intro-copy{padding:18px 22px}
     .kb-intro .kb-intro-copy h1{font-size:clamp(1.9rem,3.15vw,3rem)}
     .kb-intro .kb-intro-copy p{font-size:.9rem;line-height:1.48;margin-top:15px}
@@ -315,6 +322,9 @@ const eur=new Intl.NumberFormat('es-ES');
       --kb-intro-visual-w:100vw;
       --kb-intro-visual-h:56.25vw;
       --kb-intro-vertical-pad:30px;
+      /* En móvil la foto se sitúa encima del texto, no a su lado. */
+      --kb-intro-bottom-extra:0px;
+      --kb-intro-center-shift:0px;
       padding:var(--kb-intro-vertical-pad) 0 76px;
     }
     .kb-intro::before{

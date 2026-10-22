@@ -557,3 +557,33 @@
 @media(prefers-reduced-motion:reduce){
   .site-header.southbear-nav .sb-interior-nav{transition:none}
 }
+
+
+/* CORRECCIÓN: el desplegable pertenece al ancho completo de la barra.
+   Un transform en el <details> de 48px convertía al botón en contenedor
+   de posición para el menú y dejaba el contenido recortado / invisible. */
+.site-header.southbear-nav .sb-interior-nav .sb-nav-mobile{
+  transform:none;
+  transform-origin:center;
+}
+.site-header.southbear-nav .sb-interior-nav .sb-nav-mobile > .menu-toggle{
+  transform:scale(var(--sb-nav-icon-scale));
+  transform-origin:center;
+}
+.site-header.southbear-nav .sb-interior-nav.sb-menu-open .sb-nav-mobile,
+.site-header.southbear-nav .sb-interior-nav.sb-menu-open .sb-nav-mobile > .menu-toggle{
+  opacity:1;
+  transform:none;
+}
+.site-header.southbear-nav .sb-interior-nav.sb-menu-open .sb-nav-mobile[open] .menu-panel{
+  display:flex;
+  position:absolute;
+  opacity:1;
+  visibility:visible;
+  z-index:3;
+}
+@media(max-width:980px){
+  .site-header.southbear-nav .sb-interior-nav .sb-nav-mobile > .menu-toggle{
+    transform:none;
+  }
+}

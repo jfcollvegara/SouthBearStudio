@@ -597,3 +597,79 @@ body.landing-page,body.landing-page main{background:#FFFFFF;color:#101010}
   .kb-top-nav:not(.kb-top-nav--stuck) .kb-menu-toggle,
   .kb-top-nav:not(.kb-top-nav--stuck) .kb-nav-links{transition:none}
 }
+
+
+/* Desplegable de la landing: la cápsula NO se cierra sobre el logo.
+   Al abrir, se conserva la anchura y un radio fijo de las esquinas;
+   solo aumenta la altura hacia abajo desde la fila de marca y hamburguesa. */
+.kb-top-nav.kb-top-nav--stuck{
+  box-sizing:border-box;
+  height:58px;
+  min-height:58px;
+  align-items:flex-start;
+  overflow:hidden;
+  border-radius:29px;
+  transition:width .75s cubic-bezier(.22,1,.36,1),
+             padding .75s cubic-bezier(.22,1,.36,1),
+             height .55s cubic-bezier(.22,1,.36,1),
+             background .38s ease;
+}
+.kb-top-nav.kb-top-nav--stuck.kb-menu-open{
+  height:min(380px,calc(100dvh - 24px));
+  border-radius:29px;
+  background:rgba(255,255,255,.44);
+}
+/* La fila superior no se desplaza cuando se abre el panel. */
+.kb-top-nav.kb-top-nav--stuck .kb-compact-brand,
+.kb-top-nav.kb-top-nav--stuck .kb-menu-toggle{
+  top:29px;
+}
+.kb-top-nav.kb-top-nav--stuck.kb-menu-open .kb-nav-links{
+  top:76px;
+  right:clamp(18px,2.8vw,44px);
+  bottom:14px;
+  left:clamp(18px,2.8vw,44px);
+  width:auto;
+  min-width:0;
+  max-width:none;
+  margin:0;
+  padding:4px 0;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  overflow-y:auto;
+  border:0;
+  background:transparent;
+  -webkit-backdrop-filter:none;
+  backdrop-filter:none;
+  box-shadow:none;
+}
+.kb-top-nav.kb-top-nav--stuck.kb-menu-open .kb-nav-links a{
+  padding:11px 6px;
+  width:100%;
+  text-align:center;
+}
+@media(max-width:730px){
+  .kb-top-nav.kb-top-nav--stuck{
+    height:54px;
+    min-height:54px;
+    border-radius:27px;
+  }
+  .kb-top-nav.kb-top-nav--stuck.kb-menu-open{
+    height:min(350px,calc(100dvh - 24px));
+    border-radius:27px;
+  }
+  .kb-top-nav.kb-top-nav--stuck .kb-compact-brand,
+  .kb-top-nav.kb-top-nav--stuck .kb-menu-toggle{
+    top:27px;
+  }
+  .kb-top-nav.kb-top-nav--stuck.kb-menu-open .kb-nav-links{
+    top:68px;
+    left:16px;
+    right:16px;
+    bottom:10px;
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  .kb-top-nav.kb-top-nav--stuck{transition:none}
+}

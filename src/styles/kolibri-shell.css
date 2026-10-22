@@ -273,7 +273,7 @@
   transform-origin:center center;
   transform:translate3d(var(--sb-nav-offset),0,0) scale(var(--sb-nav-scale));
   opacity:var(--sb-nav-label-opacity);
-  filter:blur(var(--sb-nav-blur);
+  filter:blur(var(--sb-nav-blur));
   will-change:transform,opacity,filter;
 }
 .site-header.southbear-nav .sb-nav-desktop a,

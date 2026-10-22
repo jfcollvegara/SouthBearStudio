@@ -150,8 +150,13 @@ const isCurrentCategory = (url) => {
             // offsetLeft no depende del transform: no acumula errores al desplazarse.
             const from = links.offsetLeft + links.offsetWidth / 2;
             const to = menu.offsetLeft + menu.offsetWidth / 2;
-            bar.style.setProperty('--sb-nav-travel', Math.max(0, to - from) + 'px');
-            bar.style.setProperty('--sb-nav-progress', String(progress));
+            const travel = Math.max(0, to - from);
+            bar.style.setProperty('--sb-nav-offset', Math.round(travel * progress) + 'px');
+            bar.style.setProperty('--sb-nav-scale', String(1 - .84 * progress));
+            bar.style.setProperty('--sb-nav-label-opacity', String(Math.max(0, 1 - 1.25 * progress)));
+            bar.style.setProperty('--sb-nav-blur', (6 * progress).toFixed(2) + 'px');
+            bar.style.setProperty('--sb-nav-icon-opacity', String(Math.min(1, Math.max(0, (progress - .48) / .52))));
+            bar.style.setProperty('--sb-nav-icon-scale', String(.72 + .28 * progress));
 
             links.inert = compact || progress >= 0.9;
             menu.inert = !compact && progress < 0.9;

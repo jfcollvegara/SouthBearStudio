@@ -12,9 +12,7 @@ const headline = 'PRODUCCIÓN AUDIOVISUAL';
     <div class="sb-av-hero__inner">
       <h1 class="sb-av-hero__title" id="sb-av-title" aria-label={headline}>
         {Array.from(headline).map(letter=>(
-          <span class:list={['sb-av-hero__character', {'sb-av-hero__space':letter===' '}]} aria-hidden="true">
-            {letter===' ' ? '\u00A0' : letter}
-          </span>
+          <span class:list={['sb-av-hero__character', {'sb-av-hero__space':letter===' '}]} aria-hidden="true">{letter===' ' ? '\u00A0' : letter}</span>
         ))}
       </h1>
     </div>

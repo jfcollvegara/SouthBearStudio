@@ -721,15 +721,6 @@ body.landing-page,body.landing-page main{background:#FFFFFF;color:#101010}
 /* Sin flecha en la barra horizontal, pero conserva el indicador en hamburguesa. */
 .kb-top-nav:not(.kb-top-nav--stuck) .kb-services-nav-chevron{display:none}
 .kb-top-nav .kb-services-nav-item.is-open .kb-services-nav-chevron{transform:rotate(180deg)}
-/* Puente invisible que evita que el menú se cierre al bajar el puntero. */
-.kb-top-nav:not(.kb-top-nav--stuck) .kb-services-nav-item::after{
-  content:'';
-  position:absolute;
-  top:100%;
-  left:-6px;
-  right:-6px;
-  height:17px;
-}
 .kb-top-nav .kb-services-nav-panel{
   position:absolute;
   z-index:120;
@@ -848,35 +839,44 @@ body.landing-page,body.landing-page main{background:#FFFFFF;color:#101010}
 }
 
 
-/* La barra de la portada se expande ENTERA al abrir Servicios (sin
-   panel flotante, sin salientes y sin afectar al menú de scroll). */
-.kb-top-nav:not(.kb-top-nav--stuck).kb-services-expanded{
-  height:286px;
-  min-height:286px;
-  align-items:flex-start;
-  border-radius:28px;
+/* Landing, barra superior sin scroll: una sola cápsula que solo cambia
+   de altura. La fila de navegación y el radio de sus esquinas quedan
+   exactamente en el mismo lugar al abrir y al cerrar Servicios. */
+.kb-top-nav:not(.kb-top-nav--stuck){
+  box-sizing:border-box;
+  height:58px;
+  min-height:58px;
   overflow:hidden;
-  background:rgba(255,255,255,.44);
-  transition:height .48s cubic-bezier(.22,1,.36,1),border-radius .4s ease,background .38s ease;
+  border-radius:29px;
+  transition:height .45s cubic-bezier(.22,1,.36,1),background .35s ease;
 }
-.kb-top-nav:not(.kb-top-nav--stuck).kb-services-expanded .kb-nav-links{
+/* Mismo posicionamiento abierto y cerrado: sin reflujo, escala ni traslación
+   de las categorías al desplegar Servicios. */
+.kb-top-nav:not(.kb-top-nav--stuck) .kb-nav-links{
   position:absolute;
   top:8px;
   left:50%;
   right:auto;
   z-index:3;
-  height:41px;
+  width:max-content;
   max-width:calc(100% - 20px);
+  min-height:41px;
   margin:0;
   align-items:center;
   transform:translateX(-50%);
+  transform-origin:center center;
+  opacity:1;
+  visibility:visible;
+  transition:none;
 }
-.kb-top-nav:not(.kb-top-nav--stuck).kb-services-expanded .kb-services-nav-item{
+.kb-top-nav:not(.kb-top-nav--stuck) .kb-services-nav-item{
   position:static;
 }
-.kb-top-nav:not(.kb-top-nav--stuck).kb-services-expanded .kb-services-nav-item.is-open .kb-services-nav-panel{
+/* Las opciones siempre ocupan la misma posición. La animación pertenece al
+   contenedor, no a sus textos. El menú hamburguesa conserva su CSS previo. */
+.kb-top-nav:not(.kb-top-nav--stuck) .kb-services-nav-panel{
   position:absolute;
-  top:53px;
+  top:calc(100% + 4px);
   left:50%;
   right:auto;
   z-index:4;
@@ -894,30 +894,46 @@ body.landing-page,body.landing-page main{background:#FFFFFF;color:#101010}
   -webkit-backdrop-filter:none;
   backdrop-filter:none;
   box-shadow:none;
+  opacity:0;
+  visibility:hidden;
+  pointer-events:none;
+  transform:translateX(-50%);
+  transition:opacity .12s ease,visibility .12s ease;
+}
+.kb-top-nav:not(.kb-top-nav--stuck) .kb-services-nav-item.is-open .kb-services-nav-panel{
   opacity:1;
   visibility:visible;
   pointer-events:auto;
   transform:translateX(-50%);
-  transition:opacity .2s ease;
 }
-.kb-top-nav:not(.kb-top-nav--stuck).kb-services-expanded .kb-services-nav-panel a{
+.kb-top-nav:not(.kb-top-nav--stuck) .kb-services-nav-panel a{
   padding:9px 12px;
   text-align:center;
   background:transparent;
 }
+/* Altura: único cambio geométrico del desplegable. No se modifica el
+   min-height ni el border-radius al abrir para evitar saltos o recortes. */
+.kb-top-nav:not(.kb-top-nav--stuck).kb-services-expanded{
+  height:286px;
+  background:rgba(255,255,255,.44);
+}
 @media(max-width:730px){
-  .kb-top-nav:not(.kb-top-nav--stuck).kb-services-expanded{
-    height:277px;
-    min-height:277px;
-    border-radius:25px;
+  .kb-top-nav:not(.kb-top-nav--stuck){
+    height:54px;
+    min-height:54px;
+    border-radius:27px;
   }
-  .kb-top-nav:not(.kb-top-nav--stuck).kb-services-expanded .kb-nav-links{top:7px}
-  .kb-top-nav:not(.kb-top-nav--stuck).kb-services-expanded .kb-services-nav-panel a{
+  .kb-top-nav:not(.kb-top-nav--stuck) .kb-nav-links{
+    top:7px;
+    min-height:40px;
+  }
+  .kb-top-nav:not(.kb-top-nav--stuck).kb-services-expanded{height:277px}
+  .kb-top-nav:not(.kb-top-nav--stuck) .kb-services-nav-panel a{
     padding:8px 9px;
     font-size:.8rem;
   }
 }
 @media(prefers-reduced-motion:reduce){
-  .kb-top-nav:not(.kb-top-nav--stuck).kb-services-expanded,
-  .kb-top-nav:not(.kb-top-nav--stuck).kb-services-expanded .kb-services-nav-panel{transition:none}
+  .kb-top-nav:not(.kb-top-nav--stuck),
+  .kb-top-nav:not(.kb-top-nav--stuck) .kb-services-nav-panel{transition:none}
 }

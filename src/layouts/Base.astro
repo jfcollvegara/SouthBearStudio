@@ -6,6 +6,7 @@ import '@fontsource-variable/inter/wght-italic.css';
 import '../styles/global.css';
 import '../styles/kolibri-shell.css';
 import {site} from '../data/site.js';
+import {catalog} from '../data/catalog.js';
 const {
   title='Estudio creativo',
   description='SOUTHBEAR STUDIO, diseño web, identidad visual y soluciones digitales.',
@@ -76,17 +77,41 @@ const isCurrentCategory = (url) => {
             <img src={root + '/southbear-logo.svg'} alt="SOUTHBEAR STUDIO" width="218" height="40"/>
           </a>
           <nav class="sb-nav-desktop" aria-label="Navegación principal">
-            {nav.map(([url,label])=><a href={route(url)} aria-current={isCurrentCategory(url) ? 'page' : undefined}>{label}</a>)}
+            {nav.map(([url,label])=>url === '/servicios'
+              ? <button
+                  class="sb-services-trigger"
+                  type="button"
+                  aria-expanded="false"
+                  aria-controls="sb-services-dropdown"
+                  aria-haspopup="true"
+                >Servicios <span aria-hidden="true" class="sb-services-chevron">⌄</span></button>
+              : <a href={route(url)} aria-current={isCurrentCategory(url) ? 'page' : undefined}>{label}</a>
+            )}
           </nav>
           <details class="site-menu sb-nav-mobile">
             <summary class="menu-toggle" aria-label="Abrir menú de navegación">
               <span class="menu-toggle-lines" aria-hidden="true"><span></span><span></span></span>
             </summary>
             <nav class="menu-panel" aria-label="Menú de categorías">
-              {nav.map(([url,label])=><a href={route(url)} aria-current={isCurrentCategory(url) ? 'page' : undefined}>{label}</a>)}
+              {nav.map(([url,label])=>url === '/servicios'
+                ? <details class="sb-services-mobile-group">
+                    <summary>Servicios <span aria-hidden="true" class="sb-services-chevron">⌄</span></summary>
+                    <div class="sb-services-mobile-links">
+                      {catalog.map(service=>
+                        <a href={route('/servicios/'+service.slug)} aria-current={currentPath.startsWith(route('/servicios/'+service.slug).replace(/\/$/, '')) ? 'page' : undefined}>{service.title}</a>
+                      )}
+                    </div>
+                  </details>
+                : <a href={route(url)} aria-current={isCurrentCategory(url) ? 'page' : undefined}>{label}</a>
+              )}
             </nav>
           </details>
         </div>
+        <nav class="sb-services-dropdown" id="sb-services-dropdown" aria-label="Categorías de servicios" hidden>
+          {catalog.map(service=>
+            <a href={route('/servicios/'+service.slug)}>{service.title}<span aria-hidden="true">↗</span></a>
+          )}
+        </nav>
       </header>
     )}
     <main><slot/></main>
@@ -100,7 +125,7 @@ const isCurrentCategory = (url) => {
         </div>
         <nav class="sb-footer-nav" aria-label="Navegación del pie de página">
           <h3>Explora</h3>
-          <a href={route('/servicios')}>Servicios</a>
+          <a href={route('/')+'#servicios'}>Servicios</a>
           <a href={route('/proyectos')}>Proyectos</a>
           <a href={route('/nosotros')}>El estudio</a>
           <a href={route('/contacto')}>Contacto</a>
@@ -135,10 +160,33 @@ const isCurrentCategory = (url) => {
           const bar = header.querySelector('.sb-interior-nav');
           const links = header.querySelector('.sb-nav-desktop');
           const menu = header.querySelector('.sb-nav-mobile');
-          const toggle = menu.querySelector('summary');
+          const toggle = menu.querySelector(':scope > summary');
+          const servicesTrigger = header.querySelector('.sb-services-trigger');
+          const servicesDropdown = header.querySelector('.sb-services-dropdown');
+          const mobileServices = header.querySelector('.sb-services-mobile-group');
           const narrow = window.matchMedia('(max-width: 980px)');
           const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
           let scheduled = false;
+
+          function setServicesDropdown(open) {
+            const visible = Boolean(open && !narrow.matches && !links.inert);
+            header.classList.toggle('sb-services-open', visible);
+            servicesTrigger.setAttribute('aria-expanded', String(visible));
+            servicesDropdown.hidden = !visible;
+          }
+
+          servicesTrigger.addEventListener('pointerenter', () => setServicesDropdown(true));
+          servicesTrigger.addEventListener('focus', () => setServicesDropdown(true));
+          servicesTrigger.addEventListener('click', () =>
+            setServicesDropdown(servicesDropdown.hidden));
+          header.addEventListener('pointerleave', () => setServicesDropdown(false));
+          header.addEventListener('focusout', event => {
+            if (!header.contains(event.relatedTarget)) setServicesDropdown(false);
+          });
+
+          mobileServices.addEventListener('toggle', () => {
+            bar.classList.toggle('sb-services-mobile-expanded', mobileServices.open);
+          });
 
           function updateNav() {
             scheduled = false;
@@ -160,6 +208,7 @@ const isCurrentCategory = (url) => {
             bar.style.setProperty('--sb-nav-icon-scale', String(.72 + .28 * progress));
 
             links.inert = compact || progress >= 0.9;
+            if (links.inert) setServicesDropdown(false);
             menu.inert = !compact && progress < 0.9;
             if (!compact && progress < 0.9 && menu.open) menu.open = false;
           }
@@ -177,16 +226,32 @@ const isCurrentCategory = (url) => {
           menu.addEventListener('toggle', () => {
             // Se expande la propia barra, nunca se abre una tarjeta flotante.
             bar.classList.toggle('sb-menu-open', menu.open);
+            if (!menu.open) {
+              mobileServices.open = false;
+              bar.classList.remove('sb-services-mobile-expanded');
+            }
+            if (menu.open) setServicesDropdown(false);
             toggle.setAttribute('aria-label',
               menu.open ? 'Cerrar menú de navegación' : 'Abrir menú de navegación');
           });
           document.addEventListener('click', (event) => {
             if (menu.open && !menu.contains(event.target)) menu.open = false;
+            if (!header.contains(event.target)) setServicesDropdown(false);
           });
           document.addEventListener('keydown', (event) => {
-            if (event.key === 'Escape' && menu.open) {
-              menu.open = false;
-              toggle.focus();
+            if (event.key === 'Escape') {
+              if (!servicesDropdown.hidden) {
+                setServicesDropdown(false);
+                servicesTrigger.focus();
+              } else if (menu.open) {
+                if (mobileServices.open) {
+                  mobileServices.open = false;
+                  mobileServices.querySelector('summary').focus();
+                } else {
+                  menu.open = false;
+                  toggle.focus();
+                }
+              }
             }
           });
           updateNav();

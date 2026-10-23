@@ -680,8 +680,8 @@ body.landing-page,body.landing-page main{background:#FFFFFF;color:#101010}
 }
 
 
-/* La opción Servicios de la portada no lleva a una página: abre las
-   cinco categorías, también al usar la barra comprimida. */
+/* En la portada el propio Liquid Glass se prolonga SOLO bajo «Servicios».
+   Al comprimirse el menú se conserva el comportamiento de hamburguesa. */
 .kb-top-nav .kb-services-nav-item{
   position:relative;
   display:flex;
@@ -718,24 +718,37 @@ body.landing-page,body.landing-page main{background:#FFFFFF;color:#101010}
   line-height:1;
   transition:transform .22s ease;
 }
+/* Sin flecha en la barra horizontal, pero conserva el indicador en hamburguesa. */
+.kb-top-nav:not(.kb-top-nav--stuck) .kb-services-nav-chevron{display:none}
 .kb-top-nav .kb-services-nav-item.is-open .kb-services-nav-chevron{transform:rotate(180deg)}
+/* Puente invisible que evita que el menú se cierre al bajar el puntero. */
+.kb-top-nav:not(.kb-top-nav--stuck) .kb-services-nav-item::after{
+  content:'';
+  position:absolute;
+  top:100%;
+  left:-6px;
+  right:-6px;
+  height:17px;
+}
 .kb-top-nav .kb-services-nav-panel{
   position:absolute;
   z-index:120;
-  top:100%;
+  top:calc(100% + 10px);
   left:50%;
-  transform:translateX(-50%) translateY(-8px);
+  transform:translateX(-50%) translateY(-7px);
   display:flex;
   flex-direction:column;
   align-items:stretch;
-  min-width:min(400px,calc(100vw - 35px));
-  padding:13px 24px;
-  border:1px solid rgba(255,255,255,.77);
-  border-radius:23px;
-  background:rgba(255,255,255,.91);
-  -webkit-backdrop-filter:blur(27px) saturate(165%);
-  backdrop-filter:blur(27px) saturate(165%);
-  box-shadow:0 18px 52px rgba(0,0,0,.14),inset 0 1px 0 rgba(255,255,255,.8);
+  width:284px;
+  max-width:calc(100vw - 24px);
+  padding:14px 13px 10px;
+  border:1px solid rgba(255,255,255,.72);
+  border-top:0;
+  border-radius:0 0 22px 22px;
+  background:rgba(255,255,255,.27);
+  -webkit-backdrop-filter:blur(22px) saturate(170%);
+  backdrop-filter:blur(22px) saturate(170%);
+  box-shadow:none;
   opacity:0;
   visibility:hidden;
   pointer-events:none;
@@ -748,25 +761,24 @@ body.landing-page,body.landing-page main{background:#FFFFFF;color:#101010}
   transform:translateX(-50%) translateY(0);
 }
 .kb-top-nav .kb-services-nav-panel a{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:12px;
-  padding:14px 3px;
+  display:block;
+  padding:8px 11px;
   border:0;
-  border-bottom:1px solid rgba(0,0,0,.11);
+  border-radius:9px;
   color:#101010;
   background:transparent;
   font-family:var(--font-heading);
-  font-size:.95rem;
+  font-size:.84rem;
   font-weight:650;
-  line-height:1.4;
+  line-height:1.3;
   white-space:normal;
   text-align:left;
+  transition:color .18s ease,background .18s ease;
 }
-.kb-top-nav .kb-services-nav-panel a:last-child{border-bottom:0}
-.kb-top-nav .kb-services-nav-panel a span{flex:none;color:#658f37;font-size:1.1rem}
-.kb-top-nav .kb-services-nav-panel a:is(:hover,:focus-visible){color:#658f37}
+.kb-top-nav .kb-services-nav-panel a:is(:hover,:focus-visible){
+  color:#274512;
+  background:rgba(221,255,154,.26);
+}
 .kb-top-nav.kb-top-nav--stuck.kb-menu-open.kb-services-expanded{
   height:min(660px,calc(100dvh - 24px));
 }
@@ -816,11 +828,13 @@ body.landing-page,body.landing-page main{background:#FFFFFF;color:#101010}
   width:100%;
   padding:8px 6px;
   border:0;
-  color:#415b35;
+  color:#fbfbfb;
+  -webkit-text-stroke:.3px rgba(0,0,0,.82);
+  text-shadow:0 1px 3px rgba(0,0,0,.92),0 0 7px rgba(0,0,0,.76);
   font-size:clamp(.82rem,1.7vw,.96rem);
   text-align:center;
 }
-.kb-top-nav--stuck.kb-menu-open .kb-services-nav-panel a:is(:hover,:focus-visible){color:#658f37}
+.kb-top-nav--stuck.kb-menu-open .kb-services-nav-panel a:is(:hover,:focus-visible){color:#fff}
 @media(max-width:730px){
   .kb-top-nav .kb-services-nav-trigger{font-size:clamp(.65rem,2.6vw,.78rem)}
   .kb-top-nav.kb-top-nav--stuck.kb-menu-open.kb-services-expanded{height:min(640px,calc(100dvh - 24px))}

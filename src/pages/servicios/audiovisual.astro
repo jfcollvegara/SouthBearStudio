@@ -58,11 +58,13 @@ const audiovisualExtraSections = audiovisual.extraSections.map((section,groupInd
 const formatExtraPrice = extra => extra.price == null
   ? 'Bajo presupuesto'
   : new Intl.NumberFormat('es-ES',{maximumFractionDigits:2}).format(extra.price)+' €';
+// Los archivos originales mantienen su resolución y relación 16:9.
+ // CSS los encuadra en 2.35:1 con object-fit:cover (recorte vertical).
 const showcase = [
-  { shade:'#313131', grow:0.88 },
-  { shade:'#545454', grow:1.08 },
-  { shade:'#242424', grow:1.28 },
-  { shade:'#414141', grow:1 }
+  { src:'/videos/audiovisual/1.mp4', shade:'#313131', grow:0.88 },
+  { src:'/videos/audiovisual/2.mp4', shade:'#545454', grow:1.08 },
+  { src:'/videos/audiovisual/3.mp4', shade:'#242424', grow:1.28 },
+  { src:'/videos/audiovisual/4.mp4', shade:'#414141', grow:1 }
 ];
 ---
 <Base
@@ -87,7 +89,19 @@ const showcase = [
         <div
           class="sb-av-showcase__frame"
           style={`--frame-grow:${frame.grow};--frame-index:${index};--frame-color:${frame.shade}`}
-        ></div>
+        >
+          <video
+            class="sb-av-showcase__video"
+            autoplay
+            muted
+            loop
+            playsinline
+            preload="metadata"
+            aria-hidden="true"
+          >
+            <source src={frame.src} type="video/mp4" />
+          </video>
+        </div>
       ))}
     </div>
   </section>
@@ -177,6 +191,14 @@ const showcase = [
 <script>
   // Una sola ficha visible dentro de cada grupo; interacción accesible
   // por ratón, pantalla táctil y teclado, sin dependencias externas.
+  // Solo mostramos el vídeo cuando hay datos: si aún falta subir
+  // el archivo, el fotograma conserva su fondo gris provisional.
+  document.querySelectorAll<HTMLVideoElement>('.sb-av-showcase__video').forEach(video=>{
+    const reveal=()=>video.classList.add('is-ready');
+    if(video.readyState>=2) reveal();
+    else video.addEventListener('loadeddata',reveal,{once:true});
+  });
+
   document.querySelectorAll<HTMLElement>('[data-av-extra-group]').forEach(group => {
     const buttons = Array.from(group.querySelectorAll<HTMLButtonElement>('[data-av-extra-trigger]'));
     const panels = Array.from(group.querySelectorAll<HTMLElement>('[data-av-extra-panel]'));
@@ -366,6 +388,20 @@ const showcase = [
     animation:sb-av-frame-rise .85s cubic-bezier(.19,.83,.23,1) both;
     animation-delay:calc(1.35s + var(--frame-index) * .21s);
   }
+  /* El vídeo llena el recorte panorámico: sin estirar, con recorte
+     simétrico arriba/abajo, preservando la resolución del archivo. */
+  .sb-av-showcase__video{
+    display:block;
+    width:100%;
+    height:100%;
+    position:absolute;
+    inset:0;
+    object-fit:cover;
+    object-position:center center;
+    opacity:0;
+    transition:opacity .55s ease;
+  }
+  .sb-av-showcase__video.is-ready{opacity:1}
   @keyframes sb-av-frame-rise{
     0%{opacity:0;transform:translate3d(0,90px,0)}
     100%{opacity:1;transform:translate3d(0,0,0)}

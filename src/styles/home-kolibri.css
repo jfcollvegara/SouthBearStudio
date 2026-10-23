@@ -722,7 +722,7 @@ body.landing-page,body.landing-page main{background:#FFFFFF;color:#101010}
 .kb-top-nav .kb-services-nav-panel{
   position:absolute;
   z-index:120;
-  top:calc(100% + 10px);
+  top:100%;
   left:50%;
   transform:translateX(-50%) translateY(-8px);
   display:flex;

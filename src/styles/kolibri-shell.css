@@ -145,24 +145,27 @@
   .site-header.southbear-nav .menu-arrow{color:#101010}
 }
 
-/* Pie de la portada: bloque de contacto luminoso, enlace visible,
-   sin cambiar el contenido del resto de páginas. */
-.landing-page .sb-site-footer{background:var(--brand-gradient);border-top:1px solid #111;color:#101010}
-.landing-page .sb-footer-eyebrow{color:#101010}
-.landing-page .sb-footer-dot{background:#101010}
-.landing-page .sb-footer-top h2,.landing-page .sb-footer-main h3{color:#101010}
-.landing-page .sb-footer-cta{border:1px solid #101010;background:#101010;color:#fff}
-.landing-page .sb-footer-cta:hover{background:transparent;color:#101010}
-.landing-page .sb-footer-cta-icon{background:var(--brand-gradient);color:#101010}
-.landing-page .sb-footer-cta:hover .sb-footer-cta-icon{background:#101010;color:#ddff9a}
-.landing-page .sb-footer-main,.landing-page .sb-footer-bottom{border-color:#10101055}
-.landing-page .sb-footer-brand img{filter:none}
-.landing-page .sb-footer-brand p,.landing-page .sb-footer-location p,
-.landing-page .sb-footer-nav a,.landing-page .sb-footer-bottom,
-.landing-page .sb-footer-bottom a{color:#283321}
-.landing-page .sb-footer-nav a:hover,.landing-page .sb-footer-bottom a:hover{color:#101010;text-decoration:underline}
-.landing-page .sb-footer-bottom a span{color:#101010}
-.landing-page .sb-footer-brand p{margin-top:25px}
+/* SOUTHBEAR STUDIO — un solo footer en toda la web.
+   Misma superficie corporativa degradada, contrastes y distribución
+   que en la portada. El contenido se comparte desde Base.astro. */
+.sb-site-footer{
+  background:var(--brand-gradient);
+  color:#101010;
+  border-top:1px solid #111;
+}
+.sb-site-footer .sb-footer-main,
+.sb-site-footer .sb-footer-bottom{border-color:#10101055}
+.sb-site-footer .sb-footer-main h3{color:#101010}
+.sb-site-footer .sb-footer-brand img{filter:none}
+.sb-site-footer .sb-footer-brand p,
+.sb-site-footer .sb-footer-location p,
+.sb-site-footer .sb-footer-nav a,
+.sb-site-footer .sb-footer-bottom,
+.sb-site-footer .sb-footer-bottom a{color:#283321}
+.sb-site-footer .sb-footer-nav a:hover,
+.sb-site-footer .sb-footer-bottom a:hover{color:#101010;text-decoration:underline}
+.sb-site-footer .sb-footer-bottom a span{color:#101010}
+.sb-site-footer .sb-footer-brand p{margin-top:25px}
 
 
 /* SOUTHBEAR / barra interior liquid glass, sin óvalos en los enlaces. */

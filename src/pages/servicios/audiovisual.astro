@@ -205,22 +205,31 @@ const showcase = [
     }
     .sb-av-hero__space{flex-basis:9px;width:9px}
     .sb-av-hero__tagline{font-size:clamp(.94rem,3.7vw,1.22rem);margin-top:25px}
-    /* Móvil: composición compacta 2 × 2, sin scroll horizontal ni
-       huecos. Cada fotograma conserva el 16:9 y ocupa media pantalla. */
+    /* En móvil, cada fotograma ocupa casi la pantalla entera.
+       El siguiente asoma por la derecha para sugerir el gesto de deslizar. */
     .sb-av-showcase{
-      display:grid;
-      grid-template-columns:repeat(2,minmax(0,1fr));
-      align-items:stretch;
+      display:flex;
+      align-items:flex-end;
       gap:0;
       width:100%;
       margin-inline:0;
       padding:clamp(35px,7vh,68px) 0 0;
+      overflow-x:auto;
+      overflow-y:hidden;
+      scroll-snap-type:x mandatory;
+      -webkit-overflow-scrolling:touch;
+      overscroll-behavior-x:contain;
+      scrollbar-width:none;
+      touch-action:pan-x;
     }
+    .sb-av-showcase::-webkit-scrollbar{display:none}
     .sb-av-showcase__frame{
-      width:100%;
+      flex:0 0 92vw;
+      width:92vw;
       min-width:0;
-      flex:none;
       aspect-ratio:16 / 9;
+      scroll-snap-align:start;
+      scroll-snap-stop:always;
       border-radius:0;
     }
   }

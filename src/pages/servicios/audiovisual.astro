@@ -44,7 +44,8 @@ const headline = 'PRODUCCIÓN AUDIOVISUAL';
     width:100%;
     max-width:100%;
     margin:0;
-    padding:0;
+    /* Reserva sitio para el indicador REC dentro del margen de seguridad. */
+    padding:0 clamp(10px,1.65vw,29px) 0 0;
     white-space:nowrap;
     color:#FAFAFA;
     font-family:var(--font-heading);
@@ -69,6 +70,26 @@ const headline = 'PRODUCCIÓN AUDIOVISUAL';
     flex:0 0 clamp(9px,1.55vw,29px);
     width:clamp(9px,1.55vw,29px);
     font-size:0;
+  }
+  /* Punto rojo REC unido a la última letra, alineado con la base del texto. */
+  .sb-av-hero__character:last-child{position:relative}
+  .sb-av-hero__character:last-child::after{
+    content:'';
+    position:absolute;
+    left:calc(100% + .07em);
+    bottom:.1em;
+    width:.23em;
+    height:.23em;
+    border-radius:50%;
+    background:#FF3038;
+    box-shadow:0 0 .13em rgba(255,48,56,.45);
+    -webkit-text-fill-color:initial;
+    pointer-events:none;
+    animation:sb-av-rec-blink 1.3s step-end infinite;
+  }
+  @keyframes sb-av-rec-blink{
+    0%,54%{opacity:1}
+    55%,100%{opacity:.09}
   }
   /* Luz ambiental discreta que aparece y se asienta, sin barridos. */
   .sb-av-hero__inner::before{
@@ -109,5 +130,6 @@ const headline = 'PRODUCCIÓN AUDIOVISUAL';
   @media(prefers-reduced-motion:reduce){
     .sb-av-hero__title{opacity:1;transform:none;filter:none;animation:none}
     .sb-av-hero__inner::before{opacity:.25;animation:none}
+    .sb-av-hero__character:last-child::after{opacity:1;animation:none}
   }
 </style>

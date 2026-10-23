@@ -1,8 +1,25 @@
 ---
 import Base from '../../layouts/Base.astro';
+import { catalog } from '../../data/catalog.js';
 
 // Los cuatro paquetes, sus extras y condiciones siguen en src/data/catalog.js.
 const headline = 'PRODUCCIÓN AUDIOVISUAL';
+
+// Las condiciones, nombres, precios y características provienen del catálogo original.
+const audiovisual = catalog.find(service => service.slug === 'audiovisual');
+const packageDescriptions = {
+  'Reel Profesional': 'Piezas breves y dinámicas para comunicar con fuerza en redes sociales y captar todas las miradas.',
+  'Vídeo Promocional': 'Muestra lo mejor de tu producto o servicio con una historia que conecta con tu público.',
+  'Vídeo Corporativo': 'Presenta tu marca, sus valores y su esencia a través de una producción cuidada al detalle.',
+  'Vídeo Personalizado': 'Una producción singular, concebida desde cero para dar forma a aquello que tienes en mente.'
+};
+const audiovisualPackages = audiovisual.packages.map(pkg => ({
+  ...pkg,
+  summary: packageDescriptions[pkg.name] || pkg.features[0]
+}));
+const formatPackagePrice = pkg => pkg.price == null
+  ? 'Bajo presupuesto'
+  : 'Desde ' + new Intl.NumberFormat('es-ES', {maximumFractionDigits:2}).format(pkg.price) + ' €';
 const showcase = [
   { shade:'#313131', grow:0.88 },
   { shade:'#545454', grow:1.08 },
@@ -26,7 +43,7 @@ const showcase = [
     </div>
 
     <!-- Cuatro espacios 16:9 provisionales para los futuros vídeos.
-         Varía su anchura y, con ella, la altura manteniendo el formato. -->
+         En móvil forman una composición editorial, parcialmente recortada. -->
     <div class="sb-av-showcase" aria-hidden="true">
       {showcase.map((frame, index)=>(
         <div
@@ -34,6 +51,29 @@ const showcase = [
           style={`--frame-grow:${frame.grow};--frame-index:${index};--frame-color:${frame.shade}`}
         ></div>
       ))}
+    </div>
+  </section>
+
+  <!-- Paquetes audiovisuales recuperados del catálogo; vídeos pendientes. -->
+  <section class="sb-av-packages" aria-labelledby="sb-av-packages-heading">
+    <div class="sb-av-packages__inner">
+      <header class="sb-av-packages__header">
+        <h2 id="sb-av-packages-heading">Nuestros paquetes.</h2>
+      </header>
+      <div class="sb-av-packages__list">
+        {audiovisualPackages.map((pkg,index)=>(
+          <article class:list={['sb-av-package', {'sb-av-package--reverse':index % 2 === 1}]}>
+            <div class="sb-av-package__copy">
+              <h3>{pkg.name}</h3>
+              <p>{pkg.summary}</p>
+              <strong class="sb-av-package__price">{formatPackagePrice(pkg)}</strong>
+            </div>
+            <div class="sb-av-package__media" aria-label={'Espacio reservado para el vídeo de '+pkg.name}>
+              <div class="sb-av-package__video-slot" aria-hidden="true"></div>
+            </div>
+          </article>
+        ))}
+      </div>
     </div>
   </section>
 </Base>
@@ -205,33 +245,182 @@ const showcase = [
     }
     .sb-av-hero__space{flex-basis:9px;width:9px}
     .sb-av-hero__tagline{font-size:clamp(.94rem,3.7vw,1.22rem);margin-top:25px}
-    /* En móvil, cada fotograma ocupa casi la pantalla entera.
-       El siguiente asoma por la derecha para sugerir el gesto de deslizar. */
+    /* Móvil: cuatro fotogramas enormes en dos niveles. Cada uno mide
+       un 78% del ancho de pantalla: el conjunto desborda los laterales
+       y la segunda fila se desplaza para mostrar una composición distinta.
+       No hay desplazamiento horizontal ni espacio vacío bajo el título. */
+    .sb-av-hero{min-height:0}
     .sb-av-showcase{
-      display:flex;
-      align-items:flex-end;
+      display:grid;
+      grid-template-columns:repeat(2,78vw);
+      align-items:end;
       gap:0;
-      width:100%;
-      margin-inline:0;
-      padding:clamp(35px,7vh,68px) 0 0;
-      overflow-x:auto;
-      overflow-y:hidden;
-      scroll-snap-type:x mandatory;
-      -webkit-overflow-scrolling:touch;
-      overscroll-behavior-x:contain;
-      scrollbar-width:none;
-      touch-action:pan-x;
+      width:156vw;
+      margin:clamp(28px,5vh,48px) 0 0 -9vw;
+      padding:0;
+      overflow:visible;
     }
-    .sb-av-showcase::-webkit-scrollbar{display:none}
     .sb-av-showcase__frame{
-      flex:0 0 92vw;
-      width:92vw;
+      position:relative;
+      width:100%;
       min-width:0;
+      flex:none;
       aspect-ratio:16 / 9;
-      scroll-snap-align:start;
-      scroll-snap-stop:always;
       border-radius:0;
     }
+    .sb-av-showcase__frame:nth-child(n+3){left:-28vw}
+  }
+
+  /* Paquetes: cristal blanco traslúcido sobre negro, con reflejos suaves. */
+  .sb-av-packages{
+    position:relative;
+    width:100%;
+    padding:clamp(85px,9vw,145px) clamp(18px,4vw,92px) clamp(105px,12vw,180px);
+    background:#0A0A0A;
+    color:#fff;
+  }
+  .sb-av-packages__inner{width:100%;max-width:1510px;margin:0 auto}
+  .sb-av-packages__header{margin-bottom:clamp(32px,4vw,62px)}
+  .sb-av-packages__header h2{
+    margin:0;
+    color:#fff;
+    font-family:var(--font-heading);
+    font-size:clamp(2.05rem,4.2vw,4.3rem);
+    line-height:1.08;
+    font-weight:750;
+    letter-spacing:-.065em;
+  }
+  .sb-av-packages__list{
+    display:grid;
+    gap:clamp(23px,3vw,48px);
+  }
+  .sb-av-package{
+    position:relative;
+    isolation:isolate;
+    display:grid;
+    grid-template-columns:minmax(0,1fr) minmax(0,47%);
+    align-items:center;
+    gap:clamp(30px,4vw,80px);
+    min-width:0;
+    min-height:clamp(360px,32vw,480px);
+    padding:clamp(22px,3vw,46px);
+    overflow:hidden;
+    border:1px solid rgba(255,255,255,.25);
+    border-radius:clamp(24px,2.7vw,38px);
+    background:linear-gradient(135deg,
+      rgba(255,255,255,.16) 0%,
+      rgba(255,255,255,.085) 30%,
+      rgba(255,255,255,.065) 62%,
+      rgba(255,255,255,.13) 100%);
+    -webkit-backdrop-filter:blur(16px) saturate(140%);
+    backdrop-filter:blur(16px) saturate(140%);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,.51),
+      inset 0 -1px 0 rgba(255,255,255,.1),
+      0 22px 65px rgba(0,0,0,.22);
+    transition:border-color .32s ease,box-shadow .32s ease,transform .32s ease;
+  }
+  .sb-av-package::before{
+    content:'';
+    position:absolute;
+    inset:0;
+    z-index:0;
+    border-radius:inherit;
+    pointer-events:none;
+    background:
+      radial-gradient(ellipse at 8% 0%,rgba(255,255,255,.23),transparent 47%),
+      linear-gradient(135deg,rgba(255,255,255,.12),transparent 47%,rgba(255,255,255,.07));
+  }
+  .sb-av-package:hover{
+    transform:translateY(-3px);
+    border-color:rgba(255,255,255,.6);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,.68),
+      0 0 0 1px rgba(255,255,255,.11),
+      0 0 27px rgba(255,255,255,.15),
+      0 19px 60px rgba(0,0,0,.28);
+  }
+  .sb-av-package--reverse{
+    grid-template-columns:minmax(0,47%) minmax(0,1fr);
+  }
+  .sb-av-package--reverse .sb-av-package__media{order:-1}
+  .sb-av-package__copy{
+    position:relative;
+    z-index:1;
+    display:flex;
+    flex-direction:column;
+    align-items:flex-start;
+    justify-content:center;
+    min-width:0;
+    padding:clamp(5px,1.5vw,22px);
+    text-align:left;
+  }
+  .sb-av-package h3{
+    max-width:660px;
+    margin:0;
+    color:#fff;
+    font-family:var(--font-heading);
+    font-weight:750;
+    font-size:clamp(2.1rem,3.8vw,4.35rem);
+    line-height:1.05;
+    letter-spacing:-.065em;
+  }
+  .sb-av-package__copy p{
+    max-width:520px;
+    margin:clamp(18px,2.1vw,32px) 0 0;
+    font-size:clamp(.98rem,1.25vw,1.16rem);
+    line-height:1.68;
+    color:rgba(255,255,255,.82);
+  }
+  .sb-av-package__price{
+    display:inline-block;
+    margin-top:clamp(30px,3.5vw,52px);
+    color:#DDFF9A;
+    background-image:var(--brand-text-gradient,linear-gradient(108deg,#daff9c,#f4f5a4,#ccf294));
+    -webkit-background-clip:text;
+    background-clip:text;
+    -webkit-text-fill-color:transparent;
+    font-size:clamp(1.5rem,2.1vw,2.35rem);
+    font-weight:850;
+    line-height:1.2;
+    letter-spacing:-.045em;
+  }
+  .sb-av-package__media{position:relative;z-index:1;min-width:0;width:100%}
+  .sb-av-package__video-slot{
+    width:100%;
+    aspect-ratio:16 / 9;
+    border-radius:clamp(13px,1.25vw,20px);
+    background:#414141;
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,.18),
+      0 14px 38px rgba(0,0,0,.24);
+    overflow:hidden;
+  }
+  @media(max-width:960px){
+    .sb-av-package,.sb-av-package--reverse{
+      grid-template-columns:1fr;
+      min-height:0;
+      gap:clamp(24px,3vw,40px);
+    }
+    .sb-av-package--reverse .sb-av-package__media{order:initial}
+    .sb-av-package__copy{padding:8px}
+    .sb-av-package__media{width:100%}
+  }
+  @media(max-width:680px){
+    .sb-av-packages{padding:72px 15px 110px}
+    .sb-av-packages__header{margin-bottom:30px}
+    .sb-av-packages__header h2{font-size:clamp(2.05rem,7.5vw,3rem)}
+    .sb-av-packages__list{gap:20px}
+    .sb-av-package{
+      padding:23px;
+      border-radius:25px;
+      gap:24px;
+    }
+    .sb-av-package__copy{padding:0}
+    .sb-av-package h3{font-size:clamp(2.1rem,8vw,3.1rem)}
+    .sb-av-package__copy p{margin-top:18px;font-size:.97rem;line-height:1.58}
+    .sb-av-package__price{margin-top:28px;font-size:1.65rem}
+    .sb-av-package__video-slot{border-radius:14px}
   }
   @media(prefers-reduced-motion:reduce){
     .sb-av-hero__title{opacity:1;transform:none;filter:none;animation:none}
@@ -239,5 +428,7 @@ const showcase = [
     .sb-av-hero__rec{opacity:1;animation:none}
     .sb-av-hero__tagline{opacity:1;transform:none;animation:none}
     .sb-av-showcase__frame{opacity:1;transform:none;animation:none}
+    .sb-av-package{transition:none}
+    .sb-av-package:hover{transform:none}
   }
 </style>

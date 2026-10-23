@@ -8,13 +8,13 @@ import {
 } from '../../../data/audiovisual-packages.js';
 
 export function getStaticPaths() {
-  return audiovisualPackages.map((pkg, index) => ({
+  return audiovisualPackages.map(pkg => ({
     params: { slug: pkg.slug },
-    props: { pkg, packageIndex: index }
+    props: { pkg }
   }));
 }
 
-const { pkg, packageIndex } = Astro.props;
+const { pkg } = Astro.props;
 const quoteUrl = '/presupuesto/?servicio=audiovisual&paquete=' + encodeURIComponent(pkg.name);
 const conditionTitles = [
   'Idea y planificación',
@@ -48,7 +48,6 @@ const alternatives = audiovisualPackages.filter(item => item.slug !== pkg.slug);
 
       <section class="sb-avd-intro" aria-labelledby="sb-avd-title">
         <div class="sb-avd-intro__copy">
-          <p class="sb-avd-eyebrow"><span class="sb-avd-rec" aria-hidden="true"></span> SOUTHBEAR STUDIO / PRODUCCIÓN AUDIOVISUAL / 0{packageIndex+1}</p>
           <h1 id="sb-avd-title">{pkg.name}<span class="sb-avd-title-dot">.</span></h1>
           <p class="sb-avd-lead">{pkg.summary}</p>
           <div class="sb-avd-pricing">
@@ -63,13 +62,11 @@ const alternatives = audiovisualPackages.filter(item => item.slug !== pkg.slug);
               <source src={pkg.video} type="video/mp4" />
             </video>
           </div>
-          <div class="sb-avd-video-caption"><span>UN PROYECTO. UNA HISTORIA.</span><span>16:9 <span aria-hidden="true">↗</span></span></div>
         </div>
       </section>
 
       <section class="sb-avd-section" aria-labelledby="sb-avd-includes">
         <div class="sb-avd-section__heading">
-          <span class="sb-avd-index">01 / EL PAQUETE</span>
           <h2 id="sb-avd-includes">Todo lo que incluye<span class="sb-avd-title-dot">.</span></h2>
           <p>El alcance de este paquete, tal como está definido en nuestro catálogo.</p>
         </div>
@@ -86,7 +83,6 @@ const alternatives = audiovisualPackages.filter(item => item.slug !== pkg.slug);
 
       <section class="sb-avd-section" aria-labelledby="sb-avd-conditions">
         <div class="sb-avd-section__heading">
-          <span class="sb-avd-index">02 / INFORMACIÓN IMPORTANTE</span>
           <h2 id="sb-avd-conditions">Condiciones generales<span class="sb-avd-title-dot">.</span></h2>
           <p>Las condiciones de la producción, explicadas desde el principio.</p>
         </div>
@@ -103,7 +99,6 @@ const alternatives = audiovisualPackages.filter(item => item.slug !== pkg.slug);
 
       <section class="sb-avd-section" aria-labelledby="sb-avd-details">
         <div class="sb-avd-section__heading">
-          <span class="sb-avd-index">03 / ANTES DE CONTRATAR</span>
           <h2 id="sb-avd-details">Todo claro, desde el principio<span class="sb-avd-title-dot">.</span></h2>
         </div>
         <div class="sb-avd-details">
@@ -140,7 +135,6 @@ const alternatives = audiovisualPackages.filter(item => item.slug !== pkg.slug);
 
       <section class="sb-avd-final" aria-labelledby="sb-avd-final-title">
         <div>
-          <span class="sb-avd-index">HAGAMOS QUE SUCEDA</span>
           <h2 id="sb-avd-final-title">Tu proyecto empieza aquí<span class="sb-avd-title-dot">.</span></h2>
           <p>Cuéntanos qué tienes en mente y preparamos una propuesta adaptada a {pkg.name === 'Vídeo Personalizado' ? 'tu producción' : 'este paquete'}.</p>
         </div>
@@ -200,28 +194,8 @@ const alternatives = audiovisualPackages.filter(item => item.slug !== pkg.slug);
     padding:clamp(64px,7vw,118px) 0 clamp(65px,7vw,110px);
   }
   .sb-avd-intro__copy{min-width:0}
-  .sb-avd-eyebrow,.sb-avd-index{
-    display:inline-flex;
-    align-items:center;
-    gap:13px;
-    color:rgba(255,255,255,.6);
-    font-size:clamp(.69rem,.85vw,.82rem);
-    font-weight:700;
-    letter-spacing:.13em;
-    line-height:1.6;
-  }
-  .sb-avd-rec{
-    width:9px;
-    height:9px;
-    flex:none;
-    border-radius:50%;
-    background:#FF3038;
-    box-shadow:0 0 10px rgba(255,48,56,.35);
-    animation:sb-avd-blink 1.3s step-end infinite;
-  }
-  @keyframes sb-avd-blink{0%,54%{opacity:1}55%,100%{opacity:.09}}
   .sb-avd-intro h1{
-    margin:clamp(22px,3vw,40px) 0 0;
+    margin:0;
     max-width:780px;
     font-family:var(--font-heading);
     font-size:clamp(2.7rem,5.7vw,6.35rem);
@@ -309,19 +283,10 @@ const alternatives = audiovisualPackages.filter(item => item.slug !== pkg.slug);
     transition:opacity .5s ease;
   }
   .sb-avd-video.is-ready{opacity:1}
-  .sb-avd-video-caption{
-    display:flex;
-    justify-content:space-between;
-    margin-top:14px;
-    color:rgba(255,255,255,.48);
-    font-size:.69rem;
-    font-weight:700;
-    letter-spacing:.1em;
-  }
   .sb-avd-section{padding:clamp(55px,6vw,95px) 0}
   .sb-avd-section__heading{max-width:830px;margin-bottom:clamp(29px,4vw,55px)}
   .sb-avd-section__heading h2,.sb-avd-final h2{
-    margin:17px 0 0;
+    margin:0;
     font-family:var(--font-heading);
     font-weight:750;
     font-size:clamp(2rem,4.3vw,4.6rem);
@@ -520,7 +485,6 @@ const alternatives = audiovisualPackages.filter(item => item.slug !== pkg.slug);
     .sb-avd-alternative{min-height:134px}
   }
   @media(prefers-reduced-motion:reduce){
-    .sb-avd-rec{animation:none}
     .sb-avd-intro h1{animation:none}
     .sb-avd-cta,.sb-avd-alternative,.sb-avd-video{transition:none}
     .sb-avd-cta:hover,.sb-avd-alternative:hover{transform:none}

@@ -792,12 +792,6 @@ body.landing-page,body.landing-page main{background:#FFFFFF;color:#101010}
   align-items:center;
   width:100%;
 }
-/* El encabezado abierto usa el mismo contraste claro que sus enlaces. */
-.kb-top-nav--stuck.kb-menu-open .kb-services-nav-item.is-open .kb-services-nav-trigger{
-  color:#fbfbfb;
-  -webkit-text-stroke:.3px rgba(0,0,0,.82);
-  text-shadow:0 1px 3px rgba(0,0,0,.92),0 0 7px rgba(0,0,0,.76);
-}
 .kb-top-nav--stuck.kb-menu-open .kb-services-nav-trigger{
   width:100%;
   padding:11px 6px;
@@ -813,7 +807,8 @@ body.landing-page,body.landing-page main{background:#FFFFFF;color:#101010}
   padding:0;
   border:0;
   border-radius:0;
-  background:transparent;
+  background:rgba(255,255,255,.96);
+  border-radius:14px;
   backdrop-filter:none;
   -webkit-backdrop-filter:none;
   box-shadow:none;
@@ -834,13 +829,11 @@ body.landing-page,body.landing-page main{background:#FFFFFF;color:#101010}
   width:100%;
   padding:8px 6px;
   border:0;
-  color:#fbfbfb;
-  -webkit-text-stroke:.3px rgba(0,0,0,.82);
-  text-shadow:0 1px 3px rgba(0,0,0,.92),0 0 7px rgba(0,0,0,.76);
+  color:#415b35;
   font-size:clamp(.82rem,1.7vw,.96rem);
   text-align:center;
 }
-.kb-top-nav--stuck.kb-menu-open .kb-services-nav-panel a:is(:hover,:focus-visible){color:#fff}
+.kb-top-nav--stuck.kb-menu-open .kb-services-nav-panel a:is(:hover,:focus-visible){color:#658f37}
 @media(max-width:730px){
   .kb-top-nav .kb-services-nav-trigger{font-size:clamp(.65rem,2.6vw,.78rem)}
   .kb-top-nav.kb-top-nav--stuck.kb-menu-open.kb-services-expanded{height:min(640px,calc(100dvh - 24px))}
@@ -852,4 +845,79 @@ body.landing-page,body.landing-page main{background:#FFFFFF;color:#101010}
   .kb-top-nav .kb-services-nav-trigger,
   .kb-top-nav .kb-services-nav-chevron,
   .kb-top-nav .kb-services-nav-panel{transition:none}
+}
+
+
+/* La barra de la portada se expande ENTERA al abrir Servicios (sin
+   panel flotante, sin salientes y sin afectar al menú de scroll). */
+.kb-top-nav:not(.kb-top-nav--stuck).kb-services-expanded{
+  height:286px;
+  min-height:286px;
+  align-items:flex-start;
+  border-radius:28px;
+  overflow:hidden;
+  background:rgba(255,255,255,.44);
+  transition:height .48s cubic-bezier(.22,1,.36,1),border-radius .4s ease,background .38s ease;
+}
+.kb-top-nav:not(.kb-top-nav--stuck).kb-services-expanded .kb-nav-links{
+  position:absolute;
+  top:8px;
+  left:50%;
+  right:auto;
+  z-index:3;
+  height:41px;
+  max-width:calc(100% - 20px);
+  margin:0;
+  align-items:center;
+  transform:translateX(-50%);
+}
+.kb-top-nav:not(.kb-top-nav--stuck).kb-services-expanded .kb-services-nav-item{
+  position:static;
+}
+.kb-top-nav:not(.kb-top-nav--stuck).kb-services-expanded .kb-services-nav-item.is-open .kb-services-nav-panel{
+  position:absolute;
+  top:53px;
+  left:50%;
+  right:auto;
+  z-index:4;
+  display:flex;
+  flex-direction:column;
+  align-items:stretch;
+  gap:0;
+  width:min(100%,calc(100vw - 48px));
+  max-width:100%;
+  padding:10px 17px 17px;
+  margin:0;
+  border:0;
+  border-radius:0;
+  background:transparent;
+  -webkit-backdrop-filter:none;
+  backdrop-filter:none;
+  box-shadow:none;
+  opacity:1;
+  visibility:visible;
+  pointer-events:auto;
+  transform:translateX(-50%);
+  transition:opacity .2s ease;
+}
+.kb-top-nav:not(.kb-top-nav--stuck).kb-services-expanded .kb-services-nav-panel a{
+  padding:9px 12px;
+  text-align:center;
+  background:transparent;
+}
+@media(max-width:730px){
+  .kb-top-nav:not(.kb-top-nav--stuck).kb-services-expanded{
+    height:277px;
+    min-height:277px;
+    border-radius:25px;
+  }
+  .kb-top-nav:not(.kb-top-nav--stuck).kb-services-expanded .kb-nav-links{top:7px}
+  .kb-top-nav:not(.kb-top-nav--stuck).kb-services-expanded .kb-services-nav-panel a{
+    padding:8px 9px;
+    font-size:.8rem;
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  .kb-top-nav:not(.kb-top-nav--stuck).kb-services-expanded,
+  .kb-top-nav:not(.kb-top-nav--stuck).kb-services-expanded .kb-services-nav-panel{transition:none}
 }

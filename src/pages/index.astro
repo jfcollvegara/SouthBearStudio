@@ -914,14 +914,17 @@ const serviceDescriptions={
     const setServices = (open) => {
       const visible = Boolean(open);
       servicesGroup.classList.toggle('is-open', visible);
-      nav.classList.toggle('kb-services-expanded',visible && nav.classList.contains('kb-menu-open'));
+      nav.classList.toggle('kb-services-expanded',
+        visible && (!nav.classList.contains('kb-top-nav--stuck') || nav.classList.contains('kb-menu-open')));
       servicesButton.setAttribute('aria-expanded', String(visible));
     };
     servicesButton.addEventListener('click', () => setServices(!servicesGroup.classList.contains('is-open')));
     servicesGroup.addEventListener('pointerenter', () => {
       if (!nav.classList.contains('kb-top-nav--stuck')) setServices(true);
     });
-    servicesGroup.addEventListener('pointerleave', () => {
+    // El cursor puede recorrer toda la cápsula ya expandida sin cerrar
+    // el listado al dejar atrás el botón «Servicios».
+    nav.addEventListener('pointerleave', () => {
       if (!nav.classList.contains('kb-top-nav--stuck')) setServices(false);
     });
     servicesGroup.addEventListener('focusout', event => {

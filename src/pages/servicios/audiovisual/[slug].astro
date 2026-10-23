@@ -40,7 +40,7 @@ const alternatives = audiovisualPackages.filter(item => item.slug !== pkg.slug);
   title={pkg.name + ' — Producción audiovisual'}
   description={pkg.summary + ' Conoce qué incluye, condiciones y presupuesto del paquete ' + pkg.name + ' en SOUTHBEAR STUDIO.'}
 >
-  <main class="sb-avd-page">
+  <div class="sb-avd-page">
     <div class="sb-avd-container">
       <a class="sb-avd-back" href="/servicios/audiovisual/">
         <span aria-hidden="true">←</span> Volver a Producción Audiovisual
@@ -160,7 +160,7 @@ const alternatives = audiovisualPackages.filter(item => item.slug !== pkg.slug);
         </div>
       </section>
     </div>
-  </main>
+  </div>
 </Base>
 <script>
   document.querySelectorAll<HTMLVideoElement>('.sb-avd-video').forEach(video=>{

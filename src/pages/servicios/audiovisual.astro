@@ -4,10 +4,10 @@ import Base from '../../layouts/Base.astro';
 // Los cuatro paquetes, sus extras y condiciones siguen en src/data/catalog.js.
 const headline = 'PRODUCCIÓN AUDIOVISUAL';
 const showcase = [
-  { shade:'#313131', grow:0.88 },
-  { shade:'#545454', grow:1.08 },
-  { shade:'#242424', grow:1.28 },
-  { shade:'#414141', grow:1 }
+  { shade:'#313131', grow:0.88, mobileWidth:'52vw' },
+  { shade:'#545454', grow:1.08, mobileWidth:'63vw' },
+  { shade:'#242424', grow:1.28, mobileWidth:'70vw' },
+  { shade:'#414141', grow:1, mobileWidth:'57vw' }
 ];
 ---
 <Base
@@ -30,7 +30,7 @@ const showcase = [
       {showcase.map((frame, index)=>(
         <div
           class="sb-av-showcase__frame"
-          style={`--frame-grow:${frame.grow};--frame-index:${index};--frame-color:${frame.shade}`}
+          style={`--frame-grow:${frame.grow};--frame-mobile-width:${frame.mobileWidth};--frame-index:${index};--frame-color:${frame.shade}`}
         ></div>
       ))}
     </div>
@@ -259,7 +259,7 @@ const showcase = [
     }
     .sb-av-showcase::-webkit-scrollbar{display:none}
     .sb-av-showcase__frame{
-      flex:0 0 calc(55vw * var(--frame-grow));
+      flex:0 0 var(--frame-mobile-width);
       scroll-snap-align:start;
       border-radius:10px;
     }

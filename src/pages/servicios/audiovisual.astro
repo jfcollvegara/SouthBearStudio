@@ -4,10 +4,10 @@ import Base from '../../layouts/Base.astro';
 // Los cuatro paquetes, sus extras y condiciones siguen en src/data/catalog.js.
 const headline = 'PRODUCCIÓN AUDIOVISUAL';
 const showcase = [
-  { shade:'#313131', grow:0.88, mobileWidth:'52vw' },
-  { shade:'#545454', grow:1.08, mobileWidth:'63vw' },
-  { shade:'#242424', grow:1.28, mobileWidth:'70vw' },
-  { shade:'#414141', grow:1, mobileWidth:'57vw' }
+  { shade:'#313131', grow:0.88 },
+  { shade:'#545454', grow:1.08 },
+  { shade:'#242424', grow:1.28 },
+  { shade:'#414141', grow:1 }
 ];
 ---
 <Base
@@ -30,7 +30,7 @@ const showcase = [
       {showcase.map((frame, index)=>(
         <div
           class="sb-av-showcase__frame"
-          style={`--frame-grow:${frame.grow};--frame-mobile-width:${frame.mobileWidth};--frame-index:${index};--frame-color:${frame.shade}`}
+          style={`--frame-grow:${frame.grow};--frame-index:${index};--frame-color:${frame.shade}`}
         ></div>
       ))}
     </div>
@@ -45,7 +45,7 @@ const showcase = [
     overflow:hidden;
     display:flex;
     flex-direction:column;
-    padding:clamp(69px,7.7vw,148px) clamp(18px,4vw,92px) clamp(40px,5vw,76px);
+    padding:0;
     background:#0A0A0A;
     color:#fff;
   }
@@ -53,6 +53,7 @@ const showcase = [
     position:relative;
     width:100%;
     margin-inline:auto;
+    padding:clamp(69px,7.7vw,148px) clamp(18px,4vw,92px) 0;
   }
   /* Titular de una sola línea, distribuido entre márgenes de seguridad. */
   .sb-av-hero__title{
@@ -64,10 +65,9 @@ const showcase = [
     width:100%;
     max-width:100%;
     margin:0;
-    /* El barrido se recorta exactamente al área del título, sin alcanzar el subtítulo. */
-    overflow:hidden;
-    /* Reserva sitio para el indicador REC dentro del margen de seguridad. */
-    padding:0 clamp(10px,1.65vw,29px) 0 0;
+    /* Reservamos espacio suficiente para el punto REC y su halo, sin recortarlo. */
+    overflow:visible;
+    padding:0 .52em 0 0;
     white-space:nowrap;
     color:#FAFAFA;
     font-family:var(--font-heading);
@@ -80,46 +80,6 @@ const showcase = [
     transform:translate3d(0,14px,0) scale(.991);
     filter:blur(7px);
     animation:sb-av-hero-focus 1.4s cubic-bezier(.18,.8,.2,1) .12s both;
-  }
-  /* Rectángulo glossy con extremos degradados: cruza el titular,
-     y en hover usa modo diferencia para invertir el texto como un negativo. */
-  .sb-av-hero__title::before{
-    content:'';
-    position:absolute;
-    z-index:3;
-    pointer-events:none;
-    top:0;
-    bottom:0;
-    left:-36%;
-    width:33%;
-    border-radius:4px;
-    background:linear-gradient(90deg,
-      transparent 0%,
-      rgba(255,255,255,.13) 15%,
-      rgba(255,255,255,.93) 43%,
-      #fff 50%,
-      rgba(255,255,255,.8) 59%,
-      rgba(255,255,255,.13) 85%,
-      transparent 100%);
-    mix-blend-mode:difference;
-    opacity:0;
-    transform:translate3d(0,0,0);
-    animation:sb-av-gloss-intro 1.55s cubic-bezier(.45,0,.55,1) 1.5s 1 both;
-  }
-  .sb-av-hero__title:hover::before{
-    animation:sb-av-gloss-hover 1.55s cubic-bezier(.45,0,.55,1) 0s 1 both;
-  }
-  @keyframes sb-av-gloss-intro{
-    0%{opacity:0;transform:translate3d(0,0,0)}
-    12%{opacity:1}
-    84%{opacity:1}
-    100%{opacity:0;transform:translate3d(430%,0,0)}
-  }
-  @keyframes sb-av-gloss-hover{
-    0%{opacity:0;transform:translate3d(0,0,0)}
-    12%{opacity:1}
-    84%{opacity:1}
-    100%{opacity:0;transform:translate3d(430%,0,0)}
   }
   .sb-av-hero__character{
     display:block;
@@ -183,7 +143,8 @@ const showcase = [
     z-index:1;
     display:table;
     max-width:100%;
-    margin:clamp(25px,3.5vw,52px) 0 0;
+    margin:clamp(25px,3.5vw,52px) auto 0;
+    text-align:center;
     color:#ddff9a;
     font-family:var(--font-heading);
     font-size:clamp(1rem,2vw,1.8rem);
@@ -211,7 +172,7 @@ const showcase = [
     display:flex;
     align-items:flex-end;
     width:100%;
-    gap:clamp(10px,1.5vw,23px);
+    gap:0;
     margin-top:auto;
     padding-top:clamp(58px,9vw,155px);
   }
@@ -220,7 +181,7 @@ const showcase = [
     min-width:0;
     aspect-ratio:16 / 9;
     background:var(--frame-color);
-    border-radius:clamp(6px,.85vw,14px);
+    border-radius:0;
     overflow:hidden;
     opacity:0;
     transform:translate3d(0,90px,0);
@@ -232,14 +193,12 @@ const showcase = [
     100%{opacity:1;transform:translate3d(0,0,0)}
   }
   @media(min-width:681px) and (max-height:690px){
-    .sb-av-hero{padding-top:clamp(34px,5vh,72px);padding-bottom:26px}
+    .sb-av-hero__inner{padding-top:clamp(34px,5vh,72px)}
     .sb-av-showcase{padding-top:35px}
   }
   @media(max-width:680px){
-    .sb-av-hero{
-      min-height:calc(100svh - 72px);
-      padding:clamp(64px,15vw,105px) 15px 40px;
-    }
+    .sb-av-hero{min-height:calc(100svh - 72px)}
+    .sb-av-hero__inner{padding:clamp(64px,15vw,105px) 15px 0}
     .sb-av-hero__title{
       font-size:4.8vw;
       font-weight:750;
@@ -248,27 +207,17 @@ const showcase = [
     .sb-av-hero__space{flex-basis:9px;width:9px}
     .sb-av-hero__tagline{font-size:clamp(.94rem,3.7vw,1.22rem);margin-top:25px}
     .sb-av-showcase{
-      gap:11px;
-      overflow-x:auto;
-      overscroll-behavior-inline:contain;
-      scroll-snap-type:x proximity;
-      scrollbar-width:none;
-      margin-inline:-15px;
-      width:calc(100% + 30px);
-      padding:60px 15px 5px;
+      gap:0;
+      width:100%;
+      margin-inline:0;
+      padding:60px 0 0;
     }
-    .sb-av-showcase::-webkit-scrollbar{display:none}
-    .sb-av-showcase__frame{
-      flex:0 0 var(--frame-mobile-width);
-      scroll-snap-align:start;
-      border-radius:10px;
-    }
+    .sb-av-showcase__frame{flex:var(--frame-grow) 1 0%;border-radius:0}
   }
   @media(prefers-reduced-motion:reduce){
     .sb-av-hero__title{opacity:1;transform:none;filter:none;animation:none}
     .sb-av-hero__inner::before{opacity:.25;animation:none}
     .sb-av-hero__character:last-child::after{opacity:1;animation:none}
-    .sb-av-hero__title::before{display:none;animation:none}
     .sb-av-hero__tagline{opacity:1;transform:none;animation:none}
     .sb-av-showcase__frame{opacity:1;transform:none;animation:none}
   }

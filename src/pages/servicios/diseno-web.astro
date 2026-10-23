@@ -1,24 +1,167 @@
 ---
 import Base from '../../layouts/Base.astro';
 
-// Página despejada para diseñarla de nuevo.
-// Paquetes, productos, extras y condiciones siguen conservados en src/data/catalog.js.
+// Los paquetes y extras siguen intactos en src/data/catalog.js.
+// La pantalla del portátil es transparente y queda preparada para integrar
+// el vídeo que acompañará este diseño cuando esté disponible.
+const titleText = 'DISEÑO Y DESARROLLO WEB';
+const letters = [...titleText];
+const screenVideoSrc = '';
 ---
+
 <Base
   title="Diseño y desarrollo web"
-  description="Diseño y desarrollo web a medida de SOUTHBEAR STUDIO."
+  description="Creamos páginas web personalizadas, profesionales y diseñadas para que tu negocio destaque. SOUTHBEAR STUDIO."
 >
-  <div class="web-page-canvas" aria-hidden="true"></div>
+  <section class="sb-web-hero" aria-labelledby="sb-web-hero-title">
+    <header class="sb-web-heading">
+      <h1 id="sb-web-hero-title" aria-label="Diseño y desarrollo web">
+        {letters.map((letter, index) => (
+          <span class="sb-web-letter" aria-hidden="true" style={`--sb-letter-order:${index}`}>{letter === ' ' ? '\u00A0' : letter}</span>
+        ))}
+      </h1>
+    </header>
+
+    <div class="sb-web-visual" aria-label="Portátil de presentación de nuestros proyectos web">
+      <div class="sb-web-artboard">
+        <!-- La pantalla está alineada con el hueco transparente de la imagen.
+             Cuando recibamos el vídeo, bastará con asignarlo a screenVideoSrc. -->
+        <div class="sb-web-laptop-display" aria-hidden="true">
+          {screenVideoSrc && (
+            <video
+              class="sb-web-screen-video"
+              src={screenVideoSrc}
+              autoplay
+              muted
+              loop
+              playsinline
+              preload="metadata"
+              disablepictureinpicture
+            />
+          )}
+        </div>
+        <img
+          class="sb-web-laptop-image"
+          src="/southbear-diseno-web-portatil.webp"
+          width="2048"
+          height="1152"
+          alt="Portátil sobre fondo blanco y degradado gris, preparado para mostrar nuestros proyectos de diseño web"
+          loading="eager"
+          decoding="async"
+          fetchpriority="high"
+        />
+      </div>
+    </div>
+  </section>
 </Base>
 
 <style>
-  /* Lienzo vacío: solo permanecen la navegación y el pie comunes de Base. */
-  .web-page-canvas{
+  .sb-web-hero{
     width:100%;
-    min-height:65svh;
-    background:#FFFFFF;
+    overflow:hidden;
+    background:#fff;
+    color:#121712;
+  }
+  .sb-web-heading{
+    padding:clamp(48px,6.5vw,105px) 18px clamp(2px,.8vw,15px);
+    text-align:center;
+  }
+  .sb-web-heading h1{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:100%;
+    margin:0;
+    white-space:nowrap;
+    font-family:var(--font-heading);
+    font-size:clamp(1.05rem,2.35vw,2.15rem);
+    font-weight:750;
+    line-height:1.25;
+    letter-spacing:-.038em;
+  }
+  .sb-web-letter{
+    display:inline-block;
+    color:#121712;
+    background-image:linear-gradient(
+      112deg,
+      #121712 0%,#121712 35%,
+      #C7F18B 43%,#FFFFFF 48%,#D6FF99 53%,
+      #121712 64%,#121712 100%
+    );
+    background-size:270% 100%;
+    background-position:100% 0;
+    -webkit-background-clip:text;
+    background-clip:text;
+    -webkit-text-fill-color:transparent;
+    animation:
+      sb-web-letter-entrance .28s cubic-bezier(.14,.82,.28,1) both,
+      sb-web-letter-gloss .44s ease-out both;
+    animation-delay:
+      calc(.045s + var(--sb-letter-order) * .019s),
+      calc(.12s + var(--sb-letter-order) * .019s);
+  }
+  @keyframes sb-web-letter-entrance{
+    0%{opacity:0;transform:translateY(11px) scale(1.07);filter:blur(3px)}
+    65%{opacity:1;filter:drop-shadow(0 0 8px rgba(216,255,153,.9))}
+    100%{opacity:1;transform:translateY(0) scale(1);filter:none}
+  }
+  @keyframes sb-web-letter-gloss{
+    0%{background-position:100% 0}
+    100%{background-position:0% 0}
+  }
+
+  /* La imagen original tiene transparencia real sobre y dentro del portátil.
+     Fondo blanco arriba y el degradado inferior original intacto. */
+  .sb-web-visual{
+    width:100%;
+    overflow:hidden;
+    background:#fff;
+    animation:sb-web-visual-rise 1.02s .16s both;
+  }
+  .sb-web-artboard{
+    position:relative;
+    left:50%;
+    width:max(100%,820px);
+    aspect-ratio:2048 / 1152;
+    transform:translateX(-50%);
+  }
+  .sb-web-laptop-image{
+    position:relative;
+    z-index:2;
+    display:block;
+    width:100%;
+    height:auto;
+    pointer-events:none;
+  }
+  /* Coordenadas exactas de la pantalla transparente en la imagen 2048x1152. */
+  .sb-web-laptop-display{
+    position:absolute;
+    z-index:1;
+    left:36.72%;
+    top:19.98%;
+    width:26.62%;
+    height:29.68%;
+    overflow:hidden;
+    border-radius:2px;
+    background:#030303;
+  }
+  .sb-web-screen-video{
+    display:block;
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    object-position:center;
+  }
+  @keyframes sb-web-visual-rise{
+    from{opacity:0;transform:translateY(76px);filter:blur(10px)}
+    to{opacity:1;transform:translateY(0);filter:blur(0)}
   }
   @media(max-width:680px){
-    .web-page-canvas{min-height:55svh}
+    .sb-web-heading{padding:42px 9px 8px}
+    .sb-web-heading h1{font-size:clamp(.92rem,3.8vw,1.4rem);letter-spacing:-.055em}
+  }
+  @media(prefers-reduced-motion:reduce){
+    .sb-web-letter,.sb-web-visual{animation:none!important;opacity:1;transform:none;filter:none}
+    .sb-web-letter{background-position:0% 0}
   }
 </style>

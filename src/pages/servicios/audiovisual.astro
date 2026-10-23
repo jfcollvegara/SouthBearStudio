@@ -1,0 +1,28 @@
+---
+import Base from '../../layouts/Base.astro';
+
+// Inicio del rediseño de Producción Audiovisual.
+// No se han eliminado ni modificado paquetes, extras o condiciones:
+// toda la información permanece en src/data/catalog.js (slug: audiovisual).
+---
+<Base
+  title="Producción audiovisual"
+  description="Producción audiovisual a medida en SOUTHBEAR STUDIO. Vídeos, rodajes y edición profesional."
+>
+  <div class="sb-audiovisual-canvas" aria-hidden="true"></div>
+</Base>
+
+<style>
+  /* Lienzo totalmente negro entre la navegación global y el pie de página. */
+  .sb-audiovisual-canvas {
+    width: 100%;
+    min-height: calc(100svh - 83px);
+    background: #0A0A0A;
+  }
+
+  @media (max-width: 650px) {
+    .sb-audiovisual-canvas {
+      min-height: calc(100svh - 72px);
+    }
+  }
+</style>

@@ -2,9 +2,9 @@
 import Base from '../../layouts/Base.astro';
 import {catalog} from '../../data/catalog.js';
 export function getStaticPaths(){
-  // La página de Diseño web tiene una ruta propia para reconstruirla desde cero.
-  // Paquetes, productos y extras siguen intactos en src/data/catalog.js.
-  return catalog.filter(service=>service.slug!=='diseno-web').map(service=>({params:{slug:service.slug},props:{service}}));
+  // Diseño web y Producción audiovisual cuentan con rutas propias de diseño.
+  // Todos sus paquetes, extras, precios y condiciones permanecen guardados en src/data/catalog.js.
+  return catalog.filter(service=>!['diseno-web','audiovisual'].includes(service.slug)).map(service=>({params:{slug:service.slug},props:{service}}));
 }
 const {service}=Astro.props;
 const base=import.meta.env.BASE_URL.replace(/\/$/,'');

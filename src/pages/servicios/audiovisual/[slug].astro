@@ -48,7 +48,7 @@ const alternatives = audiovisualPackages.filter(item => item.slug !== pkg.slug);
 
       <section class="sb-avd-intro" aria-labelledby="sb-avd-title">
         <div class="sb-avd-intro__copy">
-          <h1 id="sb-avd-title">{pkg.name}<span class="sb-avd-title-dot">.</span></h1>
+          <h1 id="sb-avd-title">{pkg.name}</h1>
           <p class="sb-avd-lead">{pkg.summary}</p>
           <div class="sb-avd-pricing">
             <strong class="sb-avd-price">{formatAudiovisualPackagePrice(pkg)}</strong>
@@ -67,7 +67,7 @@ const alternatives = audiovisualPackages.filter(item => item.slug !== pkg.slug);
 
       <section class="sb-avd-section" aria-labelledby="sb-avd-includes">
         <div class="sb-avd-section__heading">
-          <h2 id="sb-avd-includes">Todo lo que incluye<span class="sb-avd-title-dot">.</span></h2>
+          <h2 id="sb-avd-includes">Todo lo que incluye</h2>
           <p>El alcance de este paquete, tal como está definido en nuestro catálogo.</p>
         </div>
         <div class="sb-avd-features">
@@ -83,7 +83,7 @@ const alternatives = audiovisualPackages.filter(item => item.slug !== pkg.slug);
 
       <section class="sb-avd-section" aria-labelledby="sb-avd-conditions">
         <div class="sb-avd-section__heading">
-          <h2 id="sb-avd-conditions">Condiciones generales<span class="sb-avd-title-dot">.</span></h2>
+          <h2 id="sb-avd-conditions">Condiciones generales</h2>
           <p>Las condiciones de la producción, explicadas desde el principio.</p>
         </div>
         <div class="sb-avd-conditions">
@@ -99,7 +99,7 @@ const alternatives = audiovisualPackages.filter(item => item.slug !== pkg.slug);
 
       <section class="sb-avd-section" aria-labelledby="sb-avd-details">
         <div class="sb-avd-section__heading">
-          <h2 id="sb-avd-details">Todo claro, desde el principio<span class="sb-avd-title-dot">.</span></h2>
+          <h2 id="sb-avd-details">Todo claro, desde el principio</h2>
         </div>
         <div class="sb-avd-details">
           <article class="sb-avd-glass sb-avd-info">
@@ -135,7 +135,7 @@ const alternatives = audiovisualPackages.filter(item => item.slug !== pkg.slug);
 
       <section class="sb-avd-final" aria-labelledby="sb-avd-final-title">
         <div>
-          <h2 id="sb-avd-final-title">Tu proyecto empieza aquí<span class="sb-avd-title-dot">.</span></h2>
+          <h2 id="sb-avd-final-title">Tu proyecto empieza aquí</h2>
           <p>Cuéntanos qué tienes en mente y preparamos una propuesta adaptada a {pkg.name === 'Vídeo Personalizado' ? 'tu producción' : 'este paquete'}.</p>
         </div>
         <a class="sb-avd-cta sb-avd-cta--final" href={quoteUrl}>Solicitar presupuesto <span aria-hidden="true">↗</span></a>
@@ -209,7 +209,6 @@ const alternatives = audiovisualPackages.filter(item => item.slug !== pkg.slug);
     from{opacity:0;transform:translate3d(0,18px,0)}
     to{opacity:1;transform:translate3d(0,0,0)}
   }
-  .sb-avd-title-dot{color:#DDFF9A}
   .sb-avd-lead{
     margin:clamp(19px,2.8vw,33px) 0 0;
     max-width:600px;

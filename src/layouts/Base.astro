@@ -83,7 +83,7 @@ const isCurrentCategory = (url) => {
                   type="button"
                   aria-expanded="false"
                   aria-controls="sb-services-dropdown"
-                >Servicios <span aria-hidden="true" class="sb-services-chevron">⌄</span></button>
+                >Servicios</button>
               : <a href={route(url)} aria-current={isCurrentCategory(url) ? 'page' : undefined}>{label}</a>
             )}
           </nav>
@@ -108,7 +108,7 @@ const isCurrentCategory = (url) => {
         </div>
         <nav class="sb-services-dropdown" id="sb-services-dropdown" aria-label="Categorías de servicios" hidden>
           {catalog.map(service=>
-            <a href={route('/servicios/'+service.slug)}>{service.title}<span aria-hidden="true">↗</span></a>
+            <a href={route('/servicios/'+service.slug)}>{service.title}</a>
           )}
         </nav>
       </header>
@@ -169,6 +169,16 @@ const isCurrentCategory = (url) => {
 
           function setServicesDropdown(open) {
             const visible = Boolean(open && !narrow.matches && !links.inert);
+            if (visible) {
+              // La extensión nace justo debajo de «Servicios», no en el
+              // centro de la pantalla ni como una tarjeta flotante.
+              const headerRect = header.getBoundingClientRect();
+              const triggerRect = servicesTrigger.getBoundingClientRect();
+              const center = triggerRect.left + triggerRect.width / 2 - headerRect.left;
+              const halfPanel = Math.min(142, (headerRect.width - 24) / 2);
+              const position = Math.max(halfPanel + 12, Math.min(headerRect.width - halfPanel - 12, center));
+              servicesDropdown.style.left = position + 'px';
+            }
             header.classList.toggle('sb-services-open', visible);
             servicesTrigger.setAttribute('aria-expanded', String(visible));
             servicesDropdown.hidden = !visible;
@@ -227,7 +237,10 @@ const isCurrentCategory = (url) => {
           }
 
           window.addEventListener('scroll', requestNavUpdate, {passive: true});
-          window.addEventListener('resize', requestNavUpdate, {passive: true});
+          window.addEventListener('resize', () => {
+            setServicesDropdown(false);
+            requestNavUpdate();
+          }, {passive: true});
           narrow.addEventListener('change', requestNavUpdate);
           reduced.addEventListener('change', requestNavUpdate);
           menu.addEventListener('toggle', () => {

@@ -36,3 +36,13 @@ export const webPackages = webService.packages.map(pkg => ({
 
 export const formatWebPackagePrice = pkg =>
   new Intl.NumberFormat('es-ES', { maximumFractionDigits:2 }).format(pkg.price)+' €';
+
+// Extras compartidos con el catálogo principal: el precio y las
+// condiciones se editan en un solo lugar, src/data/catalog.js.
+export const webExtras = webService.extras ?? [];
+
+export const formatWebExtraPrice = item => {
+  if (item.price === null) return item.priceLabel || 'Bajo presupuesto';
+  const amount = new Intl.NumberFormat('es-ES', { maximumFractionDigits:2 }).format(item.price);
+  return (item.from ? 'Desde ' : '') + amount + ' €' + (item.unit || '');
+};

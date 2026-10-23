@@ -1,6 +1,6 @@
 ---
 import Base from '../../layouts/Base.astro';
-import { webPackages, formatWebPackagePrice } from '../../data/web-packages.js';
+import { webPackages, webExtras, formatWebPackagePrice, formatWebExtraPrice } from '../../data/web-packages.js';
 
 // Los paquetes y extras siguen intactos en src/data/catalog.js.
 // La grabación se reproduce dentro del hueco transparente de la pantalla del portátil.
@@ -82,6 +82,19 @@ const screenVideoSrc = '/southbear-diseno-web-demo.mp4';
           </a>
         ))}
       </div>
+
+      <section class="sb-web-extras" aria-labelledby="sb-web-extras-title">
+        <h2 id="sb-web-extras-title">Nuestros extras.</h2>
+        <div class="sb-web-extras-grid">
+          {webExtras.map((extra)=>(
+            <article class="sb-web-extra">
+              <h3>{extra.name}</h3>
+              <p>{extra.detail}</p>
+              <strong class="sb-web-extra-price">{formatWebExtraPrice(extra)}</strong>
+            </article>
+          ))}
+        </div>
+      </section>
     </div>
   </section>
 </Base>
@@ -264,34 +277,28 @@ const screenVideoSrc = '/southbear-diseno-web-demo.mp4';
     border:1px solid rgba(255,255,255,.92);
     border-radius:clamp(22px,2.2vw,30px);
     background:rgba(255,255,255,.67);
-    -webkit-backdrop-filter:blur(25px) saturate(165%);
-    backdrop-filter:blur(25px) saturate(165%);
+    -webkit-backdrop-filter:blur(10px) saturate(135%);
+    backdrop-filter:blur(10px) saturate(135%);
     box-shadow:
       inset 0 2px 0 rgba(255,255,255,.98),
       inset 0 -1px 0 rgba(255,255,255,.67),
       0 18px 54px rgba(31,37,30,.095),
       0 2px 9px rgba(31,37,30,.045);
     color:#111;text-decoration:none;
-    transition:transform .32s ease,box-shadow .32s ease,border-color .32s ease;
+    transition:transform .4s cubic-bezier(.2,.85,.28,1),border-color .25s ease;
   }
-  /* Una única ondulación del reflejo verde al entrar el cursor:
-     la luz se desplaza como cristal líquido, se asienta y se detiene. */
+  /* Reflejo Liquid Glass ligero: degradados suaves sin blur animado ni
+     rotación de una superficie gigante, únicamente transform y opacity. */
   .sb-web-package::before{
     content:'';
     position:absolute;z-index:0;pointer-events:none;
-    top:-47%;left:-43%;width:186%;height:194%;
-    border-radius:50%;
-    background:conic-gradient(from 0deg,
-      rgba(221,255,154,.04) 0deg,
-      rgba(221,255,154,.08) 46deg,
-      rgba(124,204,62,.45) 102deg,
-      rgba(221,255,154,.12) 152deg,
-      rgba(221,255,154,.02) 205deg,
-      rgba(141,216,71,.28) 274deg,
-      rgba(221,255,154,.04) 360deg);
-    filter:blur(20px);
-    opacity:.72;
-    transform:rotate(0deg);
+    inset:-12%;
+    border-radius:inherit;
+    background:
+      radial-gradient(ellipse at 24% 18%,rgba(205,255,139,.64) 0%,rgba(221,255,154,.20) 33%,transparent 64%),
+      radial-gradient(ellipse at 81% 85%,rgba(113,190,50,.29) 0%,transparent 51%);
+    opacity:.44;
+    transform:translate3d(0,0,0);
     will-change:transform,opacity;
   }
   .sb-web-package::after{
@@ -309,25 +316,13 @@ const screenVideoSrc = '/southbear-diseno-web-demo.mp4';
   }
   .sb-web-package:hover::before,
   .sb-web-package:focus-visible::before{
-    animation:sb-web-glass-flow 1.05s cubic-bezier(.18,.76,.22,1) forwards;
+    animation:sb-web-glass-flow .9s cubic-bezier(.18,.78,.23,1) 1 both;
   }
   @keyframes sb-web-glass-flow{
-    0%{
-      transform:translate3d(-9px,10px,0) rotate(-12deg) scale(.96);
-      opacity:.72;
-    }
-    35%{
-      transform:translate3d(18px,-14px,0) rotate(42deg) scale(1.035);
-      opacity:1;
-    }
-    72%{
-      transform:translate3d(-5px,7px,0) rotate(88deg) scale(1.015);
-      opacity:.92;
-    }
-    100%{
-      transform:translate3d(0,0,0) rotate(103deg) scale(1);
-      opacity:.85;
-    }
+    0%{transform:translate3d(-9%,7%,0) scale(.95);opacity:.44}
+    48%{transform:translate3d(6%,-4%,0) scale(1.025);opacity:.94}
+    78%{transform:translate3d(3%,-2%,0) scale(1.008);opacity:.8}
+    100%{transform:translate3d(3%,-2%,0) scale(1);opacity:.77}
   }
   .sb-web-package:focus-visible{outline:3px solid #658c37;outline-offset:4px}
   .sb-web-package-media{
@@ -360,6 +355,69 @@ const screenVideoSrc = '/southbear-diseno-web-demo.mp4';
     -webkit-background-clip:text;background-clip:text;
     -webkit-text-fill-color:transparent;
   }
+  /* Extras: fichas horizontales compactas, cuatro columnas de escritorio. */
+  .sb-web-extras{
+    margin-top:clamp(85px,9vw,135px);
+  }
+  .sb-web-extras h2{
+    margin:0 0 clamp(23px,3vw,38px);
+    color:#111;
+    font-family:var(--font-heading);
+    font-size:clamp(1.6rem,2.65vw,2.8rem);
+    font-weight:750;
+    line-height:1.12;
+    letter-spacing:-.065em;
+  }
+  .sb-web-extras-grid{
+    display:grid;
+    grid-template-columns:repeat(4,minmax(0,1fr));
+    gap:clamp(12px,1.5vw,21px);
+    align-items:stretch;
+  }
+  .sb-web-extra{
+    display:flex;
+    flex-direction:column;
+    align-items:flex-start;
+    min-width:0;
+    min-height:164px;
+    padding:clamp(19px,1.65vw,26px);
+    border:1px solid rgba(255,255,255,.9);
+    border-radius:19px;
+    background:rgba(255,255,255,.73);
+    -webkit-backdrop-filter:blur(9px) saturate(125%);
+    backdrop-filter:blur(9px) saturate(125%);
+    box-shadow:inset 0 1px 0 #fff,0 8px 28px rgba(29,37,26,.055);
+  }
+  .sb-web-extra h3{
+    margin:0;
+    color:#111;
+    font-family:var(--font-heading);
+    font-size:clamp(1rem,1.2vw,1.17rem);
+    font-weight:800;
+    letter-spacing:-.035em;
+    line-height:1.24;
+  }
+  .sb-web-extra p{
+    margin:10px 0 19px;
+    color:#343a33;
+    font-size:.83rem;
+    line-height:1.47;
+  }
+  .sb-web-extra-price{
+    display:inline-block;
+    margin-top:auto;
+    color:#477425;
+    font-size:clamp(1.04rem,1.3vw,1.24rem);
+    font-weight:850;
+    letter-spacing:-.035em;
+    background:linear-gradient(108deg,#46731e 0%,#7caf3d 42%,#46731e 100%);
+    -webkit-background-clip:text;
+    background-clip:text;
+    -webkit-text-fill-color:transparent;
+  }
+  @media(max-width:1120px){
+    .sb-web-extras-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  }
   @media(max-width:940px){
     .sb-web-packages-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
     .sb-web-package{min-height:450px}
@@ -376,6 +434,9 @@ const screenVideoSrc = '/southbear-diseno-web-demo.mp4';
     .sb-web-package-media{min-height:190px}
     .sb-web-package h3{font-size:2.15rem}
     .sb-web-package-price{font-size:1.62rem}
+    .sb-web-extras{margin-top:80px}
+    .sb-web-extras-grid{grid-template-columns:1fr;gap:13px}
+    .sb-web-extra{min-height:135px;padding:22px;border-radius:17px}
   }
   @media(prefers-reduced-motion:reduce){
     .sb-web-package{transition:none}

@@ -2,11 +2,10 @@
 import Base from '../../layouts/Base.astro';
 
 // Los paquetes y extras siguen intactos en src/data/catalog.js.
-// La pantalla del portátil es transparente y queda preparada para integrar
-// el vídeo que acompañará este diseño cuando esté disponible.
+// La grabación se reproduce dentro del hueco transparente de la pantalla del portátil.
 const titleText = 'DISEÑO Y DESARROLLO WEB';
 const letters = [...titleText];
-const screenVideoSrc = '';
+const screenVideoSrc = '/southbear-diseno-web-demo.mp4';
 ---
 
 <Base
@@ -17,15 +16,14 @@ const screenVideoSrc = '';
     <header class="sb-web-heading">
       <h1 id="sb-web-hero-title" aria-label="Diseño y desarrollo web">
         {letters.map((letter, index) => (
-          <span class="sb-web-letter" aria-hidden="true" style={`--sb-letter-order:${index}`}>{letter === ' ' ? '\u00A0' : letter}</span>
+          <span class="sb-web-letter" aria-hidden="true" data-char={letter === ' ' ? '\u00A0' : letter} style={`--sb-letter-order:${index}`}>{letter === ' ' ? '\u00A0' : letter}</span>
         ))}
       </h1>
     </header>
 
     <div class="sb-web-visual" aria-label="Portátil de presentación de nuestros proyectos web">
       <div class="sb-web-artboard">
-        <!-- La pantalla está alineada con el hueco transparente de la imagen.
-             Cuando recibamos el vídeo, bastará con asignarlo a screenVideoSrc. -->
+        <!-- El vídeo se ve a través del recorte de la pantalla del portátil. -->
         <div class="sb-web-laptop-display" aria-hidden="true">
           {screenVideoSrc && (
             <video
@@ -79,35 +77,48 @@ const screenVideoSrc = '';
     line-height:1.25;
     letter-spacing:-.038em;
   }
+  /* Las letras base son negras de principio a fin; el brillo solo se
+     dibuja en una capa superpuesta que desaparece al terminar. */
   .sb-web-letter{
+    position:relative;
     display:inline-block;
-    color:#121712;
-    background-image:linear-gradient(
-      112deg,
-      #121712 0%,#121712 35%,
-      #C7F18B 43%,#FFFFFF 48%,#D6FF99 53%,
-      #121712 64%,#121712 100%
+    color:#000;
+    -webkit-text-fill-color:#000;
+    animation:sb-web-letter-entrance .28s cubic-bezier(.14,.82,.28,1) both;
+    animation-delay:calc(.045s + var(--sb-letter-order) * .019s);
+  }
+  .sb-web-letter::after{
+    content:attr(data-char);
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+    color:transparent;
+    -webkit-text-fill-color:transparent;
+    background-image:linear-gradient(112deg,
+      transparent 27%,
+      rgba(179,238,121,.45) 38%,
+      #fff 49%,
+      rgba(198,255,142,.82) 58%,
+      transparent 72%
     );
-    background-size:270% 100%;
+    background-size:290% 100%;
     background-position:100% 0;
     -webkit-background-clip:text;
     background-clip:text;
-    -webkit-text-fill-color:transparent;
-    animation:
-      sb-web-letter-entrance .28s cubic-bezier(.14,.82,.28,1) both,
-      sb-web-letter-gloss .44s ease-out both;
-    animation-delay:
-      calc(.045s + var(--sb-letter-order) * .019s),
-      calc(.12s + var(--sb-letter-order) * .019s);
+    opacity:0;
+    animation:sb-web-letter-gloss .39s ease-out both;
+    animation-delay:calc(.12s + var(--sb-letter-order) * .019s);
   }
   @keyframes sb-web-letter-entrance{
     0%{opacity:0;transform:translateY(11px) scale(1.07);filter:blur(3px)}
-    65%{opacity:1;filter:drop-shadow(0 0 8px rgba(216,255,153,.9))}
+    65%{opacity:1;filter:drop-shadow(0 0 8px rgba(216,255,153,.7))}
     100%{opacity:1;transform:translateY(0) scale(1);filter:none}
   }
   @keyframes sb-web-letter-gloss{
-    0%{background-position:100% 0}
-    100%{background-position:0% 0}
+    0%{opacity:0;background-position:100% 0}
+    25%{opacity:1}
+    72%{opacity:1}
+    100%{opacity:0;background-position:0% 0}
   }
 
   /* La imagen original tiene transparencia real sobre y dentro del portátil.
@@ -162,6 +173,6 @@ const screenVideoSrc = '';
   }
   @media(prefers-reduced-motion:reduce){
     .sb-web-letter,.sb-web-visual{animation:none!important;opacity:1;transform:none;filter:none}
-    .sb-web-letter{background-position:0% 0}
+    .sb-web-letter::after{animation:none;opacity:0}
   }
 </style>

@@ -1,0 +1,24 @@
+---
+import Base from '../../layouts/Base.astro';
+
+// Página despejada para diseñarla de nuevo.
+// Paquetes, productos, extras y condiciones siguen conservados en src/data/catalog.js.
+---
+<Base
+  title="Diseño y desarrollo web"
+  description="Diseño y desarrollo web a medida de SOUTHBEAR STUDIO."
+>
+  <div class="web-page-canvas" aria-hidden="true"></div>
+</Base>
+
+<style>
+  /* Lienzo vacío: solo permanecen la navegación y el pie comunes de Base. */
+  .web-page-canvas{
+    width:100%;
+    min-height:65svh;
+    background:#FFFFFF;
+  }
+  @media(max-width:680px){
+    .web-page-canvas{min-height:55svh}
+  }
+</style>

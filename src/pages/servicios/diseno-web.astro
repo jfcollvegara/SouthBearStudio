@@ -179,6 +179,8 @@ const screenVideoSrc = '/southbear-diseno-web-demo.mp4';
   .sb-web-visual{
     width:100%;
     overflow:hidden;
+    position:relative;
+    margin-top:clamp(-48px,-3.15vw,-18px);
     background:#fff;
     animation:sb-web-visual-rise 1.02s .16s both;
   }
@@ -227,9 +229,11 @@ const screenVideoSrc = '/southbear-diseno-web-demo.mp4';
      a los reflejos de cristal de las tarjetas. */
   .sb-web-packages{
     position:relative;
+    z-index:3;
     overflow:hidden;
-    background:linear-gradient(180deg,#e9e9e9 0%,#e5e5e5 34%,#ededed 76%,#f6f6f6 100%);
-    padding:clamp(67px,7vw,108px) clamp(20px,4vw,70px) clamp(95px,10vw,155px);
+    margin-top:clamp(-155px,-10vw,-65px);
+    background:linear-gradient(180deg,rgba(233,233,233,0) 0%,#e9e9e9 19%,#e5e5e5 43%,#ededed 78%,#f6f6f6 100%);
+    padding:clamp(44px,5vw,77px) clamp(20px,4vw,70px) clamp(95px,10vw,155px);
     color:#111;
   }
   .sb-web-packages-inner{max-width:1530px;margin:0 auto}
@@ -263,8 +267,8 @@ const screenVideoSrc = '/southbear-diseno-web-demo.mp4';
     color:#111;text-decoration:none;
     transition:transform .32s ease,box-shadow .32s ease,border-color .32s ease;
   }
-  /* El reflejo de luz verde recorre el cristal en círculos al
-     pasar el ratón, sin tintar la superficie gris del fondo. */
+  /* Una única ondulación del reflejo verde al entrar el cursor:
+     la luz se desplaza como cristal líquido, se asienta y se detiene. */
   .sb-web-package::before{
     content:'';
     position:absolute;z-index:0;pointer-events:none;
@@ -281,7 +285,7 @@ const screenVideoSrc = '/southbear-diseno-web-demo.mp4';
     filter:blur(20px);
     opacity:.72;
     transform:rotate(0deg);
-    will-change:transform;
+    will-change:transform,opacity;
   }
   .sb-web-package::after{
     content:'';position:absolute;inset:1px;z-index:0;pointer-events:none;
@@ -298,12 +302,25 @@ const screenVideoSrc = '/southbear-diseno-web-demo.mp4';
   }
   .sb-web-package:hover::before,
   .sb-web-package:focus-visible::before{
-    opacity:1;
-    animation:sb-web-glass-rotate 3.2s linear infinite;
+    animation:sb-web-glass-flow 1.05s cubic-bezier(.18,.76,.22,1) forwards;
   }
-  @keyframes sb-web-glass-rotate{
-    from{transform:rotate(0deg)}
-    to{transform:rotate(360deg)}
+  @keyframes sb-web-glass-flow{
+    0%{
+      transform:translate3d(-9px,10px,0) rotate(-12deg) scale(.96);
+      opacity:.72;
+    }
+    35%{
+      transform:translate3d(18px,-14px,0) rotate(42deg) scale(1.035);
+      opacity:1;
+    }
+    72%{
+      transform:translate3d(-5px,7px,0) rotate(88deg) scale(1.015);
+      opacity:.92;
+    }
+    100%{
+      transform:translate3d(0,0,0) rotate(103deg) scale(1);
+      opacity:.85;
+    }
   }
   .sb-web-package:focus-visible{outline:3px solid #658c37;outline-offset:4px}
   .sb-web-package-media{
@@ -342,7 +359,11 @@ const screenVideoSrc = '/southbear-diseno-web-demo.mp4';
     .sb-web-package h3{font-size:clamp(1.6rem,3vw,2.1rem)}
   }
   @media(max-width:680px){
-    .sb-web-packages{padding:65px 18px 95px}
+    .sb-web-packages{
+      margin-top:-56px;
+      padding:45px 18px 95px;
+      background:linear-gradient(180deg,rgba(233,233,233,0) 0%,#e9e9e9 13%,#e5e5e5 48%,#ededed 80%,#f6f6f6 100%);
+    }
     .sb-web-packages-grid{grid-template-columns:1fr;gap:17px}
     .sb-web-package{min-height:440px;padding:28px;border-radius:25px}
     .sb-web-package-media{min-height:190px}
@@ -352,7 +373,7 @@ const screenVideoSrc = '/southbear-diseno-web-demo.mp4';
   @media(prefers-reduced-motion:reduce){
     .sb-web-package{transition:none}
     .sb-web-package:hover::before,
-    .sb-web-package:focus-visible::before{animation:none}
+    .sb-web-package:focus-visible::before{animation:none;opacity:.85;transform:none}
   }
 
   @media(max-width:680px){

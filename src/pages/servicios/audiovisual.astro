@@ -205,13 +205,24 @@ const showcase = [
     }
     .sb-av-hero__space{flex-basis:9px;width:9px}
     .sb-av-hero__tagline{font-size:clamp(.94rem,3.7vw,1.22rem);margin-top:25px}
+    /* Móvil: composición compacta 2 × 2, sin scroll horizontal ni
+       huecos. Cada fotograma conserva el 16:9 y ocupa media pantalla. */
     .sb-av-showcase{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      align-items:stretch;
       gap:0;
       width:100%;
       margin-inline:0;
-      padding:60px 0 0;
+      padding:clamp(35px,7vh,68px) 0 0;
     }
-    .sb-av-showcase__frame{flex:var(--frame-grow) 1 0%;border-radius:0}
+    .sb-av-showcase__frame{
+      width:100%;
+      min-width:0;
+      flex:none;
+      aspect-ratio:16 / 9;
+      border-radius:0;
+    }
   }
   @media(prefers-reduced-motion:reduce){
     .sb-av-hero__title{opacity:1;transform:none;filter:none;animation:none}

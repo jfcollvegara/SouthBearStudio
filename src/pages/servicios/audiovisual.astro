@@ -13,9 +13,11 @@ const packageDescriptions = {
   'Vídeo Corporativo': 'Presenta tu marca, sus valores y su esencia a través de una producción cuidada al detalle.',
   'Vídeo Personalizado': 'Una producción singular, concebida desde cero para dar forma a aquello que tienes en mente.'
 };
-const audiovisualPackages = audiovisual.packages.map(pkg => ({
+const packageVideoFiles = ['5.mp4','6.mp4','7.mp4','8.mp4'];
+const audiovisualPackages = audiovisual.packages.map((pkg,index) => ({
   ...pkg,
-  summary: packageDescriptions[pkg.name] || pkg.features[0]
+  summary: packageDescriptions[pkg.name] || pkg.features[0],
+  video: '/videos/audiovisual/' + packageVideoFiles[index]
 }));
 const formatPackagePrice = pkg => pkg.price == null
   ? 'Bajo presupuesto'
@@ -120,8 +122,20 @@ const showcase = [
               <p>{pkg.summary}</p>
               <strong class="sb-av-package__price">{formatPackagePrice(pkg)}</strong>
             </div>
-            <div class="sb-av-package__media" aria-label={'Espacio reservado para el vídeo de '+pkg.name}>
-              <div class="sb-av-package__video-slot" aria-hidden="true"></div>
+            <div class="sb-av-package__media" aria-label={'Vídeo del paquete '+pkg.name}>
+              <div class="sb-av-package__video-slot">
+                <video
+                  class="sb-av-package__video"
+                  autoplay
+                  muted
+                  loop
+                  playsinline
+                  preload="metadata"
+                  aria-hidden="true"
+                >
+                  <source src={pkg.video} type="video/mp4" />
+                </video>
+              </div>
             </div>
           </article>
         ))}
@@ -193,7 +207,7 @@ const showcase = [
   // por ratón, pantalla táctil y teclado, sin dependencias externas.
   // Solo mostramos el vídeo cuando hay datos: si aún falta subir
   // el archivo, el fotograma conserva su fondo gris provisional.
-  document.querySelectorAll<HTMLVideoElement>('.sb-av-showcase__video').forEach(video=>{
+  document.querySelectorAll<HTMLVideoElement>('.sb-av-showcase__video, .sb-av-package__video').forEach(video=>{
     const reveal=()=>video.classList.add('is-ready');
     if(video.readyState>=2) reveal();
     else video.addEventListener('loadeddata',reveal,{once:true});
@@ -562,6 +576,7 @@ const showcase = [
   }
   .sb-av-package__media{position:relative;z-index:1;min-width:0;width:100%}
   .sb-av-package__video-slot{
+    position:relative;
     width:100%;
     aspect-ratio:16 / 9;
     border-radius:clamp(13px,1.25vw,20px);
@@ -571,6 +586,18 @@ const showcase = [
       0 14px 38px rgba(0,0,0,.24);
     overflow:hidden;
   }
+  .sb-av-package__video{
+    position:absolute;
+    inset:0;
+    display:block;
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    object-position:center;
+    opacity:0;
+    transition:opacity .45s ease;
+  }
+  .sb-av-package__video.is-ready{opacity:1}
   @media(max-width:960px){
     .sb-av-package,.sb-av-package--reverse{
       grid-template-columns:1fr;
@@ -837,6 +864,7 @@ const showcase = [
     .sb-av-showcase__frame{opacity:1;transform:none;animation:none}
     .sb-av-package{transition:none}
     .sb-av-package:hover{transform:none}
+    .sb-av-package__video{transition:none}
     .sb-av-extra-app__icon{transition:none}
     .sb-av-extra-app:hover .sb-av-extra-app__icon,
     .sb-av-extra-app.is-active .sb-av-extra-app__icon{transform:none}

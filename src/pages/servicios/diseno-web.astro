@@ -1,5 +1,6 @@
 ---
 import Base from '../../layouts/Base.astro';
+import { webPackages, formatWebPackagePrice } from '../../data/web-packages.js';
 
 // Los paquetes y extras siguen intactos en src/data/catalog.js.
 // La grabación se reproduce dentro del hueco transparente de la pantalla del portátil.
@@ -48,6 +49,38 @@ const screenVideoSrc = '/southbear-diseno-web-demo.mp4';
           decoding="async"
           fetchpriority="high"
         />
+      </div>
+    </div>
+  </section>
+
+  <!-- Paquetes web: tarjetas verticales de cristal blanco con un espacio
+       superior reservado para incorporar imágenes PNG más adelante. -->
+  <section class="sb-web-packages" aria-labelledby="sb-web-packages-title">
+    <div class="sb-web-packages-inner">
+      <header class="sb-web-packages-heading">
+        <span class="sb-web-packages-eyebrow">DISEÑO WEB A MEDIDA</span>
+        <h2 id="sb-web-packages-title">Nuestros paquetes.</h2>
+      </header>
+
+      <div class="sb-web-packages-grid">
+        {webPackages.map((pkg)=>(
+          <a
+            class="sb-web-package"
+            href={'/servicios/diseno-web/'+pkg.slug+'/'}
+            aria-label={pkg.name+', desde '+formatWebPackagePrice(pkg)+'. Ver el paquete'}
+          >
+            <div class="sb-web-package-media" aria-hidden="true">
+              {pkg.image && (
+                <img class="sb-web-package-image" src={pkg.image} alt="" loading="lazy" decoding="async" />
+              )}
+            </div>
+            <div class="sb-web-package-body">
+              <h3>{pkg.name}</h3>
+              <p>{pkg.summary}</p>
+              <span class="sb-web-package-price">Desde {formatWebPackagePrice(pkg)}</span>
+            </div>
+          </a>
+        ))}
       </div>
     </div>
   </section>
@@ -167,6 +200,114 @@ const screenVideoSrc = '/southbear-diseno-web-demo.mp4';
     from{opacity:0;transform:translateY(76px);filter:blur(10px)}
     to{opacity:1;transform:translateY(0);filter:blur(0)}
   }
+  /* Superficies Liquid Glass blancas, con sombras y reflejos verdes
+     contenidos en la tarjeta. Las imágenes futuras se definen en
+     src/data/web-packages.js, propiedad image de cada paquete. */
+  .sb-web-packages{
+    position:relative;
+    overflow:hidden;
+    background:
+      radial-gradient(ellipse at 11% 26%,rgba(221,255,154,.16),transparent 45%),
+      radial-gradient(ellipse at 91% 78%,rgba(221,255,154,.12),transparent 42%),
+      linear-gradient(180deg,#fff 0%,#fbfcfa 48%,#fff 100%);
+    padding:clamp(74px,8vw,124px) clamp(20px,5.5vw,100px) clamp(95px,10vw,155px);
+    color:#111;
+  }
+  .sb-web-packages-inner{max-width:1340px;margin:0 auto}
+  .sb-web-packages-heading{margin-bottom:clamp(32px,4vw,55px)}
+  .sb-web-packages-eyebrow{
+    color:#526a39;font-size:.7rem;font-weight:750;letter-spacing:.14em;
+  }
+  .sb-web-packages-heading h2{
+    color:#111;margin:13px 0 0;
+    font-family:var(--font-heading);font-size:clamp(2.4rem,4.4vw,4.9rem);
+    font-weight:750;line-height:1.06;letter-spacing:-.075em;
+  }
+  .sb-web-packages-grid{
+    display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:clamp(14px,1.9vw,26px);
+  }
+  .sb-web-package{
+    position:relative;isolation:isolate;overflow:hidden;
+    display:flex;flex-direction:column;justify-content:flex-end;
+    min-width:0;min-height:clamp(395px,36vw,548px);
+    padding:clamp(23px,2.7vw,38px);
+    border:1px solid rgba(255,255,255,.92);border-radius:clamp(22px,2.5vw,32px);
+    background:rgba(255,255,255,.57);
+    -webkit-backdrop-filter:blur(24px) saturate(160%);
+    backdrop-filter:blur(24px) saturate(160%);
+    box-shadow:
+      inset 0 2px 0 rgba(255,255,255,.95),
+      inset 0 -1px 0 rgba(255,255,255,.62),
+      0 18px 54px rgba(30,49,27,.095),
+      0 2px 9px rgba(30,49,27,.055);
+    color:#111;text-decoration:none;
+    transition:transform .32s ease,box-shadow .32s ease,border-color .32s ease;
+  }
+  .sb-web-package::before{
+    content:'';position:absolute;inset:0;z-index:-1;pointer-events:none;
+    background:
+      radial-gradient(ellipse at 4% 4%,rgba(255,255,255,.96),transparent 47%),
+      radial-gradient(ellipse at 100% 8%,rgba(221,255,154,.34),transparent 49%),
+      radial-gradient(ellipse at 12% 99%,rgba(221,255,154,.18),transparent 54%),
+      linear-gradient(145deg,rgba(255,255,255,.51),rgba(255,255,255,.08) 60%,rgba(255,255,255,.31));
+  }
+  .sb-web-package::after{
+    content:'';position:absolute;inset:1px;z-index:-1;pointer-events:none;
+    border:1px solid rgba(255,255,255,.54);border-radius:inherit;
+  }
+  .sb-web-package:hover,.sb-web-package:focus-visible{
+    transform:translateY(-7px);
+    border-color:rgba(209,245,156,.92);
+    box-shadow:inset 0 2px 0 #fff,0 27px 60px rgba(40,71,33,.14),0 7px 20px rgba(40,71,33,.08);
+  }
+  .sb-web-package:focus-visible{outline:3px solid #658c37;outline-offset:4px}
+  .sb-web-package-media{
+    position:relative;flex:1 1 auto;min-height:180px;
+    display:flex;align-items:center;justify-content:center;
+    padding:0 0 14px;
+  }
+  .sb-web-package-image{
+    display:block;width:100%;height:100%;max-height:290px;
+    object-fit:contain;object-position:center;
+    filter:drop-shadow(0 12px 20px rgba(20,38,23,.09));
+  }
+  .sb-web-package-body{position:relative;z-index:1;margin-top:auto;text-align:left}
+  .sb-web-package h3{
+    margin:0;color:#090b09;font-family:var(--font-heading);
+    font-size:clamp(1.65rem,2.3vw,2.55rem);line-height:1.08;
+    letter-spacing:-.065em;font-weight:800;
+  }
+  .sb-web-package p{
+    margin:14px 0 27px;max-width:340px;color:#222921;
+    font-size:clamp(.89rem,1.06vw,1.04rem);line-height:1.5;
+    font-weight:450;
+  }
+  .sb-web-package-price{
+    display:inline-block;
+    font-size:clamp(1.32rem,1.9vw,1.86rem);
+    font-weight:850;line-height:1.18;letter-spacing:-.045em;
+    color:#497723;
+    background:linear-gradient(108deg,#46731e 0%,#77a93c 40%,#426e1c 74%,#669e32 100%);
+    -webkit-background-clip:text;background-clip:text;
+    -webkit-text-fill-color:transparent;
+  }
+  @media(max-width:1050px){
+    .sb-web-packages-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .sb-web-package{min-height:460px}
+  }
+  @media(max-width:680px){
+    .sb-web-packages{padding:68px 18px 95px}
+    .sb-web-packages-grid{grid-template-columns:1fr;gap:17px}
+    .sb-web-package{min-height:440px;padding:28px;border-radius:25px}
+    .sb-web-package-media{min-height:190px}
+    .sb-web-package h3{font-size:2.15rem}
+    .sb-web-package-price{font-size:1.62rem}
+  }
+  @media(prefers-reduced-motion:reduce){
+    .sb-web-package{transition:none}
+  }
+
   @media(max-width:680px){
     .sb-web-heading{padding:42px 9px 8px}
     .sb-web-heading h1{font-size:clamp(.92rem,3.8vw,1.4rem);letter-spacing:-.055em}

@@ -83,7 +83,6 @@ const isCurrentCategory = (url) => {
                   type="button"
                   aria-expanded="false"
                   aria-controls="sb-services-dropdown"
-                  aria-haspopup="true"
                 >Servicios <span aria-hidden="true" class="sb-services-chevron">⌄</span></button>
               : <a href={route(url)} aria-current={isCurrentCategory(url) ? 'page' : undefined}>{label}</a>
             )}
@@ -176,9 +175,17 @@ const isCurrentCategory = (url) => {
           }
 
           servicesTrigger.addEventListener('pointerenter', () => setServicesDropdown(true));
-          servicesTrigger.addEventListener('focus', () => setServicesDropdown(true));
+          // El botón nunca navega: ratón abre al pasar por encima,
+          // Enter/Espacio alternan el panel y Flecha Abajo lleva al primer enlace.
           servicesTrigger.addEventListener('click', () =>
             setServicesDropdown(servicesDropdown.hidden));
+          servicesTrigger.addEventListener('keydown', event => {
+            if (event.key === 'ArrowDown') {
+              event.preventDefault();
+              setServicesDropdown(true);
+              servicesDropdown.querySelector('a')?.focus();
+            }
+          });
           header.addEventListener('pointerleave', () => setServicesDropdown(false));
           header.addEventListener('focusout', event => {
             if (!header.contains(event.relatedTarget)) setServicesDropdown(false);

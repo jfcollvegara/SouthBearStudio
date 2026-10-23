@@ -1,28 +1,171 @@
 ---
 import Base from '../../layouts/Base.astro';
 
-// Inicio del rediseño de Producción Audiovisual.
-// No se han eliminado ni modificado paquetes, extras o condiciones:
-// toda la información permanece en src/data/catalog.js (slug: audiovisual).
+// Los cuatro paquetes audiovisuales, sus extras y condiciones siguen
+// intactos en src/data/catalog.js (slug: audiovisual).
+const headline = ['PRODUCCIÓN', 'AUDIOVISUAL'];
 ---
 <Base
   title="Producción audiovisual"
   description="Producción audiovisual a medida en SOUTHBEAR STUDIO. Vídeos, rodajes y edición profesional."
 >
-  <div class="sb-audiovisual-canvas" aria-hidden="true"></div>
+  <section class="sb-av-hero" aria-labelledby="sb-av-title">
+    <div class="sb-av-hero__stage">
+      <h1 class="sb-av-hero__title" id="sb-av-title" aria-label="PRODUCCIÓN AUDIOVISUAL">
+        {headline.map((word, row)=>(
+          <span class="sb-av-hero__line" aria-hidden="true">
+            {[...word].map((letter, index)=>(
+              <span
+                class="sb-av-hero__letter"
+                style={`--av-row:${row};--av-order:${index}`}
+              >{letter}</span>
+            ))}
+          </span>
+        ))}
+      </h1>
+
+      <!-- Barrido de luz de una sola pasada, como una apertura de obturador. -->
+      <span class="sb-av-hero__sweep" aria-hidden="true"></span>
+      <div class="sb-av-hero__frame" aria-hidden="true">
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+  </section>
 </Base>
 
 <style>
-  /* Lienzo totalmente negro entre la navegación global y el pie de página. */
-  .sb-audiovisual-canvas {
-    width: 100%;
-    min-height: calc(100svh - 83px);
-    background: #0A0A0A;
+  .sb-av-hero{
+    position:relative;
+    isolation:isolate;
+    width:100%;
+    min-height:calc(100svh - 83px);
+    overflow:hidden;
+    padding:clamp(54px,6vw,108px) clamp(22px,4vw,92px) clamp(100px,12vw,180px);
+    background:#0A0A0A;
+    color:#fff;
   }
 
-  @media (max-width: 650px) {
-    .sb-audiovisual-canvas {
-      min-height: calc(100svh - 72px);
+  .sb-av-hero__stage{
+    position:relative;
+    width:100%;
+    margin-inline:auto;
+  }
+
+  /* Letras repartidas por todo el ancho: dos líneas cinematográficas
+     que llegan a ambos márgenes sin desbordarse en pantallas pequeñas. */
+  .sb-av-hero__title{
+    position:relative;
+    z-index:2;
+    display:flex;
+    flex-direction:column;
+    gap:clamp(23px,3.25vw,66px);
+    width:100%;
+    margin:0;
+    font-family:var(--font-heading);
+    font-weight:800;
+    font-size:clamp(2rem,10.3vw,27.5rem);
+    line-height:.92;
+    letter-spacing:-.055em;
+    text-transform:uppercase;
+    color:#fff;
+  }
+  .sb-av-hero__line{
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    width:100%;
+    overflow:hidden;
+    white-space:nowrap;
+  }
+  .sb-av-hero__letter{
+    position:relative;
+    display:inline-block;
+    flex:0 0 auto;
+    color:#fff;
+    opacity:0;
+    -webkit-text-fill-color:#fff;
+    transform:translate3d(0,65%,0) scaleY(1.07);
+    animation:sb-av-focus-reveal .78s cubic-bezier(.18,.8,.18,1) both;
+    animation-delay:calc(.08s + var(--av-row) * .2s + var(--av-order) * .038s);
+    will-change:transform,opacity;
+  }
+
+  /* La luz cruza una única vez las letras y desaparece. */
+  .sb-av-hero__sweep{
+    position:absolute;
+    z-index:3;
+    pointer-events:none;
+    left:-36%;
+    top:-5%;
+    width:29%;
+    height:105%;
+    opacity:0;
+    background:linear-gradient(90deg,
+      transparent,
+      rgba(255,255,255,.015) 25%,
+      rgba(255,255,255,.14) 48%,
+      rgba(255,255,255,.025) 59%,
+      transparent 100%
+    );
+    transform:skewX(-16deg) translate3d(0,0,0);
+    mix-blend-mode:screen;
+    animation:sb-av-shutter-light 1.3s .62s ease-out both;
+  }
+
+  /* Dos marcas de encuadre discretas, como en un visor de cámara. */
+  .sb-av-hero__frame{
+    position:relative;
+    display:flex;
+    justify-content:space-between;
+    margin-top:clamp(38px,5vw,88px);
+    opacity:0;
+    animation:sb-av-frame-in .6s 1.05s ease-out forwards;
+  }
+  .sb-av-hero__frame span{
+    display:block;
+    width:clamp(35px,6vw,100px);
+    height:1px;
+    background:rgba(255,255,255,.34);
+  }
+
+  @keyframes sb-av-focus-reveal{
+    0%{opacity:0;transform:translate3d(0,65%,0) scaleY(1.07)}
+    65%{opacity:1}
+    100%{opacity:1;transform:translate3d(0,0,0) scaleY(1)}
+  }
+  @keyframes sb-av-shutter-light{
+    0%{opacity:0;transform:skewX(-16deg) translate3d(0,0,0)}
+    20%{opacity:.9}
+    80%{opacity:.55}
+    100%{opacity:0;transform:skewX(-16deg) translate3d(490%,0,0)}
+  }
+  @keyframes sb-av-frame-in{
+    from{opacity:0;transform:translateY(10px)}
+    to{opacity:1;transform:translateY(0)}
+  }
+
+  @media(max-width:680px){
+    .sb-av-hero{
+      min-height:calc(100svh - 72px);
+      padding:clamp(54px,14vw,80px) 17px 100px;
     }
+    .sb-av-hero__title{
+      font-size:10.15vw;
+      gap:clamp(21px,5vw,33px);
+      letter-spacing:-.055em;
+    }
+    .sb-av-hero__frame{margin-top:44px}
+  }
+
+  @media(prefers-reduced-motion:reduce){
+    .sb-av-hero__letter{
+      opacity:1;
+      transform:none;
+      animation:none;
+      will-change:auto;
+    }
+    .sb-av-hero__sweep{display:none}
+    .sb-av-hero__frame{opacity:1;animation:none}
   }
 </style>

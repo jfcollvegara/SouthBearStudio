@@ -20,6 +20,7 @@ const screenVideoSrc = '/southbear-diseno-web-demo.mp4';
           <span class="sb-web-letter" aria-hidden="true" data-char={letter === ' ' ? '\u00A0' : letter} style={`--sb-letter-order:${index}`}>{letter === ' ' ? '\u00A0' : letter}</span>
         ))}
       </h1>
+      <p class="sb-web-tagline">Tú lo imaginas, nosotros lo creamos.</p>
     </header>
 
     <div class="sb-web-visual" aria-label="Portátil de presentación de nuestros proyectos web">
@@ -58,7 +59,6 @@ const screenVideoSrc = '/southbear-diseno-web-demo.mp4';
   <section class="sb-web-packages" aria-labelledby="sb-web-packages-title">
     <div class="sb-web-packages-inner">
       <header class="sb-web-packages-heading">
-        <span class="sb-web-packages-eyebrow">DISEÑO WEB A MEDIDA</span>
         <h2 id="sb-web-packages-title">Nuestros paquetes.</h2>
       </header>
 
@@ -105,10 +105,30 @@ const screenVideoSrc = '/southbear-diseno-web-demo.mp4';
     margin:0;
     white-space:nowrap;
     font-family:var(--font-heading);
-    font-size:clamp(1.05rem,2.35vw,2.15rem);
+    font-size:clamp(1.45rem,3.1vw,2.85rem);
     font-weight:750;
     line-height:1.25;
     letter-spacing:-.038em;
+  }
+  .sb-web-tagline{
+    display:table;
+    max-width:calc(100% - 12px);
+    margin:clamp(10px,1.5vw,18px) auto 0;
+    font-family:var(--font-heading);
+    font-size:clamp(.98rem,1.8vw,1.42rem);
+    line-height:1.3;
+    font-weight:750;
+    letter-spacing:-.038em;
+    color:#477625;
+    background-image:linear-gradient(110deg,#386a20 0%,#78ad39 36%,#62992d 64%,#346620 100%);
+    -webkit-background-clip:text;
+    background-clip:text;
+    -webkit-text-fill-color:transparent;
+    animation:sb-web-tagline-in .5s .75s both;
+  }
+  @keyframes sb-web-tagline-in{
+    from{opacity:0;transform:translateY(9px);filter:blur(3px)}
+    to{opacity:1;transform:translateY(0);filter:blur(0)}
   }
   /* Las letras base son negras de principio a fin; el brillo solo se
      dibuja en una capa superpuesta que desaparece al terminar. */
@@ -201,70 +221,93 @@ const screenVideoSrc = '/southbear-diseno-web-demo.mp4';
     from{opacity:0;transform:translateY(76px);filter:blur(10px)}
     to{opacity:1;transform:translateY(0);filter:blur(0)}
   }
-  /* Superficies Liquid Glass blancas, con sombras y reflejos verdes
-     contenidos en la tarjeta. Las imágenes futuras se definen en
-     src/data/web-packages.js, propiedad image de cada paquete. */
+  /* Continuidad con el gris inferior de la imagen: su último píxel
+     está en torno a #e9e9e9, por eso la transición entre ambas
+     secciones arranca exactamente en ese tono. El verde se reserva
+     a los reflejos de cristal de las tarjetas. */
   .sb-web-packages{
     position:relative;
     overflow:hidden;
-    background:
-      radial-gradient(ellipse at 11% 26%,rgba(221,255,154,.16),transparent 45%),
-      radial-gradient(ellipse at 91% 78%,rgba(221,255,154,.12),transparent 42%),
-      linear-gradient(180deg,#fff 0%,#fbfcfa 48%,#fff 100%);
-    padding:clamp(74px,8vw,124px) clamp(20px,5.5vw,100px) clamp(95px,10vw,155px);
+    background:linear-gradient(180deg,#e9e9e9 0%,#e5e5e5 34%,#ededed 76%,#f6f6f6 100%);
+    padding:clamp(67px,7vw,108px) clamp(20px,4vw,70px) clamp(95px,10vw,155px);
     color:#111;
   }
-  .sb-web-packages-inner{max-width:1340px;margin:0 auto}
-  .sb-web-packages-heading{margin-bottom:clamp(32px,4vw,55px)}
-  .sb-web-packages-eyebrow{
-    color:#526a39;font-size:.7rem;font-weight:750;letter-spacing:.14em;
-  }
+  .sb-web-packages-inner{max-width:1530px;margin:0 auto}
+  .sb-web-packages-heading{margin-bottom:clamp(28px,3.5vw,47px)}
   .sb-web-packages-heading h2{
-    color:#111;margin:13px 0 0;
-    font-family:var(--font-heading);font-size:clamp(2.4rem,4.4vw,4.9rem);
-    font-weight:750;line-height:1.06;letter-spacing:-.075em;
+    color:#111;margin:0;
+    font-family:var(--font-heading);
+    font-size:clamp(1.6rem,2.65vw,2.8rem);
+    font-weight:750;line-height:1.12;letter-spacing:-.065em;
   }
   .sb-web-packages-grid{
-    display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
-    gap:clamp(14px,1.9vw,26px);
+    display:grid;
+    grid-template-columns:repeat(4,minmax(0,1fr));
+    gap:clamp(12px,1.6vw,24px);
   }
   .sb-web-package{
     position:relative;isolation:isolate;overflow:hidden;
     display:flex;flex-direction:column;justify-content:flex-end;
-    min-width:0;min-height:clamp(395px,36vw,548px);
-    padding:clamp(23px,2.7vw,38px);
-    border:1px solid rgba(255,255,255,.92);border-radius:clamp(22px,2.5vw,32px);
-    background:rgba(255,255,255,.57);
-    -webkit-backdrop-filter:blur(24px) saturate(160%);
-    backdrop-filter:blur(24px) saturate(160%);
+    min-width:0;min-height:clamp(435px,37vw,535px);
+    padding:clamp(20px,2.05vw,32px);
+    border:1px solid rgba(255,255,255,.92);
+    border-radius:clamp(22px,2.2vw,30px);
+    background:rgba(255,255,255,.67);
+    -webkit-backdrop-filter:blur(25px) saturate(165%);
+    backdrop-filter:blur(25px) saturate(165%);
     box-shadow:
-      inset 0 2px 0 rgba(255,255,255,.95),
-      inset 0 -1px 0 rgba(255,255,255,.62),
-      0 18px 54px rgba(30,49,27,.095),
-      0 2px 9px rgba(30,49,27,.055);
+      inset 0 2px 0 rgba(255,255,255,.98),
+      inset 0 -1px 0 rgba(255,255,255,.67),
+      0 18px 54px rgba(31,37,30,.095),
+      0 2px 9px rgba(31,37,30,.045);
     color:#111;text-decoration:none;
     transition:transform .32s ease,box-shadow .32s ease,border-color .32s ease;
   }
+  /* El reflejo de luz verde recorre el cristal en círculos al
+     pasar el ratón, sin tintar la superficie gris del fondo. */
   .sb-web-package::before{
-    content:'';position:absolute;inset:0;z-index:-1;pointer-events:none;
-    background:
-      radial-gradient(ellipse at 4% 4%,rgba(255,255,255,.96),transparent 47%),
-      radial-gradient(ellipse at 100% 8%,rgba(221,255,154,.34),transparent 49%),
-      radial-gradient(ellipse at 12% 99%,rgba(221,255,154,.18),transparent 54%),
-      linear-gradient(145deg,rgba(255,255,255,.51),rgba(255,255,255,.08) 60%,rgba(255,255,255,.31));
+    content:'';
+    position:absolute;z-index:0;pointer-events:none;
+    top:-47%;left:-43%;width:186%;height:194%;
+    border-radius:50%;
+    background:conic-gradient(from 0deg,
+      rgba(221,255,154,.04) 0deg,
+      rgba(221,255,154,.08) 46deg,
+      rgba(124,204,62,.45) 102deg,
+      rgba(221,255,154,.12) 152deg,
+      rgba(221,255,154,.02) 205deg,
+      rgba(141,216,71,.28) 274deg,
+      rgba(221,255,154,.04) 360deg);
+    filter:blur(20px);
+    opacity:.72;
+    transform:rotate(0deg);
+    will-change:transform;
   }
   .sb-web-package::after{
-    content:'';position:absolute;inset:1px;z-index:-1;pointer-events:none;
-    border:1px solid rgba(255,255,255,.54);border-radius:inherit;
+    content:'';position:absolute;inset:1px;z-index:0;pointer-events:none;
+    border:1px solid rgba(255,255,255,.69);border-radius:inherit;
+    background:
+      radial-gradient(ellipse at 8% 4%,rgba(255,255,255,.78),transparent 48%),
+      linear-gradient(152deg,rgba(255,255,255,.35),transparent 52%,rgba(255,255,255,.18));
+    box-shadow:inset 0 2px 0 rgba(255,255,255,.72);
   }
   .sb-web-package:hover,.sb-web-package:focus-visible{
-    transform:translateY(-7px);
-    border-color:rgba(209,245,156,.92);
-    box-shadow:inset 0 2px 0 #fff,0 27px 60px rgba(40,71,33,.14),0 7px 20px rgba(40,71,33,.08);
+    transform:translateY(-6px);
+    border-color:rgba(202,243,143,.96);
+    box-shadow:inset 0 2px 0 #fff,0 25px 58px rgba(33,49,29,.13),0 6px 19px rgba(33,49,29,.06);
+  }
+  .sb-web-package:hover::before,
+  .sb-web-package:focus-visible::before{
+    opacity:1;
+    animation:sb-web-glass-rotate 3.2s linear infinite;
+  }
+  @keyframes sb-web-glass-rotate{
+    from{transform:rotate(0deg)}
+    to{transform:rotate(360deg)}
   }
   .sb-web-package:focus-visible{outline:3px solid #658c37;outline-offset:4px}
   .sb-web-package-media{
-    position:relative;flex:1 1 auto;min-height:180px;
+    position:relative;z-index:1;flex:1 1 auto;min-height:180px;
     display:flex;align-items:center;justify-content:center;
     padding:0 0 14px;
   }
@@ -276,29 +319,30 @@ const screenVideoSrc = '/southbear-diseno-web-demo.mp4';
   .sb-web-package-body{position:relative;z-index:1;margin-top:auto;text-align:left}
   .sb-web-package h3{
     margin:0;color:#090b09;font-family:var(--font-heading);
-    font-size:clamp(1.65rem,2.3vw,2.55rem);line-height:1.08;
-    letter-spacing:-.065em;font-weight:800;
+    font-size:clamp(1.48rem,1.88vw,2.25rem);line-height:1.08;
+    letter-spacing:-.063em;font-weight:800;
   }
   .sb-web-package p{
-    margin:14px 0 27px;max-width:340px;color:#222921;
-    font-size:clamp(.89rem,1.06vw,1.04rem);line-height:1.5;
+    margin:13px 0 26px;max-width:340px;color:#222921;
+    font-size:clamp(.86rem,.95vw,1rem);line-height:1.52;
     font-weight:450;
   }
   .sb-web-package-price{
     display:inline-block;
-    font-size:clamp(1.32rem,1.9vw,1.86rem);
+    font-size:clamp(1.29rem,1.7vw,1.73rem);
     font-weight:850;line-height:1.18;letter-spacing:-.045em;
     color:#497723;
     background:linear-gradient(108deg,#46731e 0%,#77a93c 40%,#426e1c 74%,#669e32 100%);
     -webkit-background-clip:text;background-clip:text;
     -webkit-text-fill-color:transparent;
   }
-  @media(max-width:1050px){
+  @media(max-width:940px){
     .sb-web-packages-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
-    .sb-web-package{min-height:460px}
+    .sb-web-package{min-height:450px}
+    .sb-web-package h3{font-size:clamp(1.6rem,3vw,2.1rem)}
   }
   @media(max-width:680px){
-    .sb-web-packages{padding:68px 18px 95px}
+    .sb-web-packages{padding:65px 18px 95px}
     .sb-web-packages-grid{grid-template-columns:1fr;gap:17px}
     .sb-web-package{min-height:440px;padding:28px;border-radius:25px}
     .sb-web-package-media{min-height:190px}
@@ -307,14 +351,17 @@ const screenVideoSrc = '/southbear-diseno-web-demo.mp4';
   }
   @media(prefers-reduced-motion:reduce){
     .sb-web-package{transition:none}
+    .sb-web-package:hover::before,
+    .sb-web-package:focus-visible::before{animation:none}
   }
 
   @media(max-width:680px){
     .sb-web-heading{padding:42px 9px 8px}
-    .sb-web-heading h1{font-size:clamp(.92rem,3.8vw,1.4rem);letter-spacing:-.055em}
+    .sb-web-heading h1{font-size:clamp(1.1rem,4.7vw,1.75rem);letter-spacing:-.055em}
+    .sb-web-tagline{font-size:clamp(.9rem,3.7vw,1.1rem);margin-top:12px}
   }
   @media(prefers-reduced-motion:reduce){
-    .sb-web-letter,.sb-web-visual{animation:none!important;opacity:1;transform:none;filter:none}
+    .sb-web-letter,.sb-web-visual,.sb-web-tagline{animation:none!important;opacity:1;transform:none;filter:none}
     .sb-web-letter::after{animation:none;opacity:0}
   }
 </style>

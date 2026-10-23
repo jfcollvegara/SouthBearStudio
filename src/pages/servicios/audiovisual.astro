@@ -20,6 +20,44 @@ const audiovisualPackages = audiovisual.packages.map(pkg => ({
 const formatPackagePrice = pkg => pkg.price == null
   ? 'Bajo presupuesto'
   : 'Desde ' + new Intl.NumberFormat('es-ES', {maximumFractionDigits:2}).format(pkg.price) + ' €';
+
+// Iconos vectoriales lineales para los 17 complementos. El orden sigue
+// las secciones de extras conservadas en el catálogo comercial.
+const extraIconShapes = [
+  "M12 3l8 8-9 9-6 1 1-6 9-9 M13 6l5 5 M5 19l3-3",
+  "M3 5h18v14H3z M7 5l4 5 M15 5l4 5 M3 10h18 M9 14h6 M12 12v5",
+  "M5 3h14v18H5z M8 7h8 M8 11h8 M8 15h5 M8 19h3 M17 17l4-4",
+  "M4 9a8 8 0 1 1 1 7 M4 4v5h5",
+  "M12 3v3 M12 18v3 M4.2 7.5l2.6 2 M17.2 14.5l2.6 2 M3 12h5 M16 12h5 M7 17l4-4 3 3 4-6",
+  "M4 5h16v14H4z M8 9h8 M8 13h6 M8 17h4 M16 17l2-2 M16 15l2 2",
+  "M12 21s7-5.8 7-12a7 7 0 0 0-14 0c0 6.2 7 12 7 12z M9 9a3 3 0 1 0 6 0a3 3 0 1 0-6 0",
+  "M5 18h14 M5 6h14 M8 6v12 M16 6v12 M5 12h14 M10 9l4 3-4 3",
+  "M3 18l4-5 4 3 5-8 5 3 M16 4h5v5",
+  "M3 20l6-6 3 2 8-10 M15 6h5v5 M3 4h7",
+  "M16 20v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2 M8 10a4 4 0 1 0 0-8a4 4 0 0 0 0 8 M22 20v-2a4 4 0 0 0-3-3.9 M16 2.1a4 4 0 0 1 0 7.8",
+  "M12 3a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V6a3 3 0 0 0-3-3 M5 11a7 7 0 0 0 14 0 M12 18v3 M8 21h8",
+  "M12 2l2.4 7.6L22 12l-7.6 2.4L12 22l-2.4-7.6L2 12l7.6-2.4z M19 3l.7 1.3L21 5l-1.3.7L19 7l-.7-1.3L17 5l1.3-.7z",
+  "M7 3h10v3H7z M5 6h14v15H5z M9 10h6 M9 14h6 M9 18h4",
+  "M3 10l8-2 8-5-5 8-2 8-2-6-7-3z M11 8l3 3",
+  "M3 7h7l2 2h9v11H3z M8 14h8 M12 11v6",
+  "M3 6h18v15H3z M7 3v6 M17 3v6 M3 11h18 M7 15h3 M14 15h3"
+];
+const audiovisualExtraSections = audiovisual.extraSections.map((section,groupIndex)=>{
+  const offset = audiovisual.extraSections.slice(0,groupIndex)
+    .reduce((sum,previous)=>sum+previous.items.length,0);
+  return {
+    ...section,
+    slug:'av-extra-group-'+groupIndex,
+    items:section.items.map((item,index)=>({
+      ...item,
+      detailId:'av-extra-detail-'+groupIndex+'-'+index,
+      iconPath:extraIconShapes[offset+index]
+    }))
+  };
+});
+const formatExtraPrice = extra => extra.price == null
+  ? 'Bajo presupuesto'
+  : new Intl.NumberFormat('es-ES',{maximumFractionDigits:2}).format(extra.price)+' €';
 const showcase = [
   { shade:'#313131', grow:0.88 },
   { shade:'#545454', grow:1.08 },
@@ -76,7 +114,108 @@ const showcase = [
       </div>
     </div>
   </section>
+
+  <!-- Extras: iconos tipo app que muestran el detalle y el precio al pulsarlos. -->
+  <section class="sb-av-extras" aria-labelledby="sb-av-extras-heading">
+    <div class="sb-av-extras__inner">
+      <header class="sb-av-extras__heading">
+        <h2 id="sb-av-extras-heading">Servicios extra.</h2>
+        <p>Personaliza tu producción. Pulsa cualquier icono para ver sus detalles y su precio.</p>
+      </header>
+
+      {audiovisualExtraSections.map(group=>(
+        <section class="sb-av-extra-group" aria-labelledby={group.slug+'-title'} data-av-extra-group>
+          <div class="sb-av-extra-group__heading">
+            <h3 id={group.slug+'-title'}>{group.title}</h3>
+            {group.intro && <p>{group.intro}</p>}
+          </div>
+          <div class="sb-av-extra-apps">
+            {group.items.map(item=>(
+              <button
+                class="sb-av-extra-app"
+                type="button"
+                aria-expanded="false"
+                aria-controls={item.detailId}
+                data-av-extra-trigger
+              >
+                <span class="sb-av-extra-app__icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d={item.iconPath} />
+                  </svg>
+                </span>
+                <span class="sb-av-extra-app__label">{item.name}</span>
+              </button>
+            ))}
+          </div>
+          <div class="sb-av-extra-details">
+            {group.items.map(item=>(
+              <article class="sb-av-extra-detail" id={item.detailId} data-av-extra-panel hidden>
+                <div class="sb-av-extra-detail__copy">
+                  <span class="sb-av-extra-detail__category">{group.title}</span>
+                  <h4>{item.name}</h4>
+                  <p>{item.detail}</p>
+                </div>
+                <div class="sb-av-extra-detail__aside">
+                  <strong>{formatExtraPrice(item)}</strong>
+                  <button
+                    type="button"
+                    class="sb-av-extra-detail__close"
+                    aria-label={'Cerrar detalles de '+item.name}
+                    data-av-extra-close
+                  >Cerrar <span aria-hidden="true">×</span></button>
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+      ))}
+      <p class="sb-av-extras__tax">Precios con IVA incluido. Los servicios bajo presupuesto se concretan según las necesidades del proyecto.</p>
+    </div>
+  </section>
 </Base>
+
+<script>
+  // Una sola ficha visible dentro de cada grupo; interacción accesible
+  // por ratón, pantalla táctil y teclado, sin dependencias externas.
+  document.querySelectorAll('[data-av-extra-group]').forEach(group => {
+    const buttons = Array.from(group.querySelectorAll('[data-av-extra-trigger]'));
+    const panels = Array.from(group.querySelectorAll('[data-av-extra-panel]'));
+    const closeAll = () => {
+      buttons.forEach(button => {
+        button.setAttribute('aria-expanded', 'false');
+        button.classList.remove('is-active');
+      });
+      panels.forEach(panel => { panel.hidden = true; });
+    };
+    buttons.forEach(button => {
+      button.addEventListener('click', () => {
+        const target = group.querySelector('#' + button.getAttribute('aria-controls'));
+        if (!target) return;
+        const wasOpen = button.getAttribute('aria-expanded') === 'true';
+        closeAll();
+        if (!wasOpen) {
+          button.setAttribute('aria-expanded', 'true');
+          button.classList.add('is-active');
+          target.hidden = false;
+          const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+          target.scrollIntoView({
+            behavior: prefersReducedMotion ? 'auto' : 'smooth',
+            block: 'nearest'
+          });
+        }
+      });
+    });
+    group.querySelectorAll('[data-av-extra-close]').forEach(close => {
+      close.addEventListener('click', () => {
+        const panel = close.closest('[data-av-extra-panel]');
+        const button = buttons.find(btn => btn.getAttribute('aria-controls') === panel?.id);
+        closeAll();
+        button?.focus({preventScroll:true});
+      });
+    });
+  });
+</script>
+
 <style>
   .sb-av-hero{
     position:relative;
@@ -422,6 +561,238 @@ const showcase = [
     .sb-av-package__price{margin-top:28px;font-size:1.65rem}
     .sb-av-package__video-slot{border-radius:14px}
   }
+
+  /* Complementos audiovisuales presentados como una cuadrícula de apps.
+     El cristal blanco se reserva a los iconos; la página sigue negra. */
+  .sb-av-extras{
+    position:relative;
+    width:100%;
+    padding:clamp(18px,2vw,32px) clamp(18px,4vw,92px) clamp(110px,12vw,185px);
+    background:#0A0A0A;
+    color:#f8f8f8;
+  }
+  .sb-av-extras__inner{width:100%;max-width:1510px;margin-inline:auto}
+  .sb-av-extras__heading{margin-bottom:clamp(56px,6vw,90px)}
+  .sb-av-extras__heading h2{
+    margin:0;
+    color:#fff;
+    font-family:var(--font-heading);
+    font-weight:750;
+    font-size:clamp(2.05rem,4.2vw,4.3rem);
+    line-height:1.1;
+    letter-spacing:-.065em;
+  }
+  .sb-av-extras__heading p{
+    margin:17px 0 0;
+    color:rgba(255,255,255,.65);
+    font-size:clamp(.9rem,1.06vw,1.06rem);
+    line-height:1.65;
+  }
+  .sb-av-extra-group{margin-top:clamp(52px,6vw,88px)}
+  .sb-av-extra-group__heading{margin-bottom:clamp(24px,2.7vw,39px)}
+  .sb-av-extra-group__heading h3{
+    margin:0;
+    font-family:var(--font-heading);
+    font-size:clamp(1.3rem,2vw,1.95rem);
+    font-weight:720;
+    letter-spacing:-.045em;
+    line-height:1.2;
+  }
+  .sb-av-extra-group__heading p{
+    margin:12px 0 0;
+    max-width:720px;
+    color:rgba(255,255,255,.57);
+    font-size:.88rem;
+    line-height:1.65;
+  }
+  .sb-av-extra-apps{
+    display:grid;
+    grid-template-columns:repeat(7,minmax(0,1fr));
+    gap:clamp(13px,2.05vw,29px);
+    align-items:start;
+  }
+  .sb-av-extra-app{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:clamp(11px,1.1vw,16px);
+    width:100%;
+    min-width:0;
+    padding:0;
+    border:0;
+    background:none;
+    color:inherit;
+    font:inherit;
+    cursor:pointer;
+    text-align:center;
+  }
+  .sb-av-extra-app__icon{
+    position:relative;
+    isolation:isolate;
+    display:grid;
+    place-items:center;
+    aspect-ratio:1;
+    width:100%;
+    border:1px solid rgba(255,255,255,.88);
+    border-radius:clamp(19px,2.3vw,33px);
+    background:linear-gradient(143deg,
+      rgba(255,255,255,.96) 0%,
+      rgba(255,255,255,.73) 42%,
+      rgba(255,255,255,.61) 76%,
+      rgba(255,255,255,.89) 100%);
+    -webkit-backdrop-filter:blur(13px) saturate(135%);
+    backdrop-filter:blur(13px) saturate(135%);
+    box-shadow:
+      inset 0 2px 1px rgba(255,255,255,.95),
+      inset 0 -1px 0 rgba(255,255,255,.42),
+      0 14px 38px rgba(0,0,0,.26);
+    color:#202720;
+    overflow:hidden;
+    transition:transform .3s cubic-bezier(.2,.85,.25,1),
+      border-color .28s ease,box-shadow .28s ease;
+  }
+  .sb-av-extra-app__icon::before{
+    content:'';
+    position:absolute;
+    inset:1px;
+    border-radius:inherit;
+    pointer-events:none;
+    background:
+      radial-gradient(ellipse at 9% 0%,rgba(255,255,255,.94),transparent 52%),
+      linear-gradient(150deg,rgba(255,255,255,.46),transparent 55%,rgba(255,255,255,.23));
+  }
+  .sb-av-extra-app__icon svg{
+    position:relative;
+    z-index:1;
+    width:clamp(32px,3.1vw,49px);
+    height:clamp(32px,3.1vw,49px);
+  }
+  .sb-av-extra-app__label{
+    max-width:180px;
+    font-size:clamp(.75rem,.92vw,.91rem);
+    line-height:1.4;
+    font-weight:600;
+    color:rgba(255,255,255,.84);
+    text-wrap:balance;
+  }
+  .sb-av-extra-app:hover .sb-av-extra-app__icon,
+  .sb-av-extra-app.is-active .sb-av-extra-app__icon{
+    transform:translateY(-5px);
+    border-color:#fff;
+    box-shadow:
+      inset 0 2px 1px #fff,
+      0 0 20px rgba(255,255,255,.19),
+      0 15px 38px rgba(0,0,0,.28);
+  }
+  .sb-av-extra-app.is-active .sb-av-extra-app__icon{
+    background:linear-gradient(137deg,rgba(246,255,229,.97),rgba(230,255,202,.7),rgba(255,255,255,.85));
+  }
+  .sb-av-extra-app:focus-visible{outline:none}
+  .sb-av-extra-app:focus-visible .sb-av-extra-app__icon{
+    outline:3px solid #DDFF9A;
+    outline-offset:5px;
+  }
+  .sb-av-extra-detail{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:clamp(22px,3vw,50px);
+    margin-top:clamp(22px,3vw,42px);
+    padding:clamp(26px,3vw,44px);
+    border:1px solid rgba(255,255,255,.3);
+    border-radius:clamp(21px,2.3vw,30px);
+    background:linear-gradient(140deg,rgba(255,255,255,.16),rgba(255,255,255,.065) 67%,rgba(255,255,255,.12));
+    -webkit-backdrop-filter:blur(12px) saturate(128%);
+    backdrop-filter:blur(12px) saturate(128%);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.42),0 12px 32px rgba(0,0,0,.22);
+  }
+  .sb-av-extra-detail[hidden]{display:none!important}
+  .sb-av-extra-detail__copy{max-width:820px}
+  .sb-av-extra-detail__category{
+    display:block;
+    margin:0 0 10px;
+    color:rgba(255,255,255,.63);
+    font-size:.73rem;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+  }
+  .sb-av-extra-detail h4{
+    margin:0;
+    color:#fff;
+    font-family:var(--font-heading);
+    font-size:clamp(1.5rem,2.5vw,2.35rem);
+    font-weight:750;
+    line-height:1.17;
+    letter-spacing:-.05em;
+  }
+  .sb-av-extra-detail__copy p{
+    margin:13px 0 0;
+    color:rgba(255,255,255,.8);
+    font-size:clamp(.91rem,1.08vw,1rem);
+    line-height:1.7;
+  }
+  .sb-av-extra-detail__aside{
+    flex:none;
+    display:flex;
+    flex-direction:column;
+    align-items:flex-end;
+    gap:22px;
+  }
+  .sb-av-extra-detail__aside strong{
+    display:inline-block;
+    color:#DDFF9A;
+    background-image:var(--brand-text-gradient,linear-gradient(108deg,#daff9c,#f4f5a4,#ccf294));
+    background-clip:text;
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+    font-size:clamp(1.3rem,2vw,2rem);
+    line-height:1.2;
+    letter-spacing:-.045em;
+    font-weight:800;
+    text-align:right;
+    white-space:nowrap;
+  }
+  .sb-av-extra-detail__close{
+    padding:8px 0;
+    border:0;
+    background:none;
+    color:rgba(255,255,255,.75);
+    cursor:pointer;
+    font-size:.85rem;
+  }
+  .sb-av-extra-detail__close:hover{color:#fff}
+  .sb-av-extra-detail__close:focus-visible{
+    outline:2px solid #ddff9a;
+    outline-offset:4px;
+  }
+  .sb-av-extras__tax{
+    margin:clamp(52px,5vw,85px) 0 0;
+    max-width:850px;
+    color:rgba(255,255,255,.55);
+    font-size:.83rem;
+    line-height:1.65;
+  }
+  @media(max-width:1150px){
+    .sb-av-extra-apps{grid-template-columns:repeat(5,minmax(0,1fr))}
+  }
+  @media(max-width:790px){
+    .sb-av-extra-apps{grid-template-columns:repeat(4,minmax(0,1fr));gap:19px}
+    .sb-av-extra-app__icon svg{width:39px;height:39px}
+  }
+  @media(max-width:680px){
+    .sb-av-extras{padding:25px 15px 110px}
+    .sb-av-extras__heading{margin-bottom:54px}
+    .sb-av-extras__heading h2{font-size:clamp(2.05rem,7.5vw,3rem)}
+    .sb-av-extra-group{margin-top:55px}
+    .sb-av-extra-apps{grid-template-columns:repeat(3,minmax(0,1fr));gap:22px 12px}
+    .sb-av-extra-app__icon{border-radius:clamp(18px,5.6vw,27px)}
+    .sb-av-extra-app__icon svg{width:35px;height:35px}
+    .sb-av-extra-app__label{font-size:clamp(.72rem,2.75vw,.83rem);line-height:1.35}
+    .sb-av-extra-detail{align-items:flex-start;flex-direction:column;padding:24px;gap:23px}
+    .sb-av-extra-detail__aside{align-items:flex-start;gap:15px}
+    .sb-av-extra-detail__aside strong{text-align:left;white-space:normal}
+    .sb-av-extras__tax{margin-top:60px}
+  }
   @media(prefers-reduced-motion:reduce){
     .sb-av-hero__title{opacity:1;transform:none;filter:none;animation:none}
     .sb-av-hero__inner::before{opacity:.25;animation:none}
@@ -430,5 +801,8 @@ const showcase = [
     .sb-av-showcase__frame{opacity:1;transform:none;animation:none}
     .sb-av-package{transition:none}
     .sb-av-package:hover{transform:none}
+    .sb-av-extra-app__icon{transition:none}
+    .sb-av-extra-app:hover .sb-av-extra-app__icon,
+    .sb-av-extra-app.is-active .sb-av-extra-app__icon{transform:none}
   }
 </style>

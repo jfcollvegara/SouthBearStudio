@@ -177,9 +177,9 @@ const showcase = [
 <script>
   // Una sola ficha visible dentro de cada grupo; interacción accesible
   // por ratón, pantalla táctil y teclado, sin dependencias externas.
-  document.querySelectorAll('[data-av-extra-group]').forEach(group => {
-    const buttons = Array.from(group.querySelectorAll('[data-av-extra-trigger]'));
-    const panels = Array.from(group.querySelectorAll('[data-av-extra-panel]'));
+  document.querySelectorAll<HTMLElement>('[data-av-extra-group]').forEach(group => {
+    const buttons = Array.from(group.querySelectorAll<HTMLButtonElement>('[data-av-extra-trigger]'));
+    const panels = Array.from(group.querySelectorAll<HTMLElement>('[data-av-extra-panel]'));
     const closeAll = () => {
       buttons.forEach(button => {
         button.setAttribute('aria-expanded', 'false');
@@ -189,7 +189,7 @@ const showcase = [
     };
     buttons.forEach(button => {
       button.addEventListener('click', () => {
-        const target = group.querySelector('#' + button.getAttribute('aria-controls'));
+        const target = group.querySelector<HTMLElement>('#' + button.getAttribute('aria-controls'));
         if (!target) return;
         const wasOpen = button.getAttribute('aria-expanded') === 'true';
         closeAll();
@@ -205,9 +205,9 @@ const showcase = [
         }
       });
     });
-    group.querySelectorAll('[data-av-extra-close]').forEach(close => {
+    group.querySelectorAll<HTMLButtonElement>('[data-av-extra-close]').forEach(close => {
       close.addEventListener('click', () => {
-        const panel = close.closest('[data-av-extra-panel]');
+        const panel = close.closest<HTMLElement>('[data-av-extra-panel]');
         const button = buttons.find(btn => btn.getAttribute('aria-controls') === panel?.id);
         closeAll();
         button?.focus({preventScroll:true});

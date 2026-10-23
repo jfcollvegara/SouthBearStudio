@@ -20,6 +20,7 @@ const showcase = [
         {Array.from(headline).map(letter=>(
           <span class:list={['sb-av-hero__character', {'sb-av-hero__space':letter===' '}]} aria-hidden="true">{letter===' ' ? '\u00A0' : letter}</span>
         ))}
+        <span class="sb-av-hero__rec" aria-hidden="true"></span>
       </h1>
       <p class="sb-av-hero__tagline">La creatividad cobra vida en cada fotograma.</p>
     </div>
@@ -65,9 +66,9 @@ const showcase = [
     width:100%;
     max-width:100%;
     margin:0;
-    /* Reservamos espacio suficiente para el punto REC y su halo, sin recortarlo. */
+    /* El punto REC es un elemento flex más y comparte el espaciado de las letras. */
     overflow:visible;
-    padding:0 .52em 0 0;
+    padding:0;
     white-space:nowrap;
     color:#FAFAFA;
     font-family:var(--font-heading);
@@ -93,19 +94,17 @@ const showcase = [
     width:clamp(9px,1.55vw,29px);
     font-size:0;
   }
-  /* Punto rojo REC unido a la última letra, alineado con la base del texto. */
-  .sb-av-hero__character:last-child{position:relative}
-  .sb-av-hero__character:last-child::after{
-    content:'';
-    position:absolute;
-    left:calc(100% + .07em);
-    bottom:.1em;
+  /* Carácter REC independiente: mismo hueco automático que cualquier letra. */
+  .sb-av-hero__rec{
+    display:block;
+    flex:0 0 .23em;
+    align-self:flex-end;
     width:.23em;
     height:.23em;
+    margin-bottom:.1em;
     border-radius:50%;
     background:#FF3038;
     box-shadow:0 0 .13em rgba(255,48,56,.45);
-    -webkit-text-fill-color:initial;
     pointer-events:none;
     animation:sb-av-rec-blink 1.3s step-end infinite;
   }
@@ -217,7 +216,7 @@ const showcase = [
   @media(prefers-reduced-motion:reduce){
     .sb-av-hero__title{opacity:1;transform:none;filter:none;animation:none}
     .sb-av-hero__inner::before{opacity:.25;animation:none}
-    .sb-av-hero__character:last-child::after{opacity:1;animation:none}
+    .sb-av-hero__rec{opacity:1;animation:none}
     .sb-av-hero__tagline{opacity:1;transform:none;animation:none}
     .sb-av-showcase__frame{opacity:1;transform:none;animation:none}
   }

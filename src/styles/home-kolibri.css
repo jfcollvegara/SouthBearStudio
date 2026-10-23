@@ -792,6 +792,12 @@ body.landing-page,body.landing-page main{background:#FFFFFF;color:#101010}
   align-items:center;
   width:100%;
 }
+/* El encabezado abierto usa el mismo contraste claro que sus enlaces. */
+.kb-top-nav--stuck.kb-menu-open .kb-services-nav-item.is-open .kb-services-nav-trigger{
+  color:#fbfbfb;
+  -webkit-text-stroke:.3px rgba(0,0,0,.82);
+  text-shadow:0 1px 3px rgba(0,0,0,.92),0 0 7px rgba(0,0,0,.76);
+}
 .kb-top-nav--stuck.kb-menu-open .kb-services-nav-trigger{
   width:100%;
   padding:11px 6px;

@@ -1,12 +1,34 @@
 ---
 import Base from '../../layouts/Base.astro';
 import { webPackages, webExtras, formatWebPackagePrice, formatWebExtraPrice } from '../../data/web-packages.js';
+import { catalog } from '../../data/catalog.js';
 
 // Los paquetes y extras siguen intactos en src/data/catalog.js.
 // La grabación se reproduce dentro del hueco transparente de la pantalla del portátil.
 const titleText = 'DISEÑO Y DESARROLLO WEB';
 const letters = [...titleText];
 const screenVideoSrc = '/southbear-diseno-web-demo.mp4';
+
+// Los textos comerciales recuperan los originales del catálogo, sin duplicarlos.
+const webService = catalog.find(service => service.slug === 'diseno-web');
+const conditionTitles = [
+  'Diseño adaptable y SEO básico',
+  'Textos legales',
+  'Alojamiento y dominio',
+  'Blog autogestionable',
+  'Entrega y garantía'
+];
+const webConditions = [
+  ...webService.common.map((description,index)=>({
+    title:conditionTitles[index],
+    description
+  })),
+  {title:'Servicios no incluidos',description:webService.notIncluded},
+  {
+    title:'Cambios y revisiones',
+    description:'Los cambios adicionales requieren presupuesto previo. Las revisiones no incluyen nuevos diseños completos ni trabajos fuera del alcance contratado. Se respetan siempre los derechos legales del cliente.'
+  }
+];
 ---
 
 <Base
@@ -93,6 +115,40 @@ const screenVideoSrc = '/southbear-diseno-web-demo.mp4';
               <strong class="sb-web-extra-price">{formatWebExtraPrice(extra)}</strong>
             </article>
           ))}
+        </div>
+        <p class="sb-web-pricing-note">Todos los precios mostrados incluyen IVA. Los servicios «desde» y «bajo presupuesto» se concretan según el alcance de cada proyecto.</p>
+      </section>
+
+      <!-- Información útil original, ahora en desplegables de cristal. -->
+      <section class="sb-web-info" aria-labelledby="sb-web-info-title">
+        <div class="sb-web-info-heading">
+          <h2 id="sb-web-info-title">Todo lo que necesitas saber.</h2>
+          <p>Las condiciones claras desde el primer momento.</p>
+        </div>
+        <div class="sb-web-info-grid">
+          {webConditions.map(condition=>(
+            <details class="sb-web-info-item">
+              <summary>
+                <span>{condition.title}</span>
+                <span class="sb-web-info-plus" aria-hidden="true"></span>
+              </summary>
+              <div class="sb-web-info-content">
+                <p>{condition.description}</p>
+              </div>
+            </details>
+          ))}
+        </div>
+      </section>
+
+      <section class="sb-web-closing" aria-labelledby="sb-web-closing-title">
+        <div class="sb-web-closing-content">
+          <p class="sb-web-closing-kicker">HABLEMOS DE TU PROYECTO</p>
+          <h2 id="sb-web-closing-title">Tu próxima gran idea <span>empieza aquí.</span></h2>
+          <p>Cuéntanos qué tienes en mente y encontraremos la forma de hacerlo realidad.</p>
+        </div>
+        <div class="sb-web-closing-actions">
+          <a class="sb-web-closing-button" href="/presupuesto/?servicio=diseno-web">Hablemos de tu proyecto <span aria-hidden="true">↗</span></a>
+          <a class="sb-web-closing-back" href="/servicios/">← Volver a todos los servicios</a>
         </div>
       </section>
     </div>
@@ -415,6 +471,217 @@ const screenVideoSrc = '/southbear-diseno-web-demo.mp4';
     background-clip:text;
     -webkit-text-fill-color:transparent;
   }
+  /* Resumen de precios y alcance, tras los diez complementos. */
+  .sb-web-pricing-note{
+    margin:26px 0 0;
+    max-width:900px;
+    font-size:.84rem;
+    line-height:1.65;
+    color:#454c44;
+  }
+
+  /* Preguntas y condiciones recuperadas del catálogo principal. */
+  .sb-web-info{margin-top:clamp(86px,10vw,155px)}
+  .sb-web-info-heading{
+    display:flex;
+    align-items:end;
+    justify-content:space-between;
+    gap:25px;
+    margin-bottom:clamp(26px,3vw,43px);
+  }
+  .sb-web-info-heading h2{
+    max-width:750px;
+    margin:0;
+    color:#111;
+    font-family:var(--font-heading);
+    font-size:clamp(1.65rem,2.65vw,2.8rem);
+    font-weight:750;
+    line-height:1.12;
+    letter-spacing:-.065em;
+  }
+  .sb-web-info-heading>p{
+    max-width:240px;
+    margin:0;
+    color:#404840;
+    font-size:.9rem;
+    line-height:1.6;
+  }
+  .sb-web-info-grid{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:clamp(11px,1.25vw,19px);
+    align-items:start;
+  }
+  .sb-web-info-item{
+    min-width:0;
+    overflow:hidden;
+    border:1px solid rgba(255,255,255,.85);
+    border-radius:clamp(17px,1.7vw,23px);
+    background:rgba(255,255,255,.71);
+    -webkit-backdrop-filter:blur(9px) saturate(135%);
+    backdrop-filter:blur(9px) saturate(135%);
+    box-shadow:inset 0 1px 0 #fff,0 9px 27px rgba(32,40,30,.045);
+  }
+  .sb-web-info-item>summary{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:16px;
+    min-height:83px;
+    padding:23px clamp(20px,2.25vw,32px);
+    cursor:pointer;
+    color:#111;
+    font-family:var(--font-heading);
+    font-size:clamp(1rem,1.3vw,1.24rem);
+    line-height:1.28;
+    font-weight:750;
+    letter-spacing:-.035em;
+    list-style:none;
+  }
+  .sb-web-info-item>summary::-webkit-details-marker{display:none}
+  .sb-web-info-item>summary::marker{content:''}
+  .sb-web-info-item>summary:focus-visible{outline:3px solid #669d37;outline-offset:-4px}
+  .sb-web-info-plus{
+    position:relative;
+    display:block;
+    width:32px;
+    height:32px;
+    flex:none;
+    border:1px solid rgba(74,114,41,.18);
+    border-radius:50%;
+    background:rgba(221,255,154,.43);
+  }
+  .sb-web-info-plus::before,
+  .sb-web-info-plus::after{
+    content:'';
+    position:absolute;
+    top:50%;
+    left:50%;
+    width:12px;
+    height:1.5px;
+    background:#263d1d;
+    border-radius:2px;
+    transform:translate(-50%,-50%);
+    transition:transform .25s ease;
+  }
+  .sb-web-info-plus::after{transform:translate(-50%,-50%) rotate(90deg)}
+  .sb-web-info-item[open] .sb-web-info-plus::after{
+    transform:translate(-50%,-50%) rotate(0deg);
+  }
+  .sb-web-info-item[open]{background:rgba(255,255,255,.86)}
+  .sb-web-info-content{
+    padding:0 clamp(20px,2.25vw,32px) 27px;
+  }
+  .sb-web-info-content p{
+    max-width:660px;
+    margin:0;
+    padding-top:18px;
+    border-top:1px solid rgba(38,61,29,.11);
+    color:#303930;
+    font-size:.92rem;
+    line-height:1.78;
+  }
+
+  /* Llamada final editorial, antes del footer común. */
+  .sb-web-closing{
+    position:relative;
+    overflow:hidden;
+    display:flex;
+    align-items:end;
+    justify-content:space-between;
+    gap:clamp(30px,6vw,100px);
+    margin-top:clamp(95px,11vw,175px);
+    padding:clamp(42px,6.2vw,92px);
+    border:1px solid rgba(255,255,255,.14);
+    border-radius:clamp(24px,3.2vw,40px);
+    color:#fff;
+    background:
+      radial-gradient(ellipse at 87% 19%,rgba(221,255,154,.2),transparent 51%),
+      linear-gradient(132deg,#121712 0%,#1c251c 70%,#101410 100%);
+    box-shadow:0 25px 80px rgba(16,30,15,.14);
+  }
+  .sb-web-closing-content{position:relative;z-index:1;max-width:850px}
+  .sb-web-closing-kicker{
+    margin:0 0 30px;
+    color:#d8fbb1;
+    font-size:.69rem;
+    font-weight:800;
+    letter-spacing:.16em;
+  }
+  .sb-web-closing h2{
+    margin:0;
+    font-family:var(--font-heading);
+    font-weight:750;
+    font-size:clamp(2.65rem,5vw,6rem);
+    line-height:1.02;
+    letter-spacing:-.08em;
+  }
+  .sb-web-closing h2 span{
+    color:#ddff9a;
+    background-image:var(--brand-text-gradient);
+    -webkit-background-clip:text;
+    background-clip:text;
+    -webkit-text-fill-color:transparent;
+  }
+  .sb-web-closing-content>p:last-child{
+    margin:24px 0 0;
+    max-width:510px;
+    color:#dee6db;
+    font-size:clamp(.91rem,1.1vw,1.04rem);
+    line-height:1.7;
+  }
+  .sb-web-closing-actions{
+    position:relative;z-index:1;
+    display:flex;
+    flex:none;
+    flex-direction:column;
+    align-items:flex-start;
+    gap:20px;
+  }
+  .sb-web-closing-button{
+    display:inline-flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:32px;
+    padding:19px 23px;
+    border-radius:999px;
+    background:var(--brand-gradient);
+    color:#101410!important;
+    font-weight:800;
+    font-size:.92rem;
+    text-decoration:none;
+    transition:transform .22s ease;
+  }
+  .sb-web-closing-button:hover{transform:translateY(-3px)}
+  .sb-web-closing-button:focus-visible,
+  .sb-web-closing-back:focus-visible{outline:3px solid #ddff9a;outline-offset:5px}
+  .sb-web-closing-back{
+    color:#e0e8db;
+    font-size:.82rem;
+    text-decoration:none;
+  }
+  .sb-web-closing-back:hover{text-decoration:underline}
+  @media(max-width:970px){
+    .sb-web-closing{align-items:start;flex-direction:column}
+    .sb-web-closing-actions{gap:22px}
+  }
+  @media(max-width:680px){
+    .sb-web-info-heading{display:block}
+    .sb-web-info-heading>p{margin-top:14px}
+    .sb-web-info-grid{grid-template-columns:1fr}
+    .sb-web-info-item>summary{min-height:76px}
+    .sb-web-closing{margin-top:90px;padding:42px 27px}
+    .sb-web-closing-kicker{margin-bottom:24px}
+    .sb-web-closing h2{font-size:clamp(2.5rem,10vw,4rem)}
+    .sb-web-closing-button{gap:16px;width:100%}
+    .sb-web-closing-actions{width:100%}
+  }
+  @media(prefers-reduced-motion:reduce){
+    .sb-web-info-plus::after,
+    .sb-web-info-plus::before,
+    .sb-web-closing-button{transition:none}
+  }
+
   @media(max-width:1120px){
     .sb-web-extras-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
   }

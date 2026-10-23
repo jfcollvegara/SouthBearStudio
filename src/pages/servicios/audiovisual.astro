@@ -80,7 +80,7 @@ const showcase = [
       <p class="sb-av-hero__tagline">La creatividad cobra vida en cada fotograma.</p>
     </div>
 
-    <!-- Cuatro espacios 16:9 provisionales para los futuros vídeos.
+    <!-- Cuatro espacios 2,35:1 provisionales para los futuros vídeos.
          En móvil forman una composición editorial, parcialmente recortada. -->
     <div class="sb-av-showcase" aria-hidden="true">
       {showcase.map((frame, index)=>(
@@ -357,7 +357,7 @@ const showcase = [
   .sb-av-showcase__frame{
     flex:var(--frame-grow) 1 0%;
     min-width:0;
-    aspect-ratio:16 / 9;
+    aspect-ratio:2.35 / 1;
     background:var(--frame-color);
     border-radius:0;
     overflow:hidden;
@@ -404,7 +404,7 @@ const showcase = [
       width:100%;
       min-width:0;
       flex:none;
-      aspect-ratio:16 / 9;
+      aspect-ratio:2.35 / 1;
       border-radius:0;
     }
     .sb-av-showcase__frame:nth-child(n+3){left:-28vw}

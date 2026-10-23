@@ -33,7 +33,16 @@ const serviceDescriptions={
       <span></span><span></span><span></span>
     </button>
     <div class="kb-nav-links" id="kb-nav-links">
-      <a href={link('/servicios/')}>Servicios</a>
+      <div class="kb-services-nav-item">
+        <button type="button" class="kb-services-nav-trigger" aria-expanded="false" aria-controls="kb-services-nav-panel">
+          Servicios <span aria-hidden="true" class="kb-services-nav-chevron">⌄</span>
+        </button>
+        <div class="kb-services-nav-panel" id="kb-services-nav-panel">
+          {catalog.map(service=>
+            <a href={link('/servicios/'+service.slug+'/')}>{service.title}<span aria-hidden="true">↗</span></a>
+          )}
+        </div>
+      </div>
       <a href={link('/proyectos/')}>Proyectos</a>
       <a href={link('/nosotros/')}>Estudio</a>
       <a href={link('/contacto/')}>Contacto</a>
@@ -46,7 +55,7 @@ const serviceDescriptions={
       <div class="kb-intro-copy">
         <h1 id="kb-title">Dejamos huella<br/>en tus proyectos.</h1>
         <p>Sabemos que estás cansado de ver siempre las mismas webs: plantillas baratas que apenas reflejan la personalidad de un negocio. Creamos páginas a medida que transmiten confianza, proyectan una imagen profesional y hacen que tu marca destaque.</p>
-        <a class="kb-intro-button" href={link('/servicios/')}>Descubre</a>
+        <a class="kb-intro-button" href="#servicios">Descubre</a>
       </div>
       <div class="kb-intro-visual">
         <img class="kb-intro-image" src={link("/southbear-intro-tabernas.webp")} alt="Paisaje del desierto de Tabernas al atardecer" loading="lazy" decoding="async" width="1200" height="675" />
@@ -56,7 +65,7 @@ const serviceDescriptions={
 
   <!-- Bloque 03: cinco categorías a sangre, sin separaciones. Animaciones de
        imágenes pendientes hasta recibir el material del estudio. -->
-  <section class="kb-services-mosaic" aria-labelledby="kb-services-title">
+  <section class="kb-services-mosaic" id="servicios" aria-labelledby="kb-services-title">
     <h2 id="kb-services-title" class="kb-services-accessible-title">Nuestros servicios</h2>
     {catalog.map((service,i)=>(
       <a
@@ -900,6 +909,24 @@ const serviceDescriptions={
   if (logo && nav) {
     const toggle = nav.querySelector('.kb-menu-toggle');
     const links = nav.querySelector('.kb-nav-links');
+    const servicesGroup = nav.querySelector('.kb-services-nav-item');
+    const servicesButton = nav.querySelector('.kb-services-nav-trigger');
+    const setServices = (open) => {
+      const visible = Boolean(open);
+      servicesGroup.classList.toggle('is-open', visible);
+      nav.classList.toggle('kb-services-expanded',visible && nav.classList.contains('kb-menu-open'));
+      servicesButton.setAttribute('aria-expanded', String(visible));
+    };
+    servicesButton.addEventListener('click', () => setServices(!servicesGroup.classList.contains('is-open')));
+    servicesGroup.addEventListener('pointerenter', () => {
+      if (!nav.classList.contains('kb-top-nav--stuck')) setServices(true);
+    });
+    servicesGroup.addEventListener('pointerleave', () => {
+      if (!nav.classList.contains('kb-top-nav--stuck')) setServices(false);
+    });
+    servicesGroup.addEventListener('focusout', event => {
+      if (!servicesGroup.contains(event.relatedTarget)) setServices(false);
+    });
     function measureNav() {
       if (!links) return;
       const width = links.scrollWidth + (window.innerWidth <= 390 ? 22 : window.innerWidth <= 730 ? 28 : 50);
@@ -908,12 +935,22 @@ const serviceDescriptions={
     measureNav();
     const setMenu = (open) => {
       nav.classList.toggle('kb-menu-open', open);
+      if (!open) setServices(false);
       toggle?.setAttribute('aria-expanded', String(open));
       toggle?.setAttribute('aria-label', open ? 'Cerrar menú' : 'Abrir menú');
     };
     toggle?.addEventListener('click', () => setMenu(!nav.classList.contains('kb-menu-open')));
     document.addEventListener('click', (event) => {if (!nav.contains(event.target)) setMenu(false);});
-    document.addEventListener('keydown', (event) => {if (event.key === 'Escape') {setMenu(false);toggle?.focus();}});
+    document.addEventListener('keydown', (event) => {
+      if (event.key !== 'Escape') return;
+      if (servicesGroup.classList.contains('is-open')) {
+        setServices(false);
+        servicesButton.focus();
+      } else if (nav.classList.contains('kb-menu-open')) {
+        setMenu(false);
+        toggle?.focus();
+      }
+    });
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
     let queued = false;
 
@@ -928,6 +965,7 @@ const serviceDescriptions={
       const compact = window.scrollY > 8;
       nav.classList.toggle('kb-top-nav--stuck', compact);
       if (!compact) setMenu(false);
+      else if (!nav.classList.contains('kb-menu-open')) setServices(false);
     }
 
     function scheduleScroll() {

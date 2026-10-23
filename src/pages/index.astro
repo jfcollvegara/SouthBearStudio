@@ -169,6 +169,7 @@ const serviceDescriptions={
   }
   .kb-services-tile{
     --kb-tile-text:#15201A;
+    --kb-glass-rgb:221,255,154;
     position:relative;
     isolation:isolate;
     display:flex;
@@ -186,13 +187,13 @@ const serviceDescriptions={
     border-radius:0;
     overflow:hidden;
     color:var(--kb-tile-text);
-    background-color:#DDFF9A;
-    background-image:radial-gradient(circle at 15% 9%,rgba(255,255,255,.34),transparent 49%),radial-gradient(circle at 90% 80%,rgba(24,28,25,.10),transparent 52%);
+    background-color:#FFFFFF;
+    background-image:none;
     text-decoration:none;
     outline-offset:-5px;
     transition:filter .32s ease;
   }
-  .kb-services-tile--diseno-web{background-color:#DDFF9A;background-image:var(--brand-gradient)}
+  .kb-services-tile--diseno-web{--kb-glass-rgb:221,255,154}
   /* Primer servicio: tres capturas reales a distintas profundidades.
      Con el scroll caen desde arriba y quedan antes del título. */
   .kb-services-tile--diseno-web .kb-services-tile-content{
@@ -258,7 +259,7 @@ const serviceDescriptions={
     .kb-web-preview--pc2{transform:rotateZ(9deg)}
     .kb-web-preview--mobile{transform:rotateZ(-5deg)}
   }
-  .kb-services-tile--branding{background-color:#C3B4EF}
+  .kb-services-tile--branding{--kb-glass-rgb:195,180,239}
   /* Logotipos: composición editorial de cuatro ejemplos sobre cristal.
      Un sprite optimizado conserva las cuatro imágenes del cliente. */
   .kb-services-tile--branding .kb-services-tile-content{
@@ -338,8 +339,8 @@ const serviceDescriptions={
     .kb-branding-card--3{transform:rotateZ(-2deg)}
     .kb-branding-card--4{transform:rotateZ(2deg)}
   }
-  .kb-services-tile--diseno-grafico{background-color:#EFB3A0}
-  .kb-services-tile--soluciones-qr{background-color:#96D4D9}
+  .kb-services-tile--diseno-grafico{--kb-glass-rgb:239,179,160}
+  .kb-services-tile--soluciones-qr{--kb-glass-rgb:150,212,217}
   /* QR/NFC: expositor real y código QR en dos planos, revelados mediante scroll. */
   .kb-qr-stage{
     position:absolute;
@@ -402,7 +403,8 @@ const serviceDescriptions={
     --kb-tile-text:#FFFFFF;
     --kb-av-frame-inset:clamp(14px,2vw,30px);
     --kb-av-frame-radius:clamp(20px,2.2vw,36px);
-    background-color:#131b19;
+    --kb-glass-rgb:176,208,186;
+    background-color:#FFFFFF;
   }
   .kb-services-audiovisual-frame{
     position:absolute;
@@ -428,9 +430,9 @@ const serviceDescriptions={
     z-index:3;
     inset:var(--kb-av-frame-inset);
     padding:clamp(9px,.95vw,16px);
-    border:1px solid rgba(255,255,255,.58);
+    border:1px solid rgba(var(--kb-glass-rgb),.64);
     border-radius:var(--kb-av-frame-radius);
-    background:linear-gradient(142deg,rgba(255,255,255,.42),rgba(255,255,255,.09) 50%,rgba(255,255,255,.28));
+    background:linear-gradient(142deg,rgba(var(--kb-glass-rgb),.42),rgba(255,255,255,.09) 50%,rgba(var(--kb-glass-rgb),.29));
     -webkit-backdrop-filter:blur(12px) saturate(155%);
     backdrop-filter:blur(12px) saturate(155%);
     box-shadow:inset 0 1px 0 rgba(255,255,255,.62),inset 0 -1px 0 rgba(255,255,255,.16);
@@ -463,12 +465,15 @@ const serviceDescriptions={
     position:absolute;
     z-index:0;
     inset:clamp(14px,2vw,30px);
-    border:1px solid rgba(255,255,255,.34);
+    border:1px solid rgba(var(--kb-glass-rgb),.40);
     border-radius:clamp(20px,2.2vw,36px);
-    background:linear-gradient(142deg,rgba(255,255,255,.21),rgba(255,255,255,.065) 48%,rgba(255,255,255,.12));
+    background:
+      radial-gradient(ellipse at 6% 7%,rgba(var(--kb-glass-rgb),.31),transparent 41%),
+      radial-gradient(ellipse at 96% 94%,rgba(var(--kb-glass-rgb),.23),transparent 44%),
+      linear-gradient(145deg,rgba(255,255,255,.76),rgba(255,255,255,.16) 54%,rgba(255,255,255,.55));
     -webkit-backdrop-filter:blur(18px) saturate(160%);
     backdrop-filter:blur(18px) saturate(160%);
-    box-shadow:inset 0 1px 0 rgba(255,255,255,.42),inset 0 -1px 0 rgba(255,255,255,.10),0 18px 50px rgba(0,0,0,.07);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.92),inset 0 0 25px rgba(var(--kb-glass-rgb),.13),0 18px 50px rgba(0,0,0,.06);
     pointer-events:none;
     transition:background .35s ease,border-color .35s ease,box-shadow .35s ease;
   }
@@ -481,7 +486,7 @@ const serviceDescriptions={
     width:45%;
     height:28%;
     border-radius:40px;
-    background:radial-gradient(ellipse at top left,rgba(255,255,255,.16),transparent 70%);
+    background:radial-gradient(ellipse at top left,rgba(var(--kb-glass-rgb),.22),transparent 70%);
     pointer-events:none;
   }
   .kb-services-tile-content{
@@ -519,9 +524,18 @@ const serviceDescriptions={
   }
   .kb-services-tile:hover::before,
   .kb-services-tile:focus-visible::before{
-    background:linear-gradient(142deg,rgba(255,255,255,.30),rgba(255,255,255,.105) 48%,rgba(255,255,255,.20));
-    border-color:rgba(255,255,255,.69);
-    box-shadow:inset 0 1px 0 rgba(255,255,255,.65),0 0 0 2px rgba(255,255,255,.2),0 20px 55px rgba(0,0,0,.12);
+    background:
+      radial-gradient(ellipse at 6% 7%,rgba(var(--kb-glass-rgb),.42),transparent 43%),
+      radial-gradient(ellipse at 96% 94%,rgba(var(--kb-glass-rgb),.31),transparent 46%),
+      linear-gradient(145deg,rgba(255,255,255,.84),rgba(255,255,255,.20) 54%,rgba(255,255,255,.62));
+    border-color:rgba(var(--kb-glass-rgb),.63);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.95),0 0 0 1px rgba(var(--kb-glass-rgb),.15),0 20px 55px rgba(0,0,0,.08);
+  }
+  /* El cristal audiovisual sigue siendo solo un anillo, sin teñir el vídeo. */
+  .kb-services-tile.kb-services-tile--audiovisual:hover::before,
+  .kb-services-tile.kb-services-tile--audiovisual:focus-visible::before{
+    background:linear-gradient(142deg,rgba(var(--kb-glass-rgb),.54),rgba(255,255,255,.12) 50%,rgba(var(--kb-glass-rgb),.37));
+    border-color:rgba(var(--kb-glass-rgb),.75);
   }
   .kb-services-tile:focus-visible{outline:3px solid #121212}
   @media(max-width:980px){

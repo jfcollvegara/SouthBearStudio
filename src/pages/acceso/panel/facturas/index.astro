@@ -241,7 +241,10 @@ import '../../../../styles/private-commerce.css';
         side.append(el('strong',formatEuro(item.total_cents),'sb-ops__record-money'),el('span','BORRADOR INTERNO','sb-ops__status'));
         const acts=el('div',undefined,'sb-ops__actions');
         const action=(name,code)=>{const b=el('button',name);b.type='button';b.dataset.id=item.id;b.dataset.action=code;acts.append(b);};
-        if(!item.archived_at)action('Editar ↗','edit');
+        if(!item.archived_at){
+          action('Editar ↗','edit');
+          const collections=el('a','Plan de cobro ↗');collections.href='/acceso/panel/cobros/?borrador='+encodeURIComponent(item.id);collections.title='Crear plan a partir del borrador, sin emitir factura';acts.append(collections);
+        }
         action(item.archived_at?'Restaurar':'Archivar',item.archived_at?'restore':'archive');
         article.append(main,side,acts);rows.append(article);
       }

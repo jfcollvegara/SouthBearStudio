@@ -33,10 +33,13 @@ export async function onRequestPost({request,env,data}){
       .bind(id,code,obj.client_id,obj.title,obj.issue_date,obj.valid_until,obj.notes,obj.subtotal_cents,obj.tax_cents,obj.total_cents);
     await db.batch([
       stmt,...quoteInserts(db,id,obj.lines),
-      ...(oppId?[db.prepare("UPDATE sales_opportunities SET quote_id=?,stage='propuesta',updated_at=CURRENT_TIMESTAMP WHERE id=? AND quote_id IS NULL AND archived_at IS NULL").bind(id,oppId),
+      ...(oppId?[db.prepare("UPDATE sales_opportunities SET quote_id=?,stage=CASE WHEN stage IN ('nuevo','contactado') THEN 'propuesta' ELSE stage END,updated_at=CURRENT_TIMESTAMP WHERE id=? AND quote_id IS NULL AND archived_at IS NULL").bind(id,oppId),
       audit(db,'opportunity',oppId,'update',data.southbearUser,['quote_id','stage'])]:[]),
       audit(db,'quote',id,'create',data.southbearUser,['lines','title','client_id'])
     ]);
     return apiResponse({ok:true,item:await quoteDetail(db,id)},201);
-  }catch(e){return fail(e);}
+  }catch(e){
+    if(/La oportunidad ya tiene presupuesto/.test(e?.message||''))return apiError('Esta oportunidad ya tiene un presupuesto vinculado.',409);
+    return fail(e);
+  }
 }

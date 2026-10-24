@@ -8,8 +8,8 @@ Crear un centro de operaciones único, privado y responsive, para gestionar el e
 
 - **Autenticación:** Cloudflare Access con una política por correo autorizado, verificada en la cuenta de Cloudflare.
 - **Interfaz:** Dashboard y páginas de todos los módulos; navegación lateral y móvil.
-- **Datos persistentes:** **Implementados para Clientes** mediante Cloudflare D1, base `southbear-studio-os`, jurisdicción UE. Los demás módulos todavía no almacenan datos. Los indicadores económicos siguen mostrando raya (—) hasta tener registros reales.
-- **Operaciones:** **Clientes habilitado**: altas, consulta, búsqueda, edición, archivo y restauración con auditoría y control de acceso servidor. **No habilitadas**: emisión de facturas y operaciones económicas, pendientes de backend específico y controles legales.
+- **Datos persistentes:** **Implementados para Clientes, Presupuestos y Proyectos** mediante Cloudflare D1, base `southbear-studio-os`, jurisdicción UE. El Dashboard muestra actividad y recuentos reales de esos tres módulos. Facturación, contabilidad y los demás módulos todavía no almacenan datos.
+- **Operaciones:** **Clientes, Presupuestos y Proyectos habilitados**: creación, consulta, búsqueda, edición, archivo y cambios de estado, con auditoría y control de acceso en servidor. Los presupuestos incluyen conceptos y cálculo de IVA, pero **no son facturas**; la emisión de facturas y operaciones contables aún no están habilitadas.
 - **Separación de proyectos:** no utilizar la base de datos de HyperDrive para datos de SouthBear.
 
 ## Áreas y funciones
@@ -38,8 +38,8 @@ Ampliaciones futuras según necesidad: contratos firmados, colaboradores, emplea
 ## Orden de implantación
 
 1. **Infraestructura de datos (primera fase implementada)**: D1 en UE con Pages Functions; rutas API protegidas por Cloudflare Access y validación criptográfica del JWT también en servidor. Restricción por correo del titular, preparados clientes y auditoría; pendientes automatización de copias/exportación e identidades/roles adicionales.
-2. **CRM y proyectos**: entidad `clients` operativa con registro de cambios; siguientes entidades `contacts`, `leads`, `projects`, `tasks`, `project_files`, archivos en almacenamiento privado. Incluye historial y búsqueda.
-3. **Presupuestos y facturas**: documentos, líneas, estados, impuestos, PDF y conversiones; definir y validar la información fiscal real del emisor. No permitir modificar o borrar indiscriminadamente facturas emitidas; ofrecer rectificación mediante documentos trazables.
+2. **CRM y proyectos (parcialmente implementado)**: `clients` y `projects` operativos, relacionados; siguientes entidades `contacts`, `leads`, `tasks`, `project_files`, archivos en almacenamiento privado. Incluye historial y búsqueda.
+3. **Presupuestos y facturas (presupuestos implementados)**: presupuestos con líneas, estados, IVA y vinculación a proyectos; pendientes PDF, envío, aceptación firmada y facturación. Definir y validar la información fiscal real del emisor. No permitir modificar o borrar indiscriminadamente facturas emitidas; ofrecer rectificación mediante documentos trazables.
 4. **Tesorería y gastos**: facturas recibidas, pagos, cobros, saldos, vencimientos, conciliación, archivos de justificantes.
 5. **Contabilidad e impuestos**: libros y resúmenes coherentes con los asientos/registros; exportación para asesoría y validación con normativa española aplicable antes de su puesta en producción.
 6. **Automatizaciones**: avisos, recordatorios, renovaciones y reportes, solo cuando existan datos confiables y permisos apropiados.

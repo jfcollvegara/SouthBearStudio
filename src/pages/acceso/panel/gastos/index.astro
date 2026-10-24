@@ -157,6 +157,7 @@ import '../../../../styles/private-commerce.css';
       const actions=el('div',undefined,'sb-ops__actions');
       const act=(label,action)=>{const b=el('button',label);b.type='button';b.dataset.id=item.id;b.dataset.action=action;actions.append(b);};
       act('Ver pagos ↗','pay');
+      const docs=el('a','Justificantes ↗');docs.href='/acceso/panel/documentos/?gasto='+encodeURIComponent(item.id);docs.title='Consultar justificantes privados del gasto';actions.append(docs);
       if(!item.archived_at&&!item.paid_cents)act('Editar','edit');
       act(item.archived_at?'Restaurar':'Archivar',item.archived_at?'restore':'archive');
       card.append(main,side,actions);rows.append(card);

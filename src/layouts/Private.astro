@@ -1,0 +1,48 @@
+---
+/**
+ * Base visual reutilizable para el futuro área privada de SouthBear Studio.
+ * IMPORTANTE: no implementa autenticación; la seguridad deberá verificarse
+ * en el servidor antes de habilitar cualquier función administrativa.
+ */
+import '@fontsource-variable/space-grotesk/wght.css';
+import '@fontsource-variable/inter/wght.css';
+import '../styles/private-audiovisual.css';
+const {
+  title='Área privada',
+  description='Área de gestión interna de SouthBear Studio.'
+}=Astro.props;
+---
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta name="robots" content="noindex, nofollow, noarchive, nosnippet"/>
+    <meta name="googlebot" content="noindex, nofollow, noarchive, nosnippet"/>
+    <meta name="referrer" content="strict-origin-when-cross-origin"/>
+    <meta name="theme-color" content="#0A0A0A"/>
+    <meta name="description" content={description}/>
+    <link rel="icon" href="/favicon.ico?v=4" sizes="any"/>
+    <link rel="apple-touch-icon" href="/apple-touch-icon-v4.png"/>
+    <title>{title} | SOUTHBEAR STUDIO</title>
+  </head>
+  <body class="sb-private">
+    <div class="sb-private-frame">
+      <header class="sb-private-header">
+        <a href="/" class="sb-private-header__brand" aria-label="SouthBear Studio, volver al inicio">
+          <img src="/southbear-logo.svg" alt="SOUTHBEAR STUDIO" width="192" height="42"/>
+        </a>
+        <div class="sb-private-header__meta">
+          <span class="sb-private-record" aria-hidden="true"></span>
+          <span>CONTROL ROOM <span class="sb-private-header__slash">/</span> INTERNAL</span>
+        </div>
+      </header>
+      <main id="main-content" class="sb-private-main"><slot/></main>
+      <footer class="sb-private-footer">
+        <span>© {new Date().getFullYear()} SOUTHBEAR STUDIO</span>
+        <a href="/">← VOLVER A LA WEB</a>
+        <span class="sb-private-footer__detail">CREATIVE SYSTEM / 01</span>
+      </footer>
+    </div>
+  </body>
+</html>

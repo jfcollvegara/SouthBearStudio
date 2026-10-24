@@ -232,3 +232,20 @@
 .sb-issuer__note p{margin:13px 0 0;font-size:12px;line-height:1.75;color:#b0c1a7}
 @media(max-width:1080px){.sb-issuer__layout{grid-template-columns:minmax(0,1fr)}.sb-issuer__side{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:650px){.sb-issuer__side{grid-template-columns:minmax(0,1fr)}.sb-issuer__panel form{padding:21px 18px}.sb-issuer__panel-head{padding:23px 18px 13px}.sb-issuer__preview{min-height:230px}.sb-issuer__preview strong{margin:28px 0 20px}}
+
+
+/* Facturación: borradores internos, claramente separados de documentos emitidos */
+.sb-billing__warning{margin:24px 0 30px;padding:20px 22px;display:flex;gap:15px;align-items:flex-start;background:#cda63d0c;border:1px solid #b99b527e;color:#ecdbaf}
+.sb-billing__warning-mark{display:grid;place-items:center;width:33px;height:33px;flex:0 0 33px;background:#c3a65a1b;border:1px solid #c3a65a77;color:#f6df94;font-size:21px;font-weight:900}
+.sb-billing__warning strong{font-size:10px;letter-spacing:.13em;color:#ffe69c;font-weight:850}
+.sb-billing__warning p{margin:10px 0 0;font-size:12px;line-height:1.75;color:#ddd3bd}
+.sb-billing__warning p b{color:#fff2c9}
+.sb-billing__controls{grid-template-columns:minmax(0,1fr) 190px 46px}
+.sb-billing__record{border-left:3px solid #e1b95a}
+.sb-billing__record .sb-ops__status{color:#f3d798;border-color:#c3a75c6b;background:#c3a75c0e}
+.sb-billing__dialog{border-color:#b9a568}
+.sb-billing__dialog .sb-ops-dialog__head{background:#211f19}
+.sb-billing__dialog .sb-ops-dialog__head span{color:#efd798}
+.sb-billing__dialog .sb-ops-form>p.sb-ops-form__note{color:#e1d4b8;border-color:#ddc18a;background:#baab7710}
+@media(max-width:900px){.sb-billing__controls{grid-template-columns:minmax(0,1fr) 170px 46px}}
+@media(max-width:650px){.sb-billing__controls{grid-template-columns:minmax(0,1fr) 46px}.sb-billing__controls label:nth-child(2){grid-column:1;grid-row:2}}

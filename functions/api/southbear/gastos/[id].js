@@ -1,4 +1,4 @@
-import {expenseDetail,normalizeExpense,validateProject,expenseError,apiResponse,apiError,requestBody,validId,audit} from '../../../../src/server/southbear-expenses.js';
+import {expenseDetail,normalizeExpense,resolveExpenseSupplier,validateProject,expenseError,apiResponse,apiError,requestBody,validId,audit} from '../../../../src/server/southbear-expenses.js';
 
 export async function onRequestGet({env,params}){
   if(!validId(params.id))return apiError('Gasto no válido.',400);
@@ -20,7 +20,8 @@ export async function onRequestPatch({env,request,params,data}){
     if(old.paid_cents>0)return apiError('Este gasto ya tiene pagos registrados. Para modificar importes, anula antes los pagos asociados con su motivo.',409);
     const obj=normalizeExpense(raw);
     await validateProject(db,obj.project_id);
-    const fields=['supplier_name','title','category','project_id','expense_date','due_date','document_ref','notes','gross_cents','vat_bps','base_cents','vat_cents'];
+    await resolveExpenseSupplier(db,obj,old.supplier_id);
+    const fields=['supplier_id','supplier_name','title','category','project_id','expense_date','due_date','document_ref','notes','gross_cents','vat_bps','base_cents','vat_cents'];
     await db.batch([db.prepare('UPDATE expenses SET '+fields.map(f=>f+'=?').join(',')+',updated_at=CURRENT_TIMESTAMP WHERE id=?').bind(...fields.map(f=>obj[f]),old.id),
       audit(db,'expense',old.id,'update',data.southbearUser,fields)]);
     return apiResponse({ok:true,item:await expenseDetail(db,old.id)});

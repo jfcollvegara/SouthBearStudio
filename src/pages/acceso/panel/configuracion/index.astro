@@ -1,0 +1,129 @@
+---
+import Private from '../../../../layouts/Private.astro';
+import '../../../../styles/private-commerce.css';
+---
+<Private workspace title="Configuración del estudio" description="Datos de SouthBear Studio para documentos comerciales.">
+  <section class="sb-ops sb-issuer" aria-labelledby="sb-issuer-title">
+    <div class="sb-ws-topline">
+      <span class="sb-ws-breadcrumb"><a href="/acceso/panel/">SOUTHBEAR OS</a> <span>/</span> ESTUDIO <span>/</span> CONFIGURACIÓN</span>
+      <span class="sb-ws-topline__session"><i aria-hidden="true"></i> DATOS PRIVADOS</span>
+    </div>
+    <header class="sb-ops__hero">
+      <div>
+        <span class="sb-ops__label">SOUTHBEAR / IDENTIDAD DEL ESTUDIO</span>
+        <h1 id="sb-issuer-title">TU <em>ESTUDIO.</em></h1>
+        <p>Configura los datos que figurarán como emisor en los presupuestos de SouthBear Studio. Solo aparecen en documentos privados generados bajo tu sesión.</p>
+      </div>
+      <a class="sb-ops__primary" href="/acceso/panel/presupuestos/">Ir a Presupuestos ↗</a>
+    </header>
+
+    <div class="sb-ops__info"><b aria-hidden="true">✳</b><span>La razón social, NIF y dirección deben corresponder a los datos fiscales reales del emisor. No se completan automáticamente ni se inventan. Los presupuestos no son facturas.</span></div>
+
+    <div class="sb-issuer__layout">
+      <section class="sb-issuer__panel" aria-labelledby="sb-issuer-settings-heading">
+        <div class="sb-issuer__panel-head">
+          <span class="sb-issuer__index">01 / CONFIGURACIÓN DEL EMISOR</span>
+          <h2 id="sb-issuer-settings-heading">Identidad y contacto.</h2>
+        </div>
+        <form id="sb-issuer-form">
+          <div class="sb-ops-form">
+            <label class="sb-ops-form__wide">Nombre comercial <b>*</b>
+              <input name="trade_name" maxlength="150" required placeholder="SOUTHBEAR STUDIO" autocomplete="organization"/>
+            </label>
+            <label class="sb-ops-form__wide">Nombre fiscal / Razón social
+              <input name="legal_name" maxlength="180" placeholder="Nombre y apellidos o razón social exacta" autocomplete="off"/>
+            </label>
+            <label>NIF / NIE / CIF
+              <input name="tax_id" maxlength="40" placeholder="Identificación fiscal" autocomplete="off"/>
+            </label>
+            <label>Correo de contacto
+              <input type="email" name="email" maxlength="190" placeholder="Correo del negocio" autocomplete="email"/>
+            </label>
+            <label>Teléfono
+              <input type="tel" name="phone" maxlength="60" placeholder="Teléfono profesional" autocomplete="tel"/>
+            </label>
+            <label>Web
+              <input type="url" name="website" maxlength="240" placeholder="https://..." autocomplete="url"/>
+            </label>
+            <label class="sb-ops-form__wide">Domicilio fiscal
+              <input name="address" maxlength="240" placeholder="Calle, número, planta..." autocomplete="street-address"/>
+            </label>
+            <label>Código postal
+              <input name="postal_code" maxlength="30" placeholder="Código postal" autocomplete="postal-code"/>
+            </label>
+            <label>Localidad
+              <input name="city" maxlength="120" placeholder="Municipio" autocomplete="address-level2"/>
+            </label>
+            <label>Provincia
+              <input name="province" maxlength="120" placeholder="Provincia" autocomplete="address-level1"/>
+            </label>
+            <label>País
+              <input name="country" maxlength="90" placeholder="España" autocomplete="country-name"/>
+            </label>
+            <label class="sb-ops-form__wide">Condiciones generales de los presupuestos
+              <textarea name="quote_footer" maxlength="1500" rows="4" placeholder="Por ejemplo, condiciones de pago, plazos y vigencia de la propuesta..."></textarea>
+            </label>
+          </div>
+          <p class="sb-issuer__validation" id="sb-issuer-validation" role="status">Consultando configuración…</p>
+          <p class="sb-ops-form__error" id="sb-issuer-error" role="alert" hidden></p>
+          <div class="sb-ops-form__actions">
+            <button type="submit" id="sb-issuer-save" class="sb-ops__primary">Guardar datos del estudio ↗</button>
+          </div>
+        </form>
+      </section>
+      <aside class="sb-issuer__side">
+        <span class="sb-issuer__index">02 / DOCUMENTOS</span>
+        <div class="sb-issuer__preview">
+          <span>PREVIEW / SOUTHBEAR STUDIO</span>
+          <strong>DOCUMENTOS<br/>CON <em>IDENTIDAD.</em></strong>
+          <div class="sb-issuer__stripe"></div>
+          <p>Los datos que guardes se usarán en las cabeceras de tus presupuestos PDF. No se publican en la web comercial.</p>
+        </div>
+        <div class="sb-issuer__note">
+          <strong>Antes de emitir facturas</strong>
+          <p>Este formulario configura documentos comerciales. La facturación legal y sus requisitos normativos tendrán un módulo independiente.</p>
+        </div>
+      </aside>
+    </div>
+    <p id="sb-issuer-feedback" class="sb-ops__feedback" role="status" aria-live="polite"></p>
+    <footer class="sb-ops__footer">SOUTHBEAR OS / IDENTIDAD INTERNA · INFORMACIÓN PRIVADA</footer>
+  </section>
+  <script>
+    import {requestApi,field,message} from '../../../../scripts/private-commerce.js';
+    const form=document.getElementById('sb-issuer-form');
+    const ready=document.getElementById('sb-issuer-validation');
+    const feedback=document.getElementById('sb-issuer-feedback');
+    const errorEl=document.getElementById('sb-issuer-error');
+    const save=document.getElementById('sb-issuer-save');
+    const names=['trade_name','legal_name','tax_id','email','phone','address','postal_code','city','province','country','website','quote_footer'];
+    let loaded=false;
+    function applyReadiness(status){
+      ready.classList.toggle('is-ready',status);
+      ready.textContent=status
+        ? 'DATOS FISCALES COMPLETOS · YA PUEDEN FIGURAR EN LOS PRESUPUESTOS PDF.'
+        : 'FALTAN DATOS DEL EMISOR · LOS PRESUPUESTOS PDF SE MARCARÁN COMO PROVISIONALES HASTA COMPLETAR LA IDENTIFICACIÓN FISCAL Y EL DOMICILIO.';
+    }
+    async function load(){
+      try{
+        const res=await requestApi('/configuracion');
+        for(const name of names)field(form,name).value=res.item?.[name]||'';
+        if(!field(form,'trade_name').value)field(form,'trade_name').value='SOUTHBEAR STUDIO';
+        applyReadiness(res.issuer_ready);
+        loaded=true;
+      }catch(e){message(feedback,e.message,true);ready.textContent='NO SE HA PODIDO LEER LA CONFIGURACIÓN.';}
+    }
+    form.addEventListener('submit',async event=>{
+      event.preventDefault();
+      if(!loaded)return;
+      save.disabled=true;errorEl.hidden=true;
+      try{
+        const payload=Object.fromEntries(names.map(name=>[name,field(form,name).value.trim()]));
+        const res=await requestApi('/configuracion',{method:'PUT',payload});
+        applyReadiness(res.issuer_ready);
+        message(feedback,'Datos del estudio guardados correctamente.');
+      }catch(e){errorEl.hidden=false;errorEl.textContent=e.message;message(feedback,e.message,true);}
+      finally{save.disabled=false;}
+    });
+    load();
+  </script>
+</Private>

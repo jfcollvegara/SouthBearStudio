@@ -1,0 +1,131 @@
+---
+import Private from '../../../../layouts/Private.astro';
+import '../../../../styles/private-commerce.css';
+---
+<Private workspace title="Proyectos" description="Gestión y seguimiento de proyectos de SouthBear Studio.">
+<section class="sb-ops" aria-labelledby="sb-project-title">
+  <div class="sb-ws-topline"><span class="sb-ws-breadcrumb"><a href="/acceso/panel/">SOUTHBEAR OS</a> <span>/</span> OPERACIONES <span>/</span> PROYECTOS</span><span class="sb-ws-topline__session"><i aria-hidden="true"></i> DATOS PRIVADOS</span></div>
+  <header class="sb-ops__hero"><div><span class="sb-ops__label">SOUTHBEAR / PRODUCCIÓN</span><h1 id="sb-project-title">TUS <em>PROYECTOS.</em></h1><p>Organiza los trabajos del estudio, sus clientes, fases de desarrollo, presupuestos aceptados y fechas de entrega.</p></div><button class="sb-ops__primary" id="sb-project-new" type="button">+ Nuevo proyecto <span aria-hidden="true">↗</span></button></header>
+  <div class="sb-ops__info"><b aria-hidden="true">✳</b><span>Los proyectos se almacenan en la base privada de SouthBear Studio. Puedes enlazar un presupuesto aceptado, cambiar la fase de trabajo y archivar proyectos sin borrarlos definitivamente.</span></div>
+  <div class="sb-ops__controls">
+    <label>BUSCAR PROYECTO<input id="sb-project-search" type="search" placeholder="Título o cliente" maxlength="120"/></label>
+    <label>ESTADO<select id="sb-project-state"><option value="">Todos</option><option value="planificado">Planificado</option><option value="en_curso">En curso</option><option value="en_revision">En revisión</option><option value="entregado">Entregado</option><option value="cancelado">Cancelado</option></select></label>
+    <label>VISIBILIDAD<select id="sb-project-archive"><option value="0">Activos</option><option value="1">Archivados</option></select></label>
+    <button class="sb-ops__reload" id="sb-project-reload" title="Actualizar" type="button">↻</button>
+  </div>
+  <div class="sb-ops__meta"><span id="sb-project-counter">PROYECTOS / —</span><span id="sb-project-loading" aria-live="polite">CARGANDO…</span></div>
+  <div class="sb-ops__records" id="sb-project-rows" aria-live="polite"><div class="sb-ops__empty">Consultando proyectos…</div></div>
+  <button type="button" class="sb-ops__more" id="sb-project-more" hidden>Mostrar más ↓</button>
+  <p id="sb-project-message" class="sb-ops__feedback" role="status" aria-live="polite"></p>
+  <footer class="sb-ops__footer">SOUTHBEAR OS / PROJECT MANAGER · NO SE ELIMINAN DEFINITIVAMENTE LOS REGISTROS</footer>
+</section>
+<dialog class="sb-ops-dialog" id="sb-project-dialog" aria-labelledby="sb-project-dialog-title">
+  <div class="sb-ops-dialog__head"><div><span>SOUTHBEAR / WORKFLOW</span><h2 id="sb-project-dialog-title">Nuevo proyecto.</h2></div><button class="sb-ops-dialog__close" id="sb-project-close" type="button" aria-label="Cerrar">×</button></div>
+  <form id="sb-project-form">
+    <div class="sb-ops-form">
+      <label class="sb-ops-form__wide">Título del proyecto <b>*</b><input name="title" maxlength="200" required placeholder="Ej. Identidad corporativa para…" autocomplete="off"/></label>
+      <label>Cliente <b>*</b><select name="client_id" required><option value="">Cargando clientes…</option></select></label>
+      <label>Servicio<select name="category"><option value="web">Desarrollo web</option><option value="diseno">Diseño gráfico</option><option value="audiovisual">Producción audiovisual</option><option value="otro">Otros servicios</option></select></label>
+      <label>Estado<select name="status"><option value="planificado">Planificado</option><option value="en_curso">En curso</option><option value="en_revision">En revisión</option><option value="entregado">Entregado</option><option value="cancelado">Cancelado</option></select></label>
+      <label>Presupuesto aceptado (opcional)<select name="quote_id"><option value="">Sin presupuesto vinculado</option></select></label>
+      <label>Fecha de inicio<input name="start_date" type="date"/></label>
+      <label>Fecha límite de entrega<input name="due_date" type="date"/></label>
+      <label class="sb-ops-form__wide">Descripción del trabajo<textarea name="description" rows="3" maxlength="5000" placeholder="Objetivos, alcance, entregables…"></textarea></label>
+      <label class="sb-ops-form__wide">Notas internas<textarea name="notes" rows="3" maxlength="4000" placeholder="Información interna de gestión…"></textarea></label>
+      <p class="sb-ops-form__wide sb-ops-form__note">Un presupuesto solo puede asociarse a un proyecto si está aceptado. La vinculación es permanente para mantener la trazabilidad.</p>
+    </div>
+    <p id="sb-project-form-error" class="sb-ops-form__error" hidden role="alert"></p>
+    <div class="sb-ops-form__actions"><button type="button" id="sb-project-cancel">Cancelar</button><button class="sb-ops__primary" id="sb-project-save" type="submit">Guardar proyecto ↗</button></div>
+  </form>
+</dialog>
+<script>
+  import {requestApi,getAll,fillOptions,el,field,message,formatDate} from '../../../../scripts/private-commerce.js';
+  const $=id=>document.getElementById(id);
+  const base='/proyectos',form=$('sb-project-form'),dialog=$('sb-project-dialog'),rows=$('sb-project-rows'),feedback=$('sb-project-message');
+  const statuses={planificado:'Planificado',en_curso:'En curso',en_revision:'En revisión',entregado:'Entregado',cancelado:'Cancelado'};
+  let clients=[],quotes=[],items=[],selected=null,hasMore=false,page=1,loadingId=0,busy=false;
+  const inputs=['client_id','quote_id','title','category','status','start_date','due_date','description','notes'];
+  function errorText(err){message(feedback,err.message,true);}
+  function paint(){
+    rows.replaceChildren();
+    $('sb-project-counter').textContent='PROYECTOS / '+items.length+(hasMore?'+':'');
+    $('sb-project-more').hidden=!hasMore;
+    if(!items.length){rows.append(el('div',$('sb-project-archive').value==='1'?'No hay proyectos archivados.':'Todavía no hay proyectos con estos filtros.','sb-ops__empty'));return;}
+    for(const item of items){
+      const card=el('article',undefined,'sb-ops__record');
+      const main=el('div',undefined,'sb-ops__record-main');
+      main.append(el('div',item.client_name,'sb-ops__record-index'),el('h3',item.title),el('p',[item.category.toUpperCase(),item.due_date?'Entrega: '+formatDate(item.due_date):'Sin fecha límite',item.quote_code?'Presupuesto: '+item.quote_code:null].filter(Boolean).join(' · ')));
+      const side=el('div',undefined,'sb-ops__record-side');
+      side.append(el('span',statuses[item.status]||item.status,'sb-ops__status sb-ops__status--'+item.status));
+      const actions=el('div',undefined,'sb-ops__actions');
+      function act(label,action){const b=el('button',label);b.type='button';b.dataset.id=item.id;b.dataset.action=action;actions.append(b);}
+      if(!item.archived_at)act('Editar ↗','edit');
+      act(item.archived_at?'Restaurar':'Archivar',item.archived_at?'restore':'archive');
+      card.append(main,side,actions);rows.append(card);
+    }
+  }
+  async function load(reset=true){
+    const turn=++loadingId;if(reset){page=1;items=[];}
+    $('sb-project-loading').textContent='CARGANDO…';
+    try{
+      const params=new URLSearchParams({q:$('sb-project-search').value.trim(),status:$('sb-project-state').value,archived:$('sb-project-archive').value,page:String(page)});
+      const result=await requestApi(base+'?'+params);
+      if(turn!==loadingId)return;
+      items=reset?result.items:items.concat(result.items);hasMore=result.hasMore;paint();$('sb-project-loading').textContent='ACTUALIZADO';
+    }catch(e){if(turn!==loadingId)return;$('sb-project-loading').textContent='ERROR';if(reset)rows.replaceChildren(el('div','No se pueden cargar los proyectos.','sb-ops__empty'));errorText(e);}
+  }
+  async function referenceData(){
+    clients=await getAll('/clientes');
+    quotes=await getAll('/presupuestos?status=aceptado');
+  }
+  function addOptions(item){
+    fillOptions(field(form,'client_id'),clients,{empty:'Selecciona cliente',selected:item?.client_id});
+    const selectable=quotes.filter(q=>q.client_id===field(form,'client_id').value&&(item?.quote_id===q.id||!q.archived_at));
+    fillOptions(field(form,'quote_id'),selectable.map(q=>({id:q.id,name:q.code+' · '+q.title})),{empty:'No vincular',selected:item?.quote_id,label:'name'});
+  }
+  async function open(item=null){
+    selected=item;form.reset();$('sb-project-form-error').hidden=true;
+    $('sb-project-dialog-title').textContent=item?'Editar proyecto.':'Nuevo proyecto.';
+    field(form,'quote_id').disabled=false;
+    try{await referenceData();}catch(e){errorText(e);return;}
+    if(!clients.length){message(feedback,'Primero tienes que dar de alta un cliente.',true);return;}
+    if(item){for(const name of inputs){if(name==='quote_id'||name==='client_id')continue;field(form,name).value=item[name]||'';}}
+    addOptions(item);
+    if(item?.quote_id)field(form,'quote_id').disabled=true;
+    dialog.showModal();field(form,'title').focus();
+  }
+  field(form,'client_id').addEventListener('change',()=>{fillOptions(field(form,'quote_id'),quotes.filter(q=>q.client_id===field(form,'client_id').value).map(q=>({id:q.id,name:q.code+' · '+q.title})),{empty:'No vincular'});});
+  $('sb-project-new').addEventListener('click',()=>open());
+  $('sb-project-close').addEventListener('click',()=>dialog.close());
+  $('sb-project-cancel').addEventListener('click',()=>dialog.close());
+  dialog.addEventListener('click',e=>{if(e.target===dialog)dialog.close();});
+  form.addEventListener('submit',async e=>{
+    e.preventDefault();if(busy)return;busy=true;$('sb-project-save').disabled=true;$('sb-project-form-error').hidden=true;
+    try{
+      const obj=Object.fromEntries(inputs.map(k=>[k,field(form,k).disabled?(selected?.[k]??''):field(form,k).value.trim()]));
+      obj.quote_id||=null;
+      await requestApi(base+(selected?'/'+selected.id:''),{method:selected?'PATCH':'POST',payload:obj});
+      dialog.close();message(feedback,selected?'Proyecto actualizado.':'Proyecto creado correctamente.');await load();
+    }catch(err){$('sb-project-form-error').textContent=err.message;$('sb-project-form-error').hidden=false;}
+    finally{busy=false;$('sb-project-save').disabled=false;}
+  });
+  rows.addEventListener('click',async e=>{
+    const b=e.target.closest('button[data-action]');if(!b||busy)return;
+    const item=items.find(x=>x.id===b.dataset.id);if(!item)return;
+    if(b.dataset.action==='edit'){await open(item);return;}
+    const restore=b.dataset.action==='restore';
+    if(!restore&&!confirm('¿Archivar el proyecto «'+item.title+'»?'))return;
+    busy=true;b.disabled=true;
+    try{
+      await requestApi(base+'/'+item.id,restore?{method:'PATCH',payload:{archived:false}}:{method:'DELETE'});
+      message(feedback,restore?'Proyecto restaurado.':'Proyecto archivado.');await load();
+    }catch(err){errorText(err);}finally{busy=false;b.disabled=false;}
+  });
+  let debounce;for(const id of ['sb-project-search','sb-project-state','sb-project-archive'])$(id).addEventListener(id==='sb-project-search'?'input':'change',()=>{clearTimeout(debounce);debounce=setTimeout(()=>load(),230);});
+  $('sb-project-reload').addEventListener('click',()=>load());
+  $('sb-project-more').addEventListener('click',()=>{page++;load(false);});
+  const fromQuote=new URLSearchParams(location.search).get('presupuesto');
+  if(fromQuote){open().then(()=>{const quote=quotes.find(x=>x.id===fromQuote);if(!quote||!dialog.open)return;field(form,'client_id').value=quote.client_id;field(form,'client_id').dispatchEvent(new Event('change'));field(form,'quote_id').value=quote.id;field(form,'title').value=quote.title;});}
+  load();
+</script>
+</Private>

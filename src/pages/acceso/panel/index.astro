@@ -11,7 +11,8 @@ const shortcuts=[
   {slug:'clientes',label:'Consultar clientes',caption:'Relaciones y CRM',icon:'users'},
   {slug:'presupuestos',label:'Gestionar presupuestos',caption:'Propuestas comerciales',icon:'file-text'},
   {slug:'proyectos',label:'Seguir proyectos',caption:'Fases y entregables',icon:'layers'},
-  {slug:'cobros',label:'Cobros y anticipos',caption:'Pagos reales y pendientes',icon:'wallet'}
+  {slug:'cobros',label:'Cobros y anticipos',caption:'Pagos reales y pendientes',icon:'wallet'},
+  {slug:'gastos',label:'Gestionar gastos',caption:'Pagos, proveedores y costes',icon:'credit-card'}
 ];
 const getIcon = slug => {
   const item=privateSections.flatMap(group=>group.items).find(it=>it.slug===slug);
@@ -41,7 +42,7 @@ const groupHref = group => (group.items[0]?.href||'/acceso/panel/');
     <div class="sb-ws-setup" role="status">
       <div>
         <strong><span aria-hidden="true">✳</span> Tu estudio ya tiene datos conectados</strong>
-        <p>Clientes, presupuestos, proyectos, borradores de facturación y cobros utilizan la base privada del estudio. «Cobrado» muestra solo los movimientos de ingresos registrados manualmente, no facturas emitidas; la contabilidad fiscal permanece pendiente.</p>
+        <p>Clientes, presupuestos, proyectos, borradores, cobros y gastos están conectados a la base privada. El saldo de caja compara movimientos registrados manualmente, no equivale a beneficio contable ni a facturación fiscal.</p>
       </div>
       <a href="/acceso/panel/configuracion/">Ver configuración <span aria-hidden="true">↗</span></a>
     </div>
@@ -65,6 +66,12 @@ const groupHref = group => (group.items[0]?.href||'/acceso/panel/');
             <p><span aria-hidden="true"></span>{metric.note}</p>
           </article>
         ))}
+      </div>
+      <div class="sb-ws-cash" aria-label="Resumen mensual de tesorería registrada">
+        <div><span>COBRADO DEL MES</span><strong id="sb-ws-cash-in">—</strong></div>
+        <div><span>GASTOS PAGADOS DEL MES</span><strong id="sb-ws-cash-out">—</strong></div>
+        <div><span>SALDO NETO DE CAJA REGISTRADO</span><strong id="sb-ws-cash-balance">—</strong></div>
+        <p>Flujo orientativo de movimientos anotados manualmente. No es beneficio contable, facturación fiscal ni extracto bancario.</p>
       </div>
     </section>
 
@@ -142,6 +149,11 @@ const groupHref = group => (group.items[0]?.href||'/acceso/panel/');
           const node=document.querySelector('[data-metric="'+key+'"]');
           if(node&&Number.isInteger(value)&&value>=0){node.textContent=key.endsWith('_cents')?new Intl.NumberFormat('es-ES',{style:'currency',currency:'EUR'}).format(value/100):new Intl.NumberFormat('es-ES').format(value);node.setAttribute('aria-label','Dato real registrado: '+node.textContent);}
         }
+        const euro=new Intl.NumberFormat('es-ES',{style:'currency',currency:'EUR'});
+        for(const [id,key] of [['sb-ws-cash-in','receipts_month_cents'],['sb-ws-cash-out','expenses_month_cents'],['sb-ws-cash-balance','net_cash_month_cents']]){
+          const node=document.getElementById(id),value=result.metrics?.[key];
+          if(node&&Number.isSafeInteger(value))node.textContent=euro.format(value/100);
+        }
         if(!result.activity?.length){
           container.querySelector('h3').textContent='Todavía no hay actividad.';
           container.querySelector('p').textContent='Cuando registres un nuevo cliente, proyecto o presupuesto, aparecerá aquí.';
@@ -150,7 +162,7 @@ const groupHref = group => (group.items[0]?.href||'/acceso/panel/');
         container.classList.add('sb-ws-activity-list');
         container.replaceChildren();
         for(const item of result.activity){
-          const href=item.kind==='cliente'?'/acceso/panel/clientes/':item.kind==='proyecto'?'/acceso/panel/proyectos/':item.kind==='plan_cobro'?'/acceso/panel/cobros/':'/acceso/panel/presupuestos/';
+          const href=item.kind==='cliente'?'/acceso/panel/clientes/':item.kind==='proyecto'?'/acceso/panel/proyectos/':item.kind==='plan_cobro'?'/acceso/panel/cobros/':item.kind==='gasto'?'/acceso/panel/gastos/':'/acceso/panel/presupuestos/';
           const row=document.createElement('a');row.href=href;row.className='sb-ws-activity-row';
           const intro=document.createElement('span');intro.className='sb-ws-activity-row__intro';
           const type=document.createElement('span');type.className='sb-ws-activity-row__type';

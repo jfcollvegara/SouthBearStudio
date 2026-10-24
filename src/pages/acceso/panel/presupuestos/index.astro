@@ -154,6 +154,7 @@ import '../../../../styles/private-commerce.css';
         if(item.status==='aceptado'){
           const a=el('a','Crear proyecto ↗');a.href='/acceso/panel/proyectos/?presupuesto='+encodeURIComponent(item.id);acts.append(a);
           const invoice=el('a','Preparar factura ↗');invoice.href='/acceso/panel/facturas/?presupuesto='+encodeURIComponent(item.id);invoice.title='Crear borrador interno, no una factura emitida';acts.append(invoice);
+          const collections=el('a','Plan de cobro ↗');collections.href='/acceso/panel/cobros/?presupuesto='+encodeURIComponent(item.id);collections.title='Plan de anticipo y pago final, no una factura';acts.append(collections);
         }
         else button('Archivar','archive');
       }else button('Restaurar','restore');

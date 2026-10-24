@@ -9,7 +9,7 @@ export async function onRequestGet({params,env}){
 export async function onRequestPatch({params,request,env,data}){
   if(!validId(params.id))return apiError('Identificador no válido.');
   try{
-    const db=env.SOUTHBEAR_DB,raw=await requestBody(request),old=await quoteDetail(db,params.id);
+    const db=env.SOUTHBEAR_DB,raw=await requestBody(request,80000),old=await quoteDetail(db,params.id);
     if(!old)return apiError('Presupuesto no encontrado.',404);
     if(old.archived_at){
       if(raw.archived!==false)return apiError('Restaura el presupuesto antes de modificarlo.',409);

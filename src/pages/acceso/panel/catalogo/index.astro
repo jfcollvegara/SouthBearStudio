@@ -1,0 +1,187 @@
+---
+import Private from '../../../../layouts/Private.astro';
+import '../../../../styles/private-commerce.css';
+---
+<Private workspace title="Servicios y tarifas" description="Catálogo privado de servicios, paquetes y extras con tarifas IVA incluido.">
+<section class="sb-ops sb-catalog" aria-labelledby="sb-catalog-title">
+  <div class="sb-ws-topline"><span class="sb-ws-breadcrumb"><a href="/acceso/panel/">SOUTHBEAR OS</a> <span>/</span> ESTUDIO <span>/</span> SERVICIOS Y TARIFAS</span><span class="sb-ws-topline__session"><i aria-hidden="true"></i> CATÁLOGO PRIVADO</span></div>
+  <header class="sb-ops__hero">
+    <div><span class="sb-ops__label">SOUTHBEAR / SERVICE LIBRARY</span><h1 id="sb-catalog-title">TU <em>CATÁLOGO.</em></h1>
+      <p>Centraliza los servicios de diseño, desarrollo web y producción audiovisual. Define tus precios finales y reutilízalos al presupuestar.</p>
+    </div>
+    <button id="sb-catalog-new" class="sb-ops__primary" type="button">+ Nuevo servicio <span aria-hidden="true">↗</span></button>
+  </header>
+  <div class="sb-ops__info"><b aria-hidden="true">✳</b><span>Las tarifas son <strong>referencias comerciales privadas</strong>. Al añadir un servicio a un presupuesto se copia el nombre, la descripción, el precio y el IVA de ese momento. Cambiar después la tarifa no modifica presupuestos guardados. El IVA aplicable debe revisarse para cada operación.</span></div>
+  <div class="sb-ops__controls sb-catalog__controls">
+    <label>BUSCAR SERVICIO<input id="sb-catalog-search" type="search" maxlength="120" placeholder="Servicio, paquete o descripción" autocomplete="off"/></label>
+    <label>ÁREA<select id="sb-catalog-category"><option value="">Todas</option><option value="diseno">Diseño gráfico</option><option value="web">Desarrollo web</option><option value="audiovisual">Producción audiovisual</option><option value="otro">Otros</option></select></label>
+    <label>TIPO<select id="sb-catalog-kind"><option value="">Todos</option><option value="servicio">Servicio</option><option value="paquete">Paquete</option><option value="extra">Extra</option></select></label>
+    <label>VISIBILIDAD<select id="sb-catalog-archived"><option value="0">Activos</option><option value="1">Archivados</option></select></label>
+    <button id="sb-catalog-refresh" class="sb-ops__reload" type="button" title="Actualizar">↻</button>
+  </div>
+  <div class="sb-ops__meta"><span id="sb-catalog-count">SERVICIOS / —</span><span id="sb-catalog-loading" aria-live="polite">CARGANDO…</span></div>
+  <div id="sb-catalog-rows" class="sb-ops__records" aria-live="polite"><div class="sb-ops__empty">Consultando el catálogo…</div></div>
+  <button id="sb-catalog-more" class="sb-ops__more" type="button" hidden>Mostrar más ↓</button>
+  <p id="sb-catalog-message" class="sb-ops__feedback" role="status" aria-live="polite"></p>
+  <footer class="sb-ops__footer">SOUTHBEAR OS / TARIFAS PRIVADAS · HISTORIAL DE CAMBIOS · IVA INCLUIDO</footer>
+</section>
+<dialog id="sb-catalog-dialog" class="sb-ops-dialog" aria-labelledby="sb-catalog-dialog-title">
+  <div class="sb-ops-dialog__head"><div><span>SOUTHBEAR / SERVICE EDITOR</span><h2 id="sb-catalog-dialog-title">Nuevo servicio.</h2></div><button class="sb-ops-dialog__close" type="button" id="sb-catalog-close" aria-label="Cerrar">×</button></div>
+  <form id="sb-catalog-form">
+    <div class="sb-ops-form">
+      <label class="sb-ops-form__wide">Nombre del servicio / paquete <b>*</b><input name="name" required maxlength="240" placeholder="Ej. Diseño de identidad corporativa" autocomplete="off"/></label>
+      <label>Área<select name="category"><option value="diseno">Diseño gráfico</option><option value="web">Desarrollo web</option><option value="audiovisual">Producción audiovisual</option><option value="otro">Otros</option></select></label>
+      <label>Tipo<select name="service_kind"><option value="servicio">Servicio individual</option><option value="paquete">Paquete de servicios</option><option value="extra">Extra / complemento</option></select></label>
+      <label class="sb-ops-form__wide">Descripción para el presupuesto<textarea name="description" maxlength="1000" rows="3" placeholder="Qué incluye el servicio, entregables y condiciones específicas…"></textarea></label>
+      <label>Tarifa por unidad con IVA € <b>*</b><input name="gross" type="number" step=".01" min="0" max="10000000" required placeholder="Ej. 349.00"/></label>
+      <label>IVA de referencia<select name="vat_bps"><option value="2100">21 %</option><option value="1000">10 %</option><option value="400">4 %</option><option value="0">0 %</option></select></label>
+      <label>Unidad de venta <b>*</b><input name="unit_label" maxlength="50" required value="unidad" placeholder="servicio, vídeo, hora…"/></label>
+      <label>Orden de visualización<input name="sort_order" type="number" min="0" max="100000" step="1" value="0"/></label>
+      <div class="sb-ops__totals sb-ops-form__wide">
+        <span>Base imponible de referencia</span><strong id="sb-catalog-base">—</strong>
+        <span>IVA de referencia</span><strong id="sb-catalog-vat">—</strong>
+        <span>PRECIO FINAL POR UNIDAD</span><strong id="sb-catalog-total" class="big">—</strong>
+      </div>
+      <label class="sb-ops-form__wide">Notas internas (no aparecen en los presupuestos)<textarea name="internal_notes" maxlength="3000" rows="3" placeholder="Coste estimado, colaborador, observaciones comerciales…"></textarea></label>
+      <p class="sb-ops-form__note sb-ops-form__wide">Si un servicio necesita precio personalizado, puedes dejar la tarifa de referencia en 0 € y modificarla al crear cada presupuesto. El presupuesto no se guarda automáticamente al elegir un servicio.</p>
+      <div class="sb-catalog__history sb-ops-form__wide" id="sb-catalog-history-box" hidden>
+        <h3>Historial de tarifas</h3>
+        <div id="sb-catalog-history"></div>
+      </div>
+    </div>
+    <p id="sb-catalog-form-error" class="sb-ops-form__error" hidden role="alert"></p>
+    <div class="sb-ops-form__actions"><button id="sb-catalog-cancel" type="button">Cerrar</button><button id="sb-catalog-save" type="submit" class="sb-ops__primary">Guardar servicio ↗</button></div>
+  </form>
+</dialog>
+<script>
+  import {requestApi,el,field,message,minorUnits,formatEuro} from '../../../../scripts/private-commerce.js';
+  const $=id=>document.getElementById(id);
+  const base='/catalogo',form=$('sb-catalog-form'),dialog=$('sb-catalog-dialog'),rows=$('sb-catalog-rows'),feedback=$('sb-catalog-message');
+  const area={diseno:'Diseño gráfico',web:'Desarrollo web',audiovisual:'Producción audiovisual',otro:'Otros'};
+  const types={servicio:'SERVICIO',paquete:'PAQUETE',extra:'EXTRA'};
+  const fields=['name','description','category','service_kind','unit_label','vat_bps','internal_notes','sort_order'];
+  let items=[],selected=null,page=1,hasMore=false,busy=false,token=0;
+  function amounts(){
+    try{
+      const gross=minorUnits(field(form,'gross').value,2,'tarifa con IVA');
+      const vat=Number(field(form,'vat_bps').value);
+      const baseCents=Math.round(gross*10000/(10000+vat));
+      $('sb-catalog-base').textContent=formatEuro(baseCents);
+      $('sb-catalog-vat').textContent=formatEuro(gross-baseCents);
+      $('sb-catalog-total').textContent=formatEuro(gross);
+    }catch{for(const key of ['base','vat','total'])$('sb-catalog-'+key).textContent='—';}
+  }
+  field(form,'gross').addEventListener('input',amounts);
+  field(form,'vat_bps').addEventListener('change',amounts);
+  function paint(){
+    rows.replaceChildren();
+    $('sb-catalog-count').textContent='SERVICIOS / '+items.length+(hasMore?'+':'');
+    $('sb-catalog-more').hidden=!hasMore;
+    if(!items.length){rows.append(el('div',$('sb-catalog-archived').value==='1'?'No hay servicios archivados.':'El catálogo aún no tiene servicios con estos filtros.','sb-ops__empty'));return;}
+    for(const item of items){
+      const card=el('article',undefined,'sb-ops__record sb-catalog__record');
+      const main=el('div',undefined,'sb-ops__record-main');
+      main.append(el('div',area[item.category]+' / '+(types[item.service_kind]||'SERVICIO'),'sb-ops__record-index'),el('h3',item.name));
+      main.append(el('p',item.description||'Sin descripción comercial.'));
+      const side=el('div',undefined,'sb-ops__record-side');
+      side.append(el('strong',formatEuro(item.unit_gross_cents),'sb-ops__record-money'),el('span','IVA '+(item.vat_bps/100)+' % · '+item.unit_label,'sb-ops__status'));
+      const actions=el('div',undefined,'sb-ops__actions');
+      const action=(label,code)=>{const b=el('button',label);b.type='button';b.dataset.id=item.id;b.dataset.action=code;actions.append(b);};
+      action(item.archived_at?'Ver histórico':'Editar / Tarifas ↗','edit');
+      if(!item.archived_at){
+        const a=el('a','Usar en presupuesto ↗');
+        a.href='/acceso/panel/presupuestos/?servicio='+encodeURIComponent(item.id);
+        a.title='Nuevo presupuesto con servicio preseleccionado, sujeto a revisión del importe';
+        actions.append(a);
+      }
+      action(item.archived_at?'Restaurar':'Archivar',item.archived_at?'restore':'archive');
+      card.append(main,side,actions);rows.append(card);
+    }
+  }
+  async function load(reset=true){
+    const id=++token;if(reset){items=[];page=1;}
+    $('sb-catalog-loading').textContent='CARGANDO…';
+    try{
+      const query=new URLSearchParams({
+        q:$('sb-catalog-search').value.trim(),category:$('sb-catalog-category').value,kind:$('sb-catalog-kind').value,
+        archived:$('sb-catalog-archived').value,page:String(page)
+      });
+      const result=await requestApi(base+'?'+query);
+      if(token!==id)return;
+      items=reset?result.items:items.concat(result.items);hasMore=result.hasMore;
+      paint();$('sb-catalog-loading').textContent='ACTUALIZADO';
+    }catch(error){
+      if(token!==id)return;
+      $('sb-catalog-loading').textContent='ERROR';
+      rows.replaceChildren(el('div','No se han podido cargar los servicios.','sb-ops__empty'));
+      message(feedback,error.message,true);
+    }
+  }
+  async function open(id=null){
+    if(busy)return;
+    selected=null;form.reset();$('sb-catalog-form-error').hidden=true;
+    $('sb-catalog-dialog-title').textContent=id?'Editar servicio.':'Nuevo servicio.';
+    $('sb-catalog-history-box').hidden=true;$('sb-catalog-history').replaceChildren();
+    try{
+      const item=id?(await requestApi(base+'/'+id)).item:null;
+      selected=item;
+      for(const key of fields)field(form,key).value=item?.[key]??(key==='unit_label'?'unidad':key==='sort_order'?0:key==='category'?'diseno':key==='service_kind'?'servicio':key==='vat_bps'?2100:'');
+      field(form,'gross').value=item?(item.unit_gross_cents/100).toFixed(2):'';
+      const archived=!!item?.archived_at;
+      for(const control of form.querySelectorAll('input,textarea,select'))control.disabled=archived;
+      $('sb-catalog-save').hidden=archived;
+      if(item?.price_history?.length){
+        const wrap=$('sb-catalog-history');$('sb-catalog-history-box').hidden=false;
+        for(const price of item.price_history){
+          const date=new Date(price.changed_at.replace(' ','T').replace(/Z?$/,'Z'));
+          const validDate=!Number.isNaN(date.getTime());
+          const row=el('div',undefined,'sb-catalog__history-row');
+          row.append(el('span',validDate?date.toLocaleDateString('es-ES'):'Fecha sin confirmar'),el('strong',formatEuro(price.gross_cents)+' · IVA '+(price.vat_bps/100)+' %'));
+          wrap.append(row);
+        }
+      }
+      amounts();dialog.showModal();
+      if(!archived)field(form,'name').focus();
+    }catch(e){message(feedback,e.message,true);}
+  }
+  form.addEventListener('submit',async e=>{
+    e.preventDefault();if(busy)return;
+    busy=true;$('sb-catalog-save').disabled=true;$('sb-catalog-form-error').hidden=true;
+    try{
+      const obj=Object.fromEntries(fields.map(key=>[key,field(form,key).value.trim()]));
+      obj.sort_order=Number(obj.sort_order);
+      obj.vat_bps=Number(obj.vat_bps);
+      obj.unit_gross_cents=minorUnits(field(form,'gross').value,2,'precio con IVA');
+      await requestApi(base+(selected?'/'+selected.id:''),{method:selected?'PATCH':'POST',payload:obj});
+      dialog.close();message(feedback,selected?'Servicio actualizado sin modificar presupuestos existentes.':'Servicio añadido al catálogo privado.');
+      await load();
+    }catch(err){$('sb-catalog-form-error').hidden=false;$('sb-catalog-form-error').textContent=err.message;}
+    finally{busy=false;$('sb-catalog-save').disabled=false;}
+  });
+  rows.addEventListener('click',async e=>{
+    const b=e.target.closest('button[data-action]');if(!b||busy)return;
+    const item=items.find(x=>x.id===b.dataset.id);if(!item)return;
+    if(b.dataset.action==='edit'){await open(item.id);return;}
+    if(b.dataset.action==='archive'&&!confirm('¿Archivar «'+item.name+'»? No se modificarán presupuestos antiguos.'))return;
+    busy=true;b.disabled=true;
+    try{
+      const restore=b.dataset.action==='restore';
+      await requestApi(base+'/'+item.id,restore?{method:'PATCH',payload:{archived:false}}:{method:'DELETE'});
+      message(feedback,restore?'Servicio restaurado.':'Servicio archivado. Los presupuestos históricos siguen intactos.');
+      await load();
+    }catch(err){message(feedback,err.message,true);}
+    finally{busy=false;b.disabled=false;}
+  });
+  $('sb-catalog-new').addEventListener('click',()=>open());
+  $('sb-catalog-close').addEventListener('click',()=>dialog.close());
+  $('sb-catalog-cancel').addEventListener('click',()=>dialog.close());
+  dialog.addEventListener('click',e=>{if(e.target===dialog)dialog.close();});
+  $('sb-catalog-refresh').addEventListener('click',()=>load());
+  $('sb-catalog-more').addEventListener('click',()=>{page++;load(false);});
+  let timer;
+  for(const key of ['sb-catalog-search','sb-catalog-category','sb-catalog-kind','sb-catalog-archived']){
+    $(key).addEventListener(key==='sb-catalog-search'?'input':'change',()=>{clearTimeout(timer);timer=setTimeout(()=>load(),220);});
+  }
+  load();
+</script>
+</Private>

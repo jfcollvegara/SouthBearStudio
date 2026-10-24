@@ -83,6 +83,7 @@ import '../../../../styles/private-commerce.css';
         <option value="without">Sin presupuesto aceptado</option>
       </select></label>
     </div>
+    <div id="sb-reports-project-link-notice" class="sb-reports__link-notice" hidden><span>FICHA FILTRADA AL PROYECTO DE ORIGEN</span><a href="/acceso/panel/informes/">Ver todos los proyectos ↗</a></div>
     <div class="sb-reports__project-meta"><span id="sb-reports-project-count">PROYECTOS / —</span><span id="sb-reports-loading" aria-live="polite">CARGANDO…</span></div>
     <div id="sb-reports-projects" class="sb-reports__project-list" aria-live="polite"><div class="sb-ops__empty">Consultando resultados de proyectos…</div></div>
     <p id="sb-reports-truncated" class="sb-reports__explain" hidden>Hay más de 500 proyectos. Esta vista solo muestra los 500 registros más recientes; la exportación también se limita a ellos.</p>
@@ -98,6 +99,8 @@ const statuses={planificado:'Planificado',en_curso:'En curso',en_revision:'En re
 const categories={software:'Software',materiales:'Materiales',subcontratacion:'Subcontratación',equipo:'Equipamiento',transporte:'Desplazamientos',marketing:'Marketing',alojamiento:'Hosting y dominios',otros:'Otros'};
 const monthName=new Intl.DateTimeFormat('es-ES',{month:'short',year:'numeric',timeZone:'UTC'});
 let report=null,shownProjects=[],requestCount=0;
+const selectedProjectId=new URLSearchParams(location.search).get('proyecto')||'';
+$('sb-reports-project-link-notice').hidden=!selectedProjectId;
 const money=n=>formatEuro(Number(n)||0);
 const plainMoney=c=>(Number(c||0)/100).toFixed(2);
 const numericText=n=>new Intl.NumberFormat('es-ES').format(n);
@@ -162,6 +165,7 @@ function renderProjects(){
   const query=$('sb-reports-search').value.trim().toLocaleLowerCase('es-ES');
   const status=$('sb-reports-project-status').value,ref=$('sb-reports-quote-filter').value;
   shownProjects=report.projects.filter(p=>{
+    if(selectedProjectId&&p.id!==selectedProjectId)return false;
     if(status&&p.status!==status)return false;
     if(ref==='with'&&p.approved_quote_cents===null)return false;
     if(ref==='without'&&p.approved_quote_cents!==null)return false;

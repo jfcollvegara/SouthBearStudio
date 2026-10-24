@@ -28,8 +28,8 @@ export async function onRequestPatch({params,request,env,data}){
     if(obj.client_id!==previous.client_id)return apiError('El cliente del borrador no puede cambiarse; crea uno nuevo.',409);
     await validateReferences(db,obj);
     const stmt=db.prepare(
-      'UPDATE invoice_drafts SET quote_id=?,project_id=?,title=?,planned_date=?,due_date=?,notes=?,subtotal_cents=?,tax_cents=?,total_cents=?,updated_at=CURRENT_TIMESTAMP WHERE id=?'
-    ).bind(obj.quote_id,obj.project_id,obj.title,obj.planned_date,obj.due_date,obj.notes,obj.subtotal_cents,obj.tax_cents,obj.total_cents,previous.id);
+      'UPDATE invoice_drafts SET quote_id=?,project_id=?,title=?,planned_date=?,due_date=?,notes=?,subtotal_cents=?,tax_cents=?,total_cents=?,withholding_bps=?,updated_at=CURRENT_TIMESTAMP WHERE id=?'
+    ).bind(obj.quote_id,obj.project_id,obj.title,obj.planned_date,obj.due_date,obj.notes,obj.subtotal_cents,obj.tax_cents,obj.total_cents,obj.withholding_bps,previous.id);
     await db.batch([
       db.prepare('DELETE FROM invoice_draft_lines WHERE draft_id=?').bind(previous.id),
       stmt,...insertDraftLines(db,previous.id,obj.lines),

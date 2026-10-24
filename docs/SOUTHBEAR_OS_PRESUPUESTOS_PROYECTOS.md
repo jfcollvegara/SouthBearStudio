@@ -13,7 +13,7 @@ La infraestructura de Cloudflare Pages, Cloudflare Access, Functions y D1 es ind
 - API privada: `GET/POST /api/southbear/presupuestos`, `GET/PATCH/DELETE /api/southbear/presupuestos/:id`.
 - Creación en **borrador**; número comercial `PRE-AAAA-XXXXXXXX` generado a partir de UUID aleatorio (no es un número legal de factura).
 - Cliente activo, título, fecha, validez, condiciones y hasta 25 líneas.
-- Cada línea: concepto, descripción, cantidad con 3 decimales, precio sin IVA en céntimos, y tipo de IVA elegido explícitamente entre 0/4/10/21%.
+- Cada línea: concepto, descripción, cantidad con 3 decimales, **precio final por unidad con IVA incluido** en céntimos y tipo de IVA elegido explícitamente entre 0/4/10/21%. La base imponible se obtiene del total bruto de cada línea, no se suma IVA al precio indicado.
 - El cálculo se hace en el **servidor**; la vista previa en navegador no determina los importes guardados. Bases e IVA en céntimos; redondeo por línea. Para el tratamiento fiscal definitivo deben configurarse los regímenes aplicables, retenciones y datos del emisor.
 - Seguimiento manual de estado: borrador, enviado, aceptado, rechazado y caducado. Un presupuesto enviado o aceptado no se puede modificar en su contenido (evita cambiar la oferta ya comunicada); los estados terminales no pueden revertirse desde la interfaz. La aceptación manual no equivale a firma electrónica ni a prueba de consentimiento del cliente.
 - Archivo lógico. No se permite archivar presupuestos aceptados.
@@ -57,3 +57,11 @@ La infraestructura de Cloudflare Pages, Cloudflare Access, Functions y D1 es ind
 - Crear y vincular tareas, entregables y archivos privados por proyecto.
 - Completar datos fiscales del emisor y plantillas profesionales de presupuesto, impresión PDF, aceptación del cliente y condiciones del servicio.
 - Diseñar facturación, cobros, gastos y libros contables conforme a obligaciones legales aplicables en España, previa revisión por asesoría.
+
+## Cambio del precio final con IVA incluido (octubre 2026)
+
+- Migración `db/migrations/0003_quote_gross_unit_price.sql` aplicada a D1. Nueva columna opcional `quote_lines.unit_gross_cents` para almacenar el precio final exacto introducido por unidad.
+- Los presupuestos creados previamente conservan `unit_gross_cents = NULL`, su antiguo `unit_cents` sin IVA y todos sus importes históricos. **No se han recalculado presupuestos aceptados ni enviado una factura nueva**.
+- El formulario muestra ahora «Precio con IVA €» y el usuario introduce directamente el importe final. Para un precio final de 2.560,00 € (cantidad 1; 21 %), se registran base 2.115,70 €, IVA 444,30 € y total 2.560,00 €.
+- Cálculo por concepto en céntimos: `total_cents = round(quantity_milli * unit_gross_cents / 1000)`; `base_cents = round(total_cents * 10000 / (10000 + vat_bps))`; `vat_cents = total_cents - base_cents`. El servidor calcula los importes de nuevo y no confía en los totales del navegador.
+- Al abrir una propuesta anterior, el precio final por unidad se infiere a partir del precio neto y el IVA de esa línea. **Los totales guardados de esa propuesta no cambian al visualizarla**. Si se edita un borrador antiguo y se guarda, puede existir una diferencia de céntimos por redondeo al adaptarlo a precio final por unidad; las propuestas aceptadas están bloqueadas a edición.

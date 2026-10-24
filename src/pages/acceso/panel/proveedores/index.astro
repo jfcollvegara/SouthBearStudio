@@ -1,0 +1,167 @@
+---
+import Private from '../../../../layouts/Private.astro';
+import '../../../../styles/private-commerce.css';
+---
+<Private workspace title="Proveedores" description="Directorio privado de proveedores, servicios y gastos asociados de SouthBear Studio.">
+<section class="sb-ops sb-suppliers" aria-labelledby="sb-suppliers-title">
+  <div class="sb-ws-topline"><span class="sb-ws-breadcrumb"><a href="/acceso/panel/">SOUTHBEAR OS</a> <span>/</span> FINANZAS <span>/</span> PROVEEDORES</span><span class="sb-ws-topline__session"><i aria-hidden="true"></i> DATOS PRIVADOS</span></div>
+  <header class="sb-ops__hero">
+    <div>
+      <span class="sb-ops__label">SOUTHBEAR / SUPPLIER NETWORK</span>
+      <h1 id="sb-suppliers-title">TUS <em>PROVEEDORES.</em></h1>
+      <p>Centraliza imprentas, colaboradores, licencias y empresas de servicios. Consulta sus contactos, condiciones acordadas y gastos vinculados.</p>
+    </div>
+    <button type="button" id="sb-suppliers-new" class="sb-ops__primary">+ Nuevo proveedor <span aria-hidden="true">↗</span></button>
+  </header>
+  <div class="sb-ops__info"><b aria-hidden="true">✳</b><span>Este directorio es privado. Los gastos antiguos que registraste solo con el nombre del proveedor no se asociarán automáticamente: puedes vincularlos editando su ficha de gasto si todavía no tienen pagos registrados.</span></div>
+  <div class="sb-ops__controls sb-suppliers__controls">
+    <label>BUSCAR PROVEEDOR<input id="sb-suppliers-search" type="search" maxlength="120" autocomplete="off" placeholder="Nombre, razón social, NIF o email"/></label>
+    <label>SECTOR<select id="sb-suppliers-category"><option value="">Todos</option>
+      <option value="impresion">Impresión</option><option value="software">Software y licencias</option><option value="audiovisual">Producción audiovisual</option><option value="web">Tecnología y web</option><option value="diseno">Diseño y creatividad</option><option value="logistica">Transporte y logística</option><option value="materiales">Materiales</option><option value="otros">Otros</option>
+    </select></label>
+    <label>VISIBILIDAD<select id="sb-suppliers-archive"><option value="0">Activos</option><option value="1">Archivados</option></select></label>
+    <button id="sb-suppliers-reload" type="button" class="sb-ops__reload" title="Actualizar">↻</button>
+  </div>
+  <div class="sb-ops__meta"><span id="sb-suppliers-count">PROVEEDORES / —</span><span id="sb-suppliers-loading" aria-live="polite">CARGANDO…</span></div>
+  <div id="sb-suppliers-rows" class="sb-ops__records" aria-live="polite"><div class="sb-ops__empty">Consultando tus proveedores…</div></div>
+  <button id="sb-suppliers-more" class="sb-ops__more" type="button" hidden>Mostrar más ↓</button>
+  <p id="sb-suppliers-feedback" role="status" class="sb-ops__feedback" aria-live="polite"></p>
+  <footer class="sb-ops__footer">SOUTHBEAR OS / PROVEEDORES · LOS DATOS SE CONSERVAN AL ARCHIVAR</footer>
+</section>
+<dialog id="sb-suppliers-dialog" class="sb-ops-dialog" aria-labelledby="sb-suppliers-dialog-title">
+  <div class="sb-ops-dialog__head">
+    <div><span>SOUTHBEAR / DIRECTORIO PROFESIONAL</span><h2 id="sb-suppliers-dialog-title">Nuevo proveedor.</h2></div>
+    <button id="sb-suppliers-close" class="sb-ops-dialog__close" type="button" aria-label="Cerrar">×</button>
+  </div>
+  <form id="sb-suppliers-form">
+    <div class="sb-ops-form">
+      <label class="sb-ops-form__wide">Nombre comercial <b>*</b><input name="display_name" maxlength="180" required autocomplete="organization" placeholder="Ej. Imprenta, productora o colaborador"/></label>
+      <label>Razón social / Nombre fiscal<input name="legal_name" maxlength="180" autocomplete="off"/></label>
+      <label>NIF / CIF / NIE<input name="tax_id" maxlength="45" autocomplete="off"/></label>
+      <label>Sector<select name="service_category">
+        <option value="impresion">Impresión y artes gráficas</option><option value="software">Software y licencias</option>
+        <option value="audiovisual">Audiovisual</option><option value="web">Tecnología y web</option><option value="diseno">Diseño y creatividad</option><option value="logistica">Transporte y logística</option><option value="materiales">Materiales</option><option value="otros" selected>Otros</option>
+      </select></label>
+      <label>Persona de contacto<input name="contact_name" maxlength="160" autocomplete="off"/></label>
+      <label>Email profesional<input name="email" type="email" maxlength="190" autocomplete="off"/></label>
+      <label>Teléfono<input name="phone" type="tel" maxlength="60" autocomplete="off"/></label>
+      <label>Sitio web<input name="website" type="url" maxlength="250" placeholder="https://…" autocomplete="off"/></label>
+      <label class="sb-ops-form__wide">Dirección<input name="address" maxlength="250" autocomplete="street-address"/></label>
+      <label>Código postal<input name="postal_code" maxlength="25" autocomplete="postal-code"/></label>
+      <label>Municipio<input name="city" maxlength="100" autocomplete="address-level2"/></label>
+      <label>Provincia<input name="province" maxlength="100" autocomplete="address-level1"/></label>
+      <label>País<input name="country" maxlength="80" autocomplete="country-name" value="España"/></label>
+      <label class="sb-ops-form__wide">Condiciones de pago / compra<textarea name="payment_terms" rows="2" maxlength="400" placeholder="Ej. Pago por transferencia, 30 días; pedidos mínimos…"></textarea></label>
+      <label class="sb-ops-form__wide">Notas internas<textarea name="notes" rows="3" maxlength="3000" placeholder="Tarifas, plazos, catálogo, colaboración y observaciones…"></textarea></label>
+      <p class="sb-ops-form__note sb-ops-form__wide">El NIF y otros datos deben corresponder a la documentación real del proveedor. Las cifras de gastos proceden de los registros vinculados, no se infieren de las condiciones comerciales.</p>
+    </div>
+    <p id="sb-suppliers-error" class="sb-ops-form__error" role="alert" hidden></p>
+    <div class="sb-ops-form__actions">
+      <button type="button" id="sb-suppliers-cancel">Cancelar</button>
+      <button type="submit" id="sb-suppliers-save" class="sb-ops__primary">Guardar proveedor ↗</button>
+    </div>
+  </form>
+</dialog>
+<script>
+  import {requestApi,el,field,message,formatEuro} from '../../../../scripts/private-commerce.js';
+  const $=id=>document.getElementById(id),base='/proveedores';
+  const dialog=$('sb-suppliers-dialog'),form=$('sb-suppliers-form'),feedback=$('sb-suppliers-feedback'),rows=$('sb-suppliers-rows');
+  const names=['display_name','legal_name','tax_id','contact_name','email','phone','website','address','postal_code','city','province','country','service_category','payment_terms','notes'];
+  const sectors={impresion:'Impresión',software:'Software',audiovisual:'Audiovisual',web:'Web',diseno:'Diseño',logistica:'Logística',materiales:'Materiales',otros:'Otros'};
+  let list=[],selected=null,busy=false,page=1,hasMore=false,loadToken=0;
+  function paint(){
+    rows.replaceChildren();
+    $('sb-suppliers-count').textContent='PROVEEDORES / '+list.length+(hasMore?'+':'');
+    $('sb-suppliers-more').hidden=!hasMore;
+    if(!list.length){
+      rows.append(el('div',$('sb-suppliers-archive').value==='1'?'No hay proveedores archivados.':'No hay proveedores con los filtros indicados.','sb-ops__empty'));
+      return;
+    }
+    for(const item of list){
+      const card=el('article',undefined,'sb-ops__record sb-suppliers__record');
+      const body=el('div',undefined,'sb-ops__record-main');
+      body.append(el('div',sectors[item.service_category]||'Otros','sb-ops__record-index'),el('h3',item.display_name));
+      body.append(el('p',[item.legal_name,item.contact_name,item.email,item.phone].filter(Boolean).join(' · ')||'Sin datos de contacto adicionales'));
+      const side=el('div',undefined,'sb-ops__record-side');
+      side.append(el('strong',formatEuro(item.total_expenses_cents),'sb-ops__record-money'),
+        el('span',String(item.expenses_count)+' GASTOS ACTIVOS VINCULADOS','sb-ops__status'),
+        el('small','Pagado: '+formatEuro(item.paid_cents)+' · Pendiente: '+formatEuro(Math.max(0,item.total_expenses_cents-item.paid_cents)),'sb-suppliers__numbers'));
+      const actions=el('div',undefined,'sb-ops__actions');
+      const act=(title,action)=>{const button=el('button',title);button.type='button';button.dataset.id=item.id;button.dataset.action=action;actions.append(button);};
+      act('Ver ficha ↗','edit');
+      const expenses=el('a','Ver gastos ↗');
+      expenses.href='/acceso/panel/gastos/?proveedor='+encodeURIComponent(item.id);
+      expenses.title='Mostrar únicamente los gastos vinculados a este proveedor';
+      actions.append(expenses);
+      act(item.archived_at?'Restaurar':'Archivar',item.archived_at?'restore':'archive');
+      card.append(body,side,actions);rows.append(card);
+    }
+  }
+  async function load(reset=true){
+    const token=++loadToken;
+    if(reset){page=1;list=[];}
+    $('sb-suppliers-loading').textContent='CARGANDO…';
+    try{
+      const p=new URLSearchParams({q:$('sb-suppliers-search').value.trim(),category:$('sb-suppliers-category').value,archived:$('sb-suppliers-archive').value,page:String(page)});
+      const result=await requestApi(base+'?'+p);
+      if(token!==loadToken)return;
+      list=reset?result.items:list.concat(result.items);hasMore=result.hasMore;
+      paint();$('sb-suppliers-loading').textContent='ACTUALIZADO';
+    }catch(error){
+      if(token!==loadToken)return;
+      $('sb-suppliers-loading').textContent='ERROR';
+      rows.replaceChildren(el('div','No se han podido cargar los proveedores.','sb-ops__empty'));
+      message(feedback,error.message,true);
+    }
+  }
+  function open(item=null){
+    selected=item;form.reset();
+    $('sb-suppliers-error').hidden=true;
+    $('sb-suppliers-dialog-title').textContent=item?'Editar proveedor.':'Nuevo proveedor.';
+    for(const name of names){
+      field(form,name).value=item?.[name]??(name==='country'?'España':name==='service_category'?'otros':'');
+    }
+    const archived=!!item?.archived_at;
+    for(const control of form.querySelectorAll('input,select,textarea'))control.disabled=archived;
+    $('sb-suppliers-save').hidden=archived;
+    dialog.showModal();
+    if(!archived)field(form,'display_name').focus();
+  }
+  form.addEventListener('submit',async event=>{
+    event.preventDefault();if(busy)return;
+    busy=true;$('sb-suppliers-save').disabled=true;$('sb-suppliers-error').hidden=true;
+    try{
+      const payload=Object.fromEntries(names.map(x=>[x,field(form,x).value.trim()]));
+      await requestApi(base+(selected?'/'+selected.id:''),{method:selected?'PATCH':'POST',payload});
+      dialog.close();
+      message(feedback,selected?'Proveedor actualizado.':'Proveedor guardado. Ahora puedes seleccionarlo al registrar gastos.');
+      await load();
+    }catch(error){$('sb-suppliers-error').hidden=false;$('sb-suppliers-error').textContent=error.message;}
+    finally{busy=false;$('sb-suppliers-save').disabled=false;}
+  });
+  rows.addEventListener('click',async e=>{
+    const b=e.target.closest('button[data-action]');if(!b||busy)return;
+    const item=list.find(x=>x.id===b.dataset.id);if(!item)return;
+    if(b.dataset.action==='edit'){open(item);return;}
+    if(b.dataset.action==='archive'&&!confirm('¿Archivar a «'+item.display_name+'»? Sus gastos y pagos vinculados permanecerán intactos.'))return;
+    busy=true;b.disabled=true;
+    try{
+      const restore=b.dataset.action==='restore';
+      await requestApi(base+'/'+item.id,restore?{method:'PATCH',payload:{archived:false}}:{method:'DELETE'});
+      message(feedback,restore?'Proveedor restaurado.':'Proveedor archivado sin eliminar los gastos vinculados.');
+      await load();
+    }catch(error){message(feedback,error.message,true);}finally{busy=false;b.disabled=false;}
+  });
+  $('sb-suppliers-new').addEventListener('click',()=>open());
+  $('sb-suppliers-close').addEventListener('click',()=>dialog.close());
+  $('sb-suppliers-cancel').addEventListener('click',()=>dialog.close());
+  dialog.addEventListener('click',e=>{if(e.target===dialog)dialog.close();});
+  $('sb-suppliers-reload').addEventListener('click',()=>load());
+  $('sb-suppliers-more').addEventListener('click',()=>{page++;load(false);});
+  let timer;
+  for(const id of ['sb-suppliers-search','sb-suppliers-category','sb-suppliers-archive']){
+    $(id).addEventListener(id==='sb-suppliers-search'?'input':'change',()=>{clearTimeout(timer);timer=setTimeout(()=>load(),220);});
+  }
+  load();
+</script>
+</Private>

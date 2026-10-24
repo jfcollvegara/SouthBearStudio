@@ -18,7 +18,7 @@ export async function onRequestGet({request,env}){
 }
 export async function onRequestPost({request,env,data}){
   try{
-    const raw=await requestBody(request),obj=normalizeQuote(raw),db=env.SOUTHBEAR_DB;
+    const raw=await requestBody(request,80000),obj=normalizeQuote(raw),db=env.SOUTHBEAR_DB;
     await ensureClient(db,obj.client_id);
     const id=crypto.randomUUID(),code='PRE-'+obj.issue_date.slice(0,4)+'-'+id.slice(0,8).toUpperCase();
     const stmt=db.prepare('INSERT INTO quotes(id,code,client_id,title,issue_date,valid_until,notes,subtotal_cents,tax_cents,total_cents) VALUES (?,?,?,?,?,?,?,?,?,?)')

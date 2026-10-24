@@ -1,0 +1,221 @@
+---
+import Private from '../../../../layouts/Private.astro';
+import '../../../../styles/private-commerce.css';
+---
+<Private workspace title="Documentos privados" description="Archivo privado de contratos, entregables y justificantes de SouthBear Studio.">
+  <section class="sb-ops sb-docs" aria-labelledby="sb-docs-title">
+    <div class="sb-ws-topline">
+      <span class="sb-ws-breadcrumb"><a href="/acceso/panel/">SOUTHBEAR OS</a> <span>/</span> ESTUDIO <span>/</span> DOCUMENTOS</span>
+      <span class="sb-ws-topline__session"><i aria-hidden="true"></i> ARCHIVO PRIVADO</span>
+    </div>
+    <header class="sb-ops__hero">
+      <div><span class="sb-ops__label">SOUTHBEAR / PRIVATE DOCUMENT VAULT</span>
+        <h1 id="sb-docs-title">TUS <em>DOCUMENTOS.</em></h1>
+        <p>Organiza contratos, autorizaciones, entregables y justificantes del estudio. Vincúlalos a un cliente, proyecto, presupuesto o gasto, sin publicarlos en la web.</p>
+      </div>
+      <button id="sb-docs-new" class="sb-ops__primary" type="button" disabled>+ Subir documento <span aria-hidden="true">↗</span></button>
+    </header>
+    <div id="sb-docs-storage" class="sb-docs__storage" role="status" aria-live="polite">
+      <div class="sb-docs__storage-indicator" aria-hidden="true">◉</div>
+      <div><strong id="sb-docs-storage-heading">Comprobando almacenamiento privado…</strong>
+        <p id="sb-docs-storage-detail">Este módulo utiliza almacenamiento privado R2 y controles de acceso independientes en el servidor.</p>
+      </div>
+    </div>
+    <div class="sb-ops__info">
+      <b aria-hidden="true">✳</b>
+      <span>Archivo interno, no almacenamiento público. Se admiten PDF, imágenes, DOCX, XLSX, PPTX y TXT de hasta 10 MiB cada uno. Las subidas conservan huella SHA-256 y datos del registro asociado. Archivar un documento <strong>no elimina</strong> su archivo original. Conserva copias de seguridad externas para documentos esenciales.</span>
+    </div>
+    <div class="sb-ops__controls sb-docs__controls">
+      <label>BUSCAR ARCHIVO<input id="sb-docs-search" type="search" maxlength="120" placeholder="Título o nombre del fichero"/></label>
+      <label>CATEGORÍA<select id="sb-docs-category"><option value="">Todas</option><option value="contrato">Contratos</option><option value="entregable">Entregables</option><option value="justificante">Justificantes</option><option value="autorizacion">Autorizaciones</option><option value="otro">Otros</option></select></label>
+      <label>VISIBILIDAD<select id="sb-docs-archived"><option value="0">Activos</option><option value="1">Archivados</option></select></label>
+      <button id="sb-docs-reload" class="sb-ops__reload" title="Actualizar" type="button">↻</button>
+    </div>
+    <div id="sb-docs-linked-notice" class="sb-docs__linked-notice" hidden></div>
+    <div class="sb-ops__meta">
+      <span id="sb-docs-count">DOCUMENTOS / —</span>
+      <span id="sb-docs-loading" aria-live="polite">CARGANDO…</span>
+    </div>
+    <div id="sb-docs-list" class="sb-ops__records" aria-live="polite"><div class="sb-ops__empty">Consultando el archivo…</div></div>
+    <button id="sb-docs-more" class="sb-ops__more" type="button" hidden>Mostrar más ↓</button>
+    <p id="sb-docs-feedback" class="sb-ops__feedback" role="status" aria-live="polite"></p>
+    <footer class="sb-ops__footer">SOUTHBEAR OS / ARCHIVO DOCUMENTAL · ACCESO PRIVADO · NO PUBLICA ARCHIVOS EN GITHUB NI PAGES</footer>
+  </section>
+  <dialog id="sb-docs-dialog" class="sb-ops-dialog sb-docs__dialog" aria-labelledby="sb-docs-dialog-heading">
+    <div class="sb-ops-dialog__head">
+      <div><span>SOUTHBEAR / PRIVATE UPLOAD</span><h2 id="sb-docs-dialog-heading">Subir documento.</h2></div>
+      <button class="sb-ops-dialog__close" id="sb-docs-close" aria-label="Cerrar" type="button">×</button>
+    </div>
+    <form id="sb-docs-form">
+      <div class="sb-ops-form">
+        <label class="sb-ops-form__wide">Título del documento <b>*</b><input type="text" name="title" required maxlength="200" placeholder="Ej. Contrato de desarrollo web"/></label>
+        <label>Clasificación<select name="category">
+          <option value="contrato">Contrato</option><option value="entregable">Entregable</option>
+          <option value="justificante">Justificante</option><option value="autorizacion">Autorización</option><option value="otro">Otro</option>
+        </select></label>
+        <label>Relacionar con<select name="link_type">
+          <option value="general">Archivo general del estudio</option><option value="cliente">Cliente</option>
+          <option value="proyecto">Proyecto</option><option value="presupuesto">Presupuesto</option><option value="gasto">Gasto</option>
+        </select></label>
+        <label class="sb-ops-form__wide" id="sb-docs-link-wrap" hidden>Registro relacionado<select name="link_id"><option value="">Selecciona un registro…</option></select></label>
+        <label class="sb-ops-form__wide">Archivo <b>*</b>
+          <input type="file" name="file" required accept=".pdf,.png,.jpg,.jpeg,.webp,.docx,.xlsx,.pptx,.txt"/>
+        </label>
+        <p class="sb-ops-form__note sb-ops-form__wide">Máximo 10 MiB por archivo. No se admiten HTML, SVG, ejecutables ni archivos ZIP genéricos. Las descargas se realizan siempre como adjuntos.</p>
+        <label class="sb-ops-form__wide">Notas internas<textarea name="notes" maxlength="3000" rows="3" placeholder="Versión, destinatario, descripción, revisión o condiciones de entrega…"></textarea></label>
+      </div>
+      <p id="sb-docs-error" class="sb-ops-form__error" role="alert" hidden></p>
+      <div class="sb-ops-form__actions">
+        <button id="sb-docs-cancel" type="button">Cancelar</button>
+        <button id="sb-docs-save" class="sb-ops__primary" type="submit">Guardar en archivo privado ↗</button>
+      </div>
+    </form>
+  </dialog>
+  <script>
+    import {API,requestApi,getAll,fillOptions,el,field,message,formatDate} from '../../../../scripts/private-commerce.js';
+    const $=id=>document.getElementById(id);
+    const form=$('sb-docs-form'),dialog=$('sb-docs-dialog'),list=$('sb-docs-list'),feedback=$('sb-docs-feedback');
+    const types={contrato:'CONTRATO',entregable:'ENTREGABLE',justificante:'JUSTIFICANTE',autorizacion:'AUTORIZACIÓN',otro:'OTRO'};
+    const linkLabels={cliente:'CLIENTE',proyecto:'PROYECTO',presupuesto:'PRESUPUESTO',gasto:'GASTO'};
+    const sources={cliente:'/clientes',proyecto:'/proyectos',presupuesto:'/presupuestos',gasto:'/gastos'};
+    let storageReady=false,items=[],page=1,hasMore=false,busy=false,loadingId=0,options={};
+    const params=new URLSearchParams(location.search);
+    const entry=['cliente','proyecto','presupuesto','gasto'].map(k=>({type:k,id:params.get(k)})).find(x=>x.id);
+    if(entry){
+      const notice=$('sb-docs-linked-notice');
+      notice.hidden=false;
+      notice.append(el('span','VISTA FILTRADA: '+linkLabels[entry.type]+' VINCULADO'));
+      const link=el('a','Ver todos los documentos ↗');link.href='/acceso/panel/documentos/';notice.append(link);
+    }
+    function bytes(n){
+      const value=Number(n)||0;
+      return value>=1048576?(value/1048576).toFixed(2)+' MiB':(value/1024).toFixed(1)+' KiB';
+    }
+    async function checkStorage(){
+      try{
+        const result=await requestApi('/documentos/estado');
+        storageReady=!!result.storage_ready;
+        $('sb-docs-new').disabled=!storageReady;
+        $('sb-docs-storage').classList.toggle('sb-docs__storage--ready',storageReady);
+        $('sb-docs-storage-heading').textContent=storageReady?'Archivo privado disponible':'El almacenamiento R2 todavía no está configurado';
+        $('sb-docs-storage-detail').textContent=storageReady
+          ?'Almacenamiento privado operativo. Puedes subir y descargar documentos protegidos por tu sesión.'
+          :'Las subidas están bloqueadas para proteger tus archivos. Debes habilitar R2 en Cloudflare y vincular el bucket privado a Pages con el nombre SOUTHBEAR_FILES.';
+      }catch(err){
+        storageReady=false;$('sb-docs-new').disabled=true;
+        $('sb-docs-storage-heading').textContent='No se ha podido verificar el almacenamiento';
+        $('sb-docs-storage-detail').textContent=err.message;
+      }
+    }
+    async function sourceOptions(type){
+      if(!type||type==='general')return [];
+      if(!options[type]){
+        const rows=await getAll(sources[type]);
+        options[type]=rows.map(x=>({id:x.id,label:type==='cliente'?x.display_name:type==='presupuesto'?x.code+' · '+x.title:type==='gasto'?x.supplier_name+' · '+x.title:x.title}));
+      }
+      return options[type];
+    }
+    async function refreshLink(){
+      const kind=field(form,'link_type').value;
+      $('sb-docs-link-wrap').hidden=kind==='general';
+      if(kind==='general'){fillOptions(field(form,'link_id'),[],{empty:'Sin registro relacionado'});return;}
+      field(form,'link_id').replaceChildren(new Option('Cargando registros…',''));
+      try{
+        const rows=await sourceOptions(kind);
+        fillOptions(field(form,'link_id'),rows,{empty:'Selecciona un registro',label:'label',selected:entry?.type===kind?entry.id:''});
+      }catch(e){message(feedback,e.message,true);}
+    }
+    field(form,'link_type').addEventListener('change',()=>refreshLink());
+    async function open(){
+      if(!storageReady||busy)return;
+      form.reset();$('sb-docs-error').hidden=true;
+      options={};if(entry)field(form,'link_type').value=entry.type;
+      dialog.showModal();await refreshLink();field(form,'title').focus();
+    }
+    function paint(){
+      list.replaceChildren();
+      $('sb-docs-count').textContent='DOCUMENTOS / '+items.length+(hasMore?'+':'');
+      $('sb-docs-more').hidden=!hasMore;
+      if(!items.length){
+        list.append(el('div',$('sb-docs-archived').value==='1'?'No hay documentos archivados.':'Todavía no hay documentos con estos filtros.','sb-ops__empty'));return;
+      }
+      for(const doc of items){
+        const box=el('article',undefined,'sb-ops__record sb-docs__record');
+        const main=el('div',undefined,'sb-ops__record-main');
+        main.append(el('div',types[doc.category]+' / '+formatDate(doc.created_at),'sb-ops__record-index'),el('h3',doc.title));
+        const related=doc.client_name?'Cliente: '+doc.client_name:
+          doc.project_name?'Proyecto: '+doc.project_name:
+          doc.quote_code?'Presupuesto: '+doc.quote_code:
+          doc.expense_name?'Gasto: '+doc.expense_name:'Archivo general';
+        main.append(el('p',doc.original_name+' · '+bytes(doc.size_bytes)+' · '+related));
+        if(doc.notes)main.append(el('p',doc.notes,'sb-docs__notes'));
+        const side=el('div',undefined,'sb-ops__record-side');
+        side.append(el('strong',bytes(doc.size_bytes),'sb-ops__record-money'),el('span',doc.archived_at?'ARCHIVADO':'ARCHIVO PRIVADO','sb-ops__status'));
+        const actions=el('div',undefined,'sb-ops__actions');
+        const download=el('a','Descargar ↗');
+        download.href=API+'/documentos/'+encodeURIComponent(doc.id)+'/descargar';
+        download.rel='nofollow';download.title='Descarga autenticada, archivo no público';
+        actions.append(download);
+        const b=el('button',doc.archived_at?'Restaurar':'Archivar');b.type='button';b.dataset.id=doc.id;b.dataset.action=doc.archived_at?'restore':'archive';actions.append(b);
+        box.append(main,side,actions);list.append(box);
+      }
+    }
+    async function load(reset=true){
+      const token=++loadingId;
+      if(reset){items=[];page=1;}
+      $('sb-docs-loading').textContent='CARGANDO…';
+      try{
+        const q=new URLSearchParams({q:$('sb-docs-search').value.trim(),category:$('sb-docs-category').value,archived:$('sb-docs-archived').value,page:String(page)});
+        if(entry){q.set('link_type',entry.type);q.set('link_id',entry.id);}
+        const result=await requestApi('/documentos?'+q);
+        if(token!==loadingId)return;
+        items=reset?result.items:items.concat(result.items);hasMore=result.hasMore;paint();
+        $('sb-docs-loading').textContent='ACTUALIZADO';
+      }catch(e){if(token!==loadingId)return;$('sb-docs-loading').textContent='ERROR';list.replaceChildren(el('div','No se ha podido consultar el archivo.','sb-ops__empty'));message(feedback,e.message,true);}
+    }
+    form.addEventListener('submit',async e=>{
+      e.preventDefault();if(!storageReady||busy)return;
+      const file=field(form,'file').files?.[0];
+      if(!file){$('sb-docs-error').textContent='Selecciona un archivo.';$('sb-docs-error').hidden=false;return;}
+      if(file.size>10485760||file.size===0){$('sb-docs-error').textContent='El archivo supera 10 MiB o está vacío.';$('sb-docs-error').hidden=false;return;}
+      busy=true;$('sb-docs-save').disabled=true;$('sb-docs-error').hidden=true;
+      try{
+        const payload=new FormData();
+        for(const key of ['title','category','link_type','link_id','notes'])payload.set(key,field(form,key).value.trim());
+        payload.set('file',file,file.name);
+        const response=await fetch(API+'/documentos',{method:'POST',credentials:'same-origin',cache:'no-store',
+          headers:{'X-SouthBear-Request':'1','Accept':'application/json'},body:payload});
+        let result;
+        try{result=await response.json();}catch{throw new Error('La subida no ha devuelto una respuesta válida. Comprueba la sesión.');}
+        if(!response.ok||!result.ok)throw new Error(result.error||'No se ha guardado el documento.');
+        dialog.close();message(feedback,'Archivo almacenado en privado. Se ha registrado su huella de integridad.');
+        await load();
+      }catch(err){$('sb-docs-error').textContent=err.message;$('sb-docs-error').hidden=false;}
+      finally{busy=false;$('sb-docs-save').disabled=false;}
+    });
+    list.addEventListener('click',async e=>{
+      const b=e.target.closest('button[data-action]');if(!b||busy)return;
+      const item=items.find(x=>x.id===b.dataset.id);if(!item)return;
+      if(b.dataset.action==='archive'&&!confirm('¿Archivar el documento «'+item.title+'»? El archivo original se conservará.'))return;
+      busy=true;b.disabled=true;
+      try{
+        const restore=b.dataset.action==='restore';
+        await requestApi('/documentos/'+item.id,restore?{method:'PATCH',payload:{archived:false}}:{method:'DELETE'});
+        message(feedback,restore?'Documento restaurado.':'Documento archivado sin eliminar el archivo.');
+        await load();
+      }catch(err){message(feedback,err.message,true);}
+      finally{busy=false;b.disabled=false;}
+    });
+    $('sb-docs-new').addEventListener('click',()=>open());
+    $('sb-docs-close').addEventListener('click',()=>dialog.close());
+    $('sb-docs-cancel').addEventListener('click',()=>dialog.close());
+    dialog.addEventListener('click',e=>{if(e.target===dialog)dialog.close();});
+    $('sb-docs-reload').addEventListener('click',()=>{load();checkStorage();});
+    $('sb-docs-more').addEventListener('click',()=>{page++;load(false);});
+    let timer;
+    for(const id of ['sb-docs-search','sb-docs-category','sb-docs-archived']){
+      $(id).addEventListener(id==='sb-docs-search'?'input':'change',()=>{clearTimeout(timer);timer=setTimeout(()=>load(),240);});
+    }
+    checkStorage();load();
+  </script>
+</Private>

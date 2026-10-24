@@ -106,7 +106,9 @@ import '../../../../styles/private-clients.css';
         const actions=document.createElement('div');actions.className='sb-crm__actions';
         const edit=safeNode('button','Editar ↗');edit.type='button';edit.dataset.action='edit';edit.dataset.id=item.id;
         const archive=safeNode('button',filter.value==='archived'?'Restaurar':'Archivar');archive.type='button';archive.dataset.action=filter.value==='archived'?'restore':'archive';archive.dataset.id=item.id;
-        actions.append(edit,archive);row.append(monogram,info,type,actions);list.append(row);
+        const docs=safeNode('a','Documentos ↗');docs.href='/acceso/panel/documentos/?cliente='+encodeURIComponent(item.id);
+        docs.title='Consultar archivos privados del cliente';
+        actions.append(edit,docs,archive);row.append(monogram,info,type,actions);list.append(row);
       }
       $('sb-crm-count').textContent=(filter.value==='archived'?'ARCHIVADOS':'CLIENTES ACTIVOS')+' / '+items.length+(hasMore?'+':'');
       $('sb-crm-pagination').hidden=!hasMore;

@@ -923,13 +923,19 @@ const serviceDescriptions={
         visible && (!nav.classList.contains('kb-top-nav--stuck') || nav.classList.contains('kb-menu-open')));
       servicesButton.setAttribute('aria-expanded', String(visible));
     };
+    // En pantallas táctiles, pointerenter puede dispararse antes del click.
+    // El toque debe abrir o cerrar por sí solo, sin una apertura previa que
+    // haga que el mismo gesto cierre inmediatamente el desplegable.
+    const hasMouseHover = window.matchMedia('(hover: hover) and (pointer: fine)');
     servicesButton.addEventListener('click', () => setServices(!servicesGroup.classList.contains('is-open')));
-    servicesGroup.addEventListener('pointerenter', () => {
+    servicesGroup.addEventListener('pointerenter', event => {
+      if (event.pointerType !== 'mouse' || !hasMouseHover.matches) return;
       if (!nav.classList.contains('kb-top-nav--stuck')) setServices(true);
     });
-    // El cursor puede recorrer toda la cápsula ya expandida sin cerrar
-    // el listado al dejar atrás el botón «Servicios».
-    nav.addEventListener('pointerleave', () => {
+    // El cierre por salida de la cápsula también es exclusivo del ratón.
+    // En móvil solo se cierra al pulsar de nuevo, bajar o salir del menú.
+    nav.addEventListener('pointerleave', event => {
+      if (event.pointerType !== 'mouse' || !hasMouseHover.matches) return;
       if (!nav.classList.contains('kb-top-nav--stuck')) setServices(false);
     });
     servicesGroup.addEventListener('focusout', event => {
@@ -961,9 +967,16 @@ const serviceDescriptions={
     });
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
     let queued = false;
+    let previousScrollY = window.scrollY;
 
     function renderScroll() {
       queued = false;
+      const currentScrollY = window.scrollY;
+      // Al bajar, retraer Servicios incluso si el menú está expandido.
+      if (currentScrollY > previousScrollY + 2 && servicesGroup.classList.contains('is-open')) {
+        setServices(false);
+      }
+      previousScrollY = currentScrollY;
       const travel = Math.max(125, logo.offsetHeight * 0.85);
       const progress = reducedMotion.matches
         ? 0

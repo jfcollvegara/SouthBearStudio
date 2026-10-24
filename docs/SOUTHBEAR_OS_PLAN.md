@@ -8,8 +8,8 @@ Crear un centro de operaciones único, privado y responsive, para gestionar el e
 
 - **Autenticación:** Cloudflare Access con una política por correo autorizado, verificada en la cuenta de Cloudflare.
 - **Interfaz:** Dashboard y páginas de todos los módulos; navegación lateral y móvil.
-- **Datos persistentes:** **No implementados**. Los indicadores muestran raya (—), no ceros ni números ficticios.
-- **Operaciones:** **No habilitadas**. No emitir facturas ni capturar datos sensibles hasta completar el backend y los controles legales.
+- **Datos persistentes:** **Implementados para Clientes** mediante Cloudflare D1, base `southbear-studio-os`, jurisdicción UE. Los demás módulos todavía no almacenan datos. Los indicadores económicos siguen mostrando raya (—) hasta tener registros reales.
+- **Operaciones:** **Clientes habilitado**: altas, consulta, búsqueda, edición, archivo y restauración con auditoría y control de acceso servidor. **No habilitadas**: emisión de facturas y operaciones económicas, pendientes de backend específico y controles legales.
 - **Separación de proyectos:** no utilizar la base de datos de HyperDrive para datos de SouthBear.
 
 ## Áreas y funciones
@@ -37,8 +37,8 @@ Ampliaciones futuras según necesidad: contratos firmados, colaboradores, emplea
 
 ## Orden de implantación
 
-1. **Infraestructura de datos**: almacenamiento independiente para SouthBear (por ejemplo, Cloudflare D1 con Functions/Workers o Supabase separado), autenticación validada **en servidor**, autorización por propietario/rol, auditoría, copias y exportación. Cloudflare Access sobre páginas HTML **no reemplaza** la seguridad de las APIs ni de la base de datos.
-2. **CRM y proyectos**: entidades `clients`, `contacts`, `leads`, `projects`, `tasks`, `project_files`; CRUD validado y relacionado, archivos en almacenamiento privado. Incluye historial y búsqueda.
+1. **Infraestructura de datos (primera fase implementada)**: D1 en UE con Pages Functions; rutas API protegidas por Cloudflare Access y validación criptográfica del JWT también en servidor. Restricción por correo del titular, preparados clientes y auditoría; pendientes automatización de copias/exportación e identidades/roles adicionales.
+2. **CRM y proyectos**: entidad `clients` operativa con registro de cambios; siguientes entidades `contacts`, `leads`, `projects`, `tasks`, `project_files`, archivos en almacenamiento privado. Incluye historial y búsqueda.
 3. **Presupuestos y facturas**: documentos, líneas, estados, impuestos, PDF y conversiones; definir y validar la información fiscal real del emisor. No permitir modificar o borrar indiscriminadamente facturas emitidas; ofrecer rectificación mediante documentos trazables.
 4. **Tesorería y gastos**: facturas recibidas, pagos, cobros, saldos, vencimientos, conciliación, archivos de justificantes.
 5. **Contabilidad e impuestos**: libros y resúmenes coherentes con los asientos/registros; exportación para asesoría y validación con normativa española aplicable antes de su puesta en producción.

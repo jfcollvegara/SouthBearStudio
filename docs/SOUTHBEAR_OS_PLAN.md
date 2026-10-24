@@ -4,13 +4,16 @@
 
 Crear un centro de operaciones único, privado y responsive, para gestionar el estudio creativo **de principio a fin**: captación, clientes, presupuestos, trabajos, facturas, ingresos, gastos, contabilidad, impuestos, documentos, proveedores y seguimiento de resultados. Debe seguir el estilo visual negro/cinematográfico de Producción Audiovisual.
 
-## Estado actual
+## Estado actual (24 de octubre de 2026)
 
-- **Autenticación:** Cloudflare Access con una política por correo autorizado, verificada en la cuenta de Cloudflare.
-- **Interfaz:** Dashboard y páginas de todos los módulos; navegación lateral y móvil.
-- **Datos persistentes:** **Implementados para Clientes, Presupuestos y Proyectos** mediante Cloudflare D1, base `southbear-studio-os`, jurisdicción UE. El Dashboard muestra actividad y recuentos reales de esos tres módulos. Facturación, contabilidad y los demás módulos todavía no almacenan datos.
-- **Operaciones:** **Clientes, Presupuestos y Proyectos habilitados**: creación, consulta, búsqueda, edición, archivo y cambios de estado, con auditoría y control de acceso en servidor. Los presupuestos incluyen conceptos y cálculo de IVA, pero **no son facturas**; la emisión de facturas y operaciones contables aún no están habilitadas.
-- **Separación de proyectos:** no utilizar la base de datos de HyperDrive para datos de SouthBear.
+- **Autenticación:** Cloudflare Access y comprobación del JWT en el servidor.
+- **Almacenamiento:** Cloudflare D1 de SouthBear Studio, separada de HyperDrive.
+- **Módulos con operaciones persistentes:** Clientes, Presupuestos (precios IVA incluido y descarga PDF comercial), Proyectos, Configuración fiscal del emisor, Facturación en modo **borradores internos sin emisión**, Cobros, Gastos, Proveedores y Servicios y tarifas.
+- **Analítica:** Dashboard e Informes de tesorería y diferencias comerciales estimadas por proyecto. No representan libros fiscales ni ingresos devengados.
+- **Servicios y tarifas:** catálogo privado con categorías, paquetes y extras; historial de cambios de precio y copia a conceptos de presupuestos, sin alterar históricos.
+- **Pendientes prioritarios:** Oportunidades, archivo documental privado, conciliación/exportación contable para asesoría, validación legal y técnica antes de habilitar cualquier factura fiscal.
+- **Agenda y tareas:** **última fase**, orientada a integración con Google Calendar. No crear un segundo calendario independiente; concretar la integración y sus permisos cuando toque.
+- **Facturación:** las facturas fiscales definitivas y los módulos de Impuestos y Contabilidad siguen pendientes de diseño y validación normativa y profesional.
 
 ## Áreas y funciones
 
@@ -58,3 +61,11 @@ Ampliaciones futuras según necesidad: contratos firmados, colaboradores, emplea
 ## Principio de producto
 
 **Nada de pantallas que aparenten guardar, emitir o calcular si todavía no lo hacen.** Primero interfaces honestas, después operaciones persistentes y auditables. El panel se ampliará sobre el layout `src/layouts/Private.astro`, el menú `src/components/private/Navigation.astro`, el catálogo `src/data/private-modules.js` y los estilos `src/styles/private-workspace.css`.
+
+## Prioridades ajustadas (octubre de 2026)
+
+1. Catálogo comercial «Servicios y tarifas» y reutilización en presupuestos (fase actual).
+2. Pipeline de oportunidades: contacto potencial → negociación → presupuesto → proyecto.
+3. Archivo documental privado de contratos, entregables y justificantes, con almacenamiento no público y permisos.
+4. Exportación para asesoría y conciliación de cobros/gastos. La emisión fiscal quedará bloqueada hasta verificar requisitos aplicables.
+5. Agenda y tareas **al final**, priorizando Google Calendar conectado y evitando funcionalidades duplicadas.

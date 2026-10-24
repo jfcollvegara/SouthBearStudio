@@ -1,0 +1,339 @@
+---
+import Private from '../../../../layouts/Private.astro';
+import '../../../../styles/private-commerce.css';
+---
+<Private workspace title="Cobros y anticipos" description="Planes de pago, cobros recibidos y saldos pendientes de SouthBear Studio.">
+<section class="sb-ops sb-collections" aria-labelledby="sb-collections-title">
+  <div class="sb-ws-topline"><span class="sb-ws-breadcrumb"><a href="/acceso/panel/">SOUTHBEAR OS</a> <span>/</span> FINANZAS <span>/</span> COBROS</span><span class="sb-ws-topline__session"><i aria-hidden="true"></i> DATOS PRIVADOS</span></div>
+  <header class="sb-ops__hero">
+    <div><span class="sb-ops__label">SOUTHBEAR / CASHFLOW WORKSPACE</span><h1 id="sb-collections-title">TUS <em>COBROS.</em></h1><p>Organiza los anticipos, los pagos finales y los importes pendientes de cada cliente. Cada cobro queda registrado con fecha, método e historial.</p></div>
+    <button id="sb-collections-new" type="button" class="sb-ops__primary">+ Plan de cobro <span aria-hidden="true">↗</span></button>
+  </header>
+  <div class="sb-ops__info"><b aria-hidden="true">✳</b><span>Registra un cobro solo cuando hayas comprobado que has recibido el dinero. Este módulo no consulta tu banco, no expide facturas ni sustituye las obligaciones de facturación por anticipos. Las cifras previstas y las realmente cobradas se muestran por separado.</span></div>
+  <div class="sb-collections__metrics" aria-label="Resumen de cobros">
+    <div><span>COBRADO REGISTRADO</span><strong id="sb-collections-paid">—</strong><small>Movimientos no anulados, incluso en planes archivados</small></div>
+    <div><span>PENDIENTE PREVISTO</span><strong id="sb-collections-outstanding">—</strong><small>Solo planes activos</small></div>
+    <div><span>TOTAL PLANIFICADO</span><strong id="sb-collections-planned">—</strong><small>Importes de planes activos</small></div>
+  </div>
+  <div class="sb-ops__controls sb-collections__controls">
+    <label>BUSCAR CLIENTE O TRABAJO<input type="search" id="sb-collections-search" placeholder="Cliente, trabajo o referencia" maxlength="120"/></label>
+    <label>VISIBILIDAD<select id="sb-collections-archived"><option value="0">Planes activos</option><option value="1">Planes archivados</option></select></label>
+    <button class="sb-ops__reload" id="sb-collections-refresh" title="Actualizar" type="button">↻</button>
+  </div>
+  <div class="sb-ops__meta"><span id="sb-collections-counter">PLANES / —</span><span id="sb-collections-loading" aria-live="polite">CARGANDO…</span></div>
+  <div id="sb-collections-rows" class="sb-ops__records" aria-live="polite"><div class="sb-ops__empty">Consultando planes de cobro…</div></div>
+  <button class="sb-ops__more" type="button" id="sb-collections-more" hidden>Mostrar más ↓</button>
+  <p id="sb-collections-feedback" class="sb-ops__feedback" role="status" aria-live="polite"></p>
+  <footer class="sb-ops__footer">SOUTHBEAR OS / TESORERÍA · REGISTROS INTRODUCIDOS MANUALMENTE · NO EMITE FACTURAS FISCALES</footer>
+</section>
+<dialog id="sb-collections-plan-dialog" class="sb-ops-dialog" aria-labelledby="sb-collections-plan-title">
+  <div class="sb-ops-dialog__head"><div><span>SOUTHBEAR / PLAN DE PAGO</span><h2 id="sb-collections-plan-title">Nuevo plan de cobro.</h2></div><button type="button" id="sb-collections-plan-close" class="sb-ops-dialog__close" aria-label="Cerrar">×</button></div>
+  <form id="sb-collections-plan-form">
+    <div class="sb-ops-form">
+      <label class="sb-ops-form__wide">Trabajo o servicio <b>*</b><input name="title" required maxlength="200" placeholder="Ej. Desarrollo web corporativo"/></label>
+      <label>Cliente <b>*</b><select name="client_id" required><option value="">Cargando clientes…</option></select></label>
+      <label>Presupuesto aceptado (opcional)<select name="quote_id"><option value="">Sin presupuesto vinculado</option></select></label>
+      <label>Proyecto (opcional)<select name="project_id"><option value="">Sin proyecto vinculado</option></select></label>
+      <label>Borrador de facturación (opcional)<select name="draft_id"><option value="">Sin borrador vinculado</option></select></label>
+      <p class="sb-ops-form__note sb-ops-form__wide">Puedes vincular un presupuesto aceptado <b>o</b> un borrador de facturación, junto con su proyecto. No ambos. El importe se toma del documento de origen, sin duplicarlo.</p>
+      <label>Importe total con IVA € <b>*</b><input name="total" type="number" required min=".01" step=".01" max="1000000000" placeholder="Ej. 1000.00"/></label>
+      <label>Anticipo previsto con IVA € <b>*</b><input name="advance" type="number" required min="0" step=".01" max="1000000000" placeholder="Ej. 500.00"/></label>
+      <div class="sb-collections__schedule sb-ops-form__wide" aria-live="polite">
+        <span>ENTRADA PREVISTA</span><strong id="sb-collections-advance-preview">—</strong>
+        <span>SEGUNDO PAGO</span><strong id="sb-collections-final-preview">—</strong>
+      </div>
+      <label>Vencimiento anticipo<input type="date" name="advance_due_date"/></label>
+      <label>Vencimiento segundo pago<input type="date" name="final_due_date"/></label>
+      <label class="sb-ops-form__wide">Notas internas<textarea name="notes" maxlength="3000" rows="3" placeholder="Condiciones particulares, plazos pactados…"></textarea></label>
+      <p class="sb-ops-form__note sb-ops-form__wide">Por defecto: hasta 99 €, 100 % anticipado; importes superiores, 50 % + 50 %. Puedes ajustar el anticipo según lo pactado. La fecha real se introducirá cuando registres cada cobro.</p>
+    </div>
+    <p class="sb-ops-form__error" id="sb-collections-plan-error" role="alert" hidden></p>
+    <div class="sb-ops-form__actions"><button type="button" id="sb-collections-plan-cancel">Cerrar</button><button id="sb-collections-plan-save" class="sb-ops__primary" type="submit">Guardar plan ↗</button></div>
+  </form>
+</dialog>
+<dialog id="sb-collections-receipts-dialog" class="sb-ops-dialog sb-collections__receipts-dialog" aria-labelledby="sb-collections-receipts-title">
+  <div class="sb-ops-dialog__head"><div><span>SOUTHBEAR / REGISTRO DE MOVIMIENTOS</span><h2 id="sb-collections-receipts-title">Cobros registrados.</h2></div><button type="button" class="sb-ops-dialog__close" id="sb-collections-receipts-close" aria-label="Cerrar">×</button></div>
+  <div class="sb-collections__receipts-body">
+    <div class="sb-collections__balance" id="sb-collections-balance"></div>
+    <form id="sb-collections-receipts-form">
+      <h3>Registrar un cobro recibido.</h3>
+      <div class="sb-ops-form">
+        <label>Importe realmente cobrado € <b>*</b><input name="amount" required type="number" min=".01" step=".01" placeholder="Ej. 250.00"/></label>
+        <label>Fecha real de cobro <b>*</b><input name="paid_date" required type="date"/></label>
+        <label>Método<select name="method"><option value="transferencia">Transferencia</option><option value="tarjeta">Tarjeta</option><option value="efectivo">Efectivo</option><option value="bizum">Bizum</option><option value="otro">Otro</option></select></label>
+        <label>Referencia (opcional)<input name="reference" maxlength="120" placeholder="N.º operación o referencia propia"/></label>
+        <label class="sb-ops-form__wide">Notas (opcional)<textarea name="notes" rows="2" maxlength="1500"></textarea></label>
+      </div>
+      <p id="sb-collections-receipts-error" class="sb-ops-form__error" role="alert" hidden></p>
+      <div class="sb-ops-form__actions"><button id="sb-collections-receipts-save" class="sb-ops__primary" type="submit">Registrar cobro ↗</button></div>
+    </form>
+    <h3 class="sb-collections__history-title">Historial de cobros y anulaciones.</h3>
+    <div id="sb-collections-history" class="sb-collections__history"></div>
+    <p class="sb-ops-form__note">Los cobros registrados no se eliminan. Si detectas un error, anula el movimiento indicando el motivo y registra uno correcto. También debes gestionar por separado las facturas de anticipos que legalmente correspondan.</p>
+  </div>
+</dialog>
+<script>
+  import {requestApi,getAll,fillOptions,el,field,message,formatEuro,formatDate,todayLocal,minorUnits} from '../../../../scripts/private-commerce.js';
+  const $=id=>document.getElementById(id),base='/cobros';
+  const planForm=$('sb-collections-plan-form'),planDialog=$('sb-collections-plan-dialog'),receiptForm=$('sb-collections-receipts-form'),receiptDialog=$('sb-collections-receipts-dialog');
+  const feedback=$('sb-collections-feedback'),rows=$('sb-collections-rows');
+  let plans=[],clients=[],quotes=[],projects=[],drafts=[],selectedPlan=null,receiptPlan=null,busy=false,hasMore=false,page=1,loadId=0;
+  const modes={transferencia:'Transferencia',tarjeta:'Tarjeta',efectivo:'Efectivo',bizum:'Bizum',otro:'Otro'};
+  function money(raw){try{return minorUnits(raw,2,'el importe');}catch{return 0;}}
+  function suggestedAdvance(amount){return amount<=9900?amount:Math.round(amount/2);}
+  function preview(){
+    const total=money(field(planForm,'total').value),advance=money(field(planForm,'advance').value);
+    $('sb-collections-advance-preview').textContent=formatEuro(advance);
+    $('sb-collections-final-preview').textContent=advance>total?'El anticipo supera el total':formatEuro(total-advance);
+  }
+  function applyPreset(){
+    const total=money(field(planForm,'total').value);
+    field(planForm,'advance').value=(suggestedAdvance(total)/100).toFixed(2);
+    preview();
+  }
+  field(planForm,'total').addEventListener('input',applyPreset);
+  field(planForm,'advance').addEventListener('input',preview);
+  async function sources(){
+    const result=await Promise.all([getAll('/clientes'),getAll('/presupuestos?status=aceptado'),getAll('/proyectos'),getAll('/facturas')]);
+    [clients,quotes,projects,drafts]=result;
+  }
+  function sourceOptions(){
+    const client=field(planForm,'client_id').value;
+    for(const [key,data,empty,label] of [
+      ['quote_id',quotes,'Sin presupuesto aceptado',x=>x.code+' · '+x.title],
+      ['project_id',projects,'Sin proyecto',x=>x.title],
+      ['draft_id',drafts,'Sin borrador de facturación',x=>x.reference+' · '+x.title]
+    ]){
+      const control=field(planForm,key),current=control.value;
+      fillOptions(control,data.filter(x=>x.client_id===client).map(x=>({id:x.id,label:label(x)})),{empty,selected:current,label:'label'});
+    }
+  }
+  function selectQuote(id){
+    const q=quotes.find(x=>x.id===id);if(!q)return;
+    field(planForm,'client_id').value=q.client_id;sourceOptions();
+    field(planForm,'quote_id').value=q.id;field(planForm,'draft_id').value='';
+    if(!field(planForm,'title').value.trim())field(planForm,'title').value=q.title;
+    const project=projects.find(p=>p.quote_id===q.id&&p.client_id===q.client_id);
+    if(project)field(planForm,'project_id').value=project.id;
+    field(planForm,'total').value=(q.total_cents/100).toFixed(2);
+    applyPreset();
+  }
+  function selectDraft(id){
+    const d=drafts.find(x=>x.id===id);if(!d)return;
+    field(planForm,'client_id').value=d.client_id;sourceOptions();
+    field(planForm,'draft_id').value=d.id;field(planForm,'quote_id').value='';
+    if(d.project_id)field(planForm,'project_id').value=d.project_id;
+    if(!field(planForm,'title').value.trim())field(planForm,'title').value=d.title;
+    field(planForm,'total').value=(d.total_cents/100).toFixed(2);
+    applyPreset();
+  }
+  function selectProject(id){
+    const p=projects.find(x=>x.id===id);if(!p)return;
+    field(planForm,'client_id').value=p.client_id;sourceOptions();
+    field(planForm,'project_id').value=p.id;
+    if(p.quote_id&&quotes.some(q=>q.id===p.quote_id))selectQuote(p.quote_id);
+    if(!field(planForm,'title').value.trim())field(planForm,'title').value=p.title;
+  }
+  field(planForm,'client_id').addEventListener('change',()=>{for(const key of ['quote_id','draft_id','project_id'])field(planForm,key).value='';sourceOptions();});
+  field(planForm,'quote_id').addEventListener('change',()=>selectQuote(field(planForm,'quote_id').value));
+  field(planForm,'draft_id').addEventListener('change',()=>selectDraft(field(planForm,'draft_id').value));
+  field(planForm,'project_id').addEventListener('change',()=>selectProject(field(planForm,'project_id').value));
+  async function openPlan(id=null,{quote=null,project=null,draft=null}={}){
+    if(busy)return;
+    selectedPlan=null;planForm.reset();$('sb-collections-plan-error').hidden=true;
+    $('sb-collections-plan-title').textContent=id?'Editar plan de cobro.':'Nuevo plan de cobro.';
+    $('sb-collections-plan-save').textContent=id?'Guardar cambios ↗':'Guardar plan ↗';
+    try{
+      await sources();
+      if(!clients.length){message(feedback,'Crea primero un cliente.',true);return;}
+      const item=id?(await requestApi(base+'/'+id)).item:null;
+      selectedPlan=item;
+      fillOptions(field(planForm,'client_id'),clients,{empty:'Selecciona cliente',selected:item?.client_id});
+      if(item){
+        field(planForm,'title').value=item.title;
+        field(planForm,'notes').value=item.notes||'';
+        field(planForm,'total').value=(item.total_cents/100).toFixed(2);
+        field(planForm,'advance').value=(item.advance_cents/100).toFixed(2);
+        field(planForm,'advance_due_date').value=item.advance_due_date||'';
+        field(planForm,'final_due_date').value=item.final_due_date||'';
+        sourceOptions();
+        for(const key of ['quote_id','project_id','draft_id'])field(planForm,key).value=item[key]||'';
+      }else{
+        sourceOptions();
+        if(quote)selectQuote(quote);
+        else if(draft)selectDraft(draft);
+        else if(project)selectProject(project);
+      }
+      for(const key of ['client_id','quote_id','project_id','draft_id','total']){
+        field(planForm,key).disabled=!!item;
+      }
+      // El total de presupuestos y borradores se extrae del registro original.
+      if(!item)field(planForm,'total').readOnly=!!(field(planForm,'quote_id').value||field(planForm,'draft_id').value);
+      preview();planDialog.showModal();field(planForm,'title').focus();
+    }catch(e){message(feedback,e.message,true);}
+  }
+  function paint(){
+    rows.replaceChildren();
+    $('sb-collections-counter').textContent='PLANES / '+plans.length+(hasMore?'+':'');
+    $('sb-collections-more').hidden=!hasMore;
+    if(!plans.length){rows.append(el('div',$('sb-collections-archived').value==='1'?'No hay planes archivados.':'Todavía no hay planes de cobro.','sb-ops__empty'));return;}
+    for(const item of plans){
+      const paid=item.paid_cents||0,remaining=Math.max(0,item.total_cents-paid);
+      const status=remaining===0?'COBRADO':paid>0?'PARCIAL':'PENDIENTE';
+      const card=el('article',undefined,'sb-ops__record sb-collections__record');
+      const main=el('div',undefined,'sb-ops__record-main');
+      main.append(el('div',item.client_name,'sb-ops__record-index'),el('h3',item.title));
+      main.append(el('p',[
+        item.quote_code?'Presupuesto: '+item.quote_code:null,
+        item.project_name?'Proyecto: '+item.project_name:null,
+        item.draft_reference?'Borrador: '+item.draft_reference:null,
+        'Anticipo: '+formatEuro(item.advance_cents),
+        item.final_due_date?'Fecha final: '+formatDate(item.final_due_date):null
+      ].filter(Boolean).join(' · ')));
+      const side=el('div',undefined,'sb-ops__record-side');
+      side.append(el('strong',formatEuro(remaining)+' pendiente','sb-ops__record-money'),el('span',status,'sb-ops__status'));
+      side.append(el('small','Recibido: '+formatEuro(paid)+' / '+formatEuro(item.total_cents),'sb-collections__paid-caption'));
+      const actions=el('div',undefined,'sb-ops__actions');
+      const button=(label,code)=>{const b=el('button',label);b.type='button';b.dataset.id=item.id;b.dataset.action=code;actions.append(b);};
+      button('Ver movimientos ↗','receipts');
+      if(!item.archived_at)button('Editar plan','edit');
+      button(item.archived_at?'Restaurar':'Archivar',item.archived_at?'restore':'archive');
+      card.append(main,side,actions);rows.append(card);
+    }
+  }
+  async function load(reset=true){
+    const token=++loadId;if(reset){page=1;plans=[];}
+    $('sb-collections-loading').textContent='CARGANDO…';
+    try{
+      const q=new URLSearchParams({q:$('sb-collections-search').value.trim(),archived:$('sb-collections-archived').value,page:String(page)});
+      const r=await requestApi(base+'?'+q);
+      if(token!==loadId)return;
+      plans=reset?r.items:plans.concat(r.items);hasMore=r.hasMore;paint();
+      $('sb-collections-loading').textContent='ACTUALIZADO';
+      $('sb-collections-paid').textContent=formatEuro(r.summary.received_cents);
+      $('sb-collections-outstanding').textContent=formatEuro(r.summary.pending_cents);
+      $('sb-collections-planned').textContent=formatEuro(r.summary.planned_cents);
+    }catch(e){if(token!==loadId)return;$('sb-collections-loading').textContent='ERROR';rows.replaceChildren(el('div','No se pueden cargar los planes.','sb-ops__empty'));message(feedback,e.message,true);}
+  }
+  planForm.addEventListener('submit',async e=>{
+    e.preventDefault();if(busy)return;
+    busy=true;$('sb-collections-plan-save').disabled=true;$('sb-collections-plan-error').hidden=true;
+    try{
+      const meta={
+        title:field(planForm,'title').value.trim(),notes:field(planForm,'notes').value.trim(),
+        advance_cents:minorUnits(field(planForm,'advance').value,2,'anticipo'),
+        advance_due_date:field(planForm,'advance_due_date').value,
+        final_due_date:field(planForm,'final_due_date').value
+      };
+      const payload=selectedPlan?meta:{...meta,
+        client_id:field(planForm,'client_id').value,
+        quote_id:field(planForm,'quote_id').value||null,
+        project_id:field(planForm,'project_id').value||null,
+        draft_id:field(planForm,'draft_id').value||null,
+        total_cents:minorUnits(field(planForm,'total').value,2,'total')
+      };
+      await requestApi(base+(selectedPlan?'/'+selectedPlan.id:''),{method:selectedPlan?'PATCH':'POST',payload});
+      planDialog.close();message(feedback,selectedPlan?'Plan actualizado.':'Plan de cobro creado. Los pagos todavía deben registrarse por separado.');await load();
+    }catch(e){$('sb-collections-plan-error').textContent=e.message;$('sb-collections-plan-error').hidden=false;}
+    finally{busy=false;$('sb-collections-plan-save').disabled=false;}
+  });
+  function displayBalance(item){
+    const due=Math.max(0,item.total_cents-item.paid_cents);
+    const box=$('sb-collections-balance');box.replaceChildren();
+    box.append(el('span','TOTAL CONTRATADO'),el('strong',formatEuro(item.total_cents)),el('span','COBRADO REGISTRADO'),el('strong',formatEuro(item.paid_cents)),el('span','PENDIENTE'),el('strong',formatEuro(due)));
+    field(receiptForm,'amount').max=String(due/100);
+    field(receiptForm,'amount').disabled=due<=0||!!item.archived_at;
+    $('sb-collections-receipts-save').disabled=due<=0||!!item.archived_at;
+    if(due===0)message($('sb-collections-receipts-error'),'Este trabajo ya está completamente cobrado.',false);
+    else if(item.archived_at)message($('sb-collections-receipts-error'),'El plan está archivado. Restáuralo para introducir un cobro.',true);
+    else{$('sb-collections-receipts-error').hidden=true;}
+  }
+  function showHistory(item){
+    const history=$('sb-collections-history');history.replaceChildren();
+    if(!item.receipts?.length){history.append(el('p','Todavía no hay movimientos.','sb-collections__history-empty'));return;}
+    for(const receipt of item.receipts){
+      const card=el('div',undefined,'sb-collections__movement'+(receipt.canceled_at?' sb-collections__movement--void':''));
+      const left=el('div');
+      left.append(el('strong',formatEuro(receipt.amount_cents)),el('span',formatDate(receipt.paid_date)+' · '+(modes[receipt.method]||receipt.method)));
+      if(receipt.reference)left.append(el('small','Ref.: '+receipt.reference));
+      if(receipt.notes)left.append(el('small',receipt.notes));
+      if(receipt.canceled_at)left.append(el('small','ANULADO · '+receipt.cancel_reason));
+      card.append(left);
+      if(!receipt.canceled_at){
+        const b=el('button','Anular');b.type='button';b.dataset.receipt=receipt.id;b.title='Anular con motivo; no elimina el registro';card.append(b);
+      }
+      history.append(card);
+    }
+  }
+  async function openReceipts(id){
+    if(busy)return;
+    receiptPlan=null;receiptForm.reset();$('sb-collections-receipts-error').hidden=true;
+    try{
+      const item=(await requestApi(base+'/'+id)).item;
+      receiptPlan=item;field(receiptForm,'paid_date').value=todayLocal();
+      $('sb-collections-receipts-title').textContent=item.title;
+      displayBalance(item);showHistory(item);receiptDialog.showModal();
+    }catch(e){message(feedback,e.message,true);}
+  }
+  receiptForm.addEventListener('submit',async e=>{
+    e.preventDefault();if(busy||!receiptPlan)return;
+    busy=true;$('sb-collections-receipts-save').disabled=true;$('sb-collections-receipts-error').hidden=true;
+    try{
+      const payload={
+        amount_cents:minorUnits(field(receiptForm,'amount').value,2,'importe recibido'),
+        paid_date:field(receiptForm,'paid_date').value,
+        method:field(receiptForm,'method').value,
+        reference:field(receiptForm,'reference').value.trim(),
+        notes:field(receiptForm,'notes').value.trim()
+      };
+      const result=await requestApi(base+'/'+receiptPlan.id+'/movimientos',{method:'POST',payload});
+      receiptPlan=result.item;receiptForm.reset();field(receiptForm,'paid_date').value=todayLocal();
+      displayBalance(receiptPlan);showHistory(receiptPlan);
+      message(feedback,'Cobro registrado. Revisa también las obligaciones de facturación del anticipo.');await load();
+    }catch(err){$('sb-collections-receipts-error').textContent=err.message;$('sb-collections-receipts-error').hidden=false;}
+    finally{busy=false;if(receiptPlan)$('sb-collections-receipts-save').disabled=!!receiptPlan.archived_at||receiptPlan.paid_cents>=receiptPlan.total_cents;}
+  });
+  $('sb-collections-history').addEventListener('click',async e=>{
+    const b=e.target.closest('button[data-receipt]');if(!b||busy||!receiptPlan)return;
+    const reason=prompt('Indica el motivo por el que anulas este cobro. El movimiento seguirá apareciendo en el historial.');
+    if(reason===null)return;
+    if(!reason.trim()){message(feedback,'Es obligatorio indicar un motivo de anulación.',true);return;}
+    busy=true;b.disabled=true;
+    try{
+      const result=await requestApi(base+'/'+receiptPlan.id+'/movimientos/'+b.dataset.receipt,{method:'PATCH',payload:{reason:reason.trim()}});
+      receiptPlan=result.item;displayBalance(receiptPlan);showHistory(receiptPlan);
+      message(feedback,'Cobro anulado conservando su historial.');await load();
+    }catch(err){message(feedback,err.message,true);}finally{busy=false;b.disabled=false;}
+  });
+  rows.addEventListener('click',async e=>{
+    const b=e.target.closest('button[data-action]');if(!b||busy)return;
+    const item=plans.find(x=>x.id===b.dataset.id);if(!item)return;
+    const action=b.dataset.action;
+    if(action==='receipts'){await openReceipts(item.id);return;}
+    if(action==='edit'){await openPlan(item.id);return;}
+    if(action==='archive'&&!confirm('¿Archivar este plan? Los cobros ya registrados seguirán contabilizados y conservados.'))return;
+    busy=true;b.disabled=true;
+    try{
+      await requestApi(base+'/'+item.id,action==='archive'?{method:'DELETE'}:{method:'PATCH',payload:{archived:false}});
+      message(feedback,action==='archive'?'Plan archivado. Los cobros históricos permanecen.':'Plan restaurado.');await load();
+    }catch(err){message(feedback,err.message,true);}finally{busy=false;b.disabled=false;}
+  });
+  $('sb-collections-new').addEventListener('click',()=>openPlan());
+  $('sb-collections-plan-close').addEventListener('click',()=>planDialog.close());
+  $('sb-collections-plan-cancel').addEventListener('click',()=>planDialog.close());
+  $('sb-collections-receipts-close').addEventListener('click',()=>receiptDialog.close());
+  planDialog.addEventListener('click',e=>{if(e.target===planDialog)planDialog.close();});
+  receiptDialog.addEventListener('click',e=>{if(e.target===receiptDialog)receiptDialog.close();});
+  $('sb-collections-refresh').addEventListener('click',()=>load());
+  $('sb-collections-more').addEventListener('click',()=>{page++;load(false);});
+  let timeout;
+  for(const id of ['sb-collections-search','sb-collections-archived']){
+    $(id).addEventListener(id==='sb-collections-search'?'input':'change',()=>{clearTimeout(timeout);timeout=setTimeout(()=>load(),230);});
+  }
+  const q=new URLSearchParams(location.search);
+  if(q.get('presupuesto'))openPlan(null,{quote:q.get('presupuesto')});
+  else if(q.get('proyecto'))openPlan(null,{project:q.get('proyecto')});
+  else if(q.get('borrador'))openPlan(null,{draft:q.get('borrador')});
+  load();
+</script>
+</Private>

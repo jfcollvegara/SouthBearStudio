@@ -1,0 +1,274 @@
+---
+import Private from '../../../../layouts/Private.astro';
+import '../../../../styles/private-commerce.css';
+---
+<Private workspace title="Gastos del estudio" description="Control privado de gastos, proveedores, pagos y costes de proyectos de SouthBear Studio.">
+<section class="sb-ops sb-expenses" aria-labelledby="sb-expenses-title">
+  <div class="sb-ws-topline"><span class="sb-ws-breadcrumb"><a href="/acceso/panel/">SOUTHBEAR OS</a> <span>/</span> FINANZAS <span>/</span> GASTOS</span><span class="sb-ws-topline__session"><i aria-hidden="true"></i> REGISTROS PRIVADOS</span></div>
+  <header class="sb-ops__hero">
+    <div><span class="sb-ops__label">SOUTHBEAR / COST MANAGEMENT</span><h1 id="sb-expenses-title">TUS <em>GASTOS.</em></h1><p>Organiza servicios subcontratados, suscripciones, materiales, equipos y otros costes del estudio. Vincula cada gasto a un proyecto y lleva el seguimiento de sus pagos.</p></div>
+    <button id="sb-expenses-new" type="button" class="sb-ops__primary">+ Registrar gasto <span aria-hidden="true">↗</span></button>
+  </header>
+  <div class="sb-ops__info"><b aria-hidden="true">✳</b><span>Este módulo es de <strong>gestión interna</strong>. No decide qué gastos ni qué IVA son fiscalmente deducibles. No adjunta justificantes todavía ni sincroniza bancos: registra únicamente los importes y pagos que introduzcas. Conserva las facturas y comprobantes originales.</span></div>
+  <div class="sb-expenses__metrics">
+    <div><span>PAGADO ESTE MES</span><strong id="sb-expenses-month">—</strong><small>Movimientos registrados con fecha del mes actual</small></div>
+    <div><span>PENDIENTE DE PAGO</span><strong id="sb-expenses-pending">—</strong><small>Gastos activos menos pagos contabilizados</small></div>
+    <div><span>GASTOS COMPROMETIDOS</span><strong id="sb-expenses-committed">—</strong><small>Importe total de gastos activos</small></div>
+  </div>
+  <div class="sb-ops__controls sb-expenses__controls">
+    <label>BUSCAR GASTO O PROVEEDOR<input id="sb-expenses-search" type="search" maxlength="120" placeholder="Concepto, proveedor o referencia"/></label>
+    <label>CATEGORÍA<select id="sb-expenses-category">
+      <option value="">Todas</option><option value="software">Software</option><option value="materiales">Materiales</option>
+      <option value="subcontratacion">Subcontratación</option><option value="equipo">Equipamiento</option>
+      <option value="transporte">Desplazamientos</option><option value="marketing">Marketing</option>
+      <option value="alojamiento">Hosting y dominios</option><option value="otros">Otros</option>
+    </select></label>
+    <label>VISIBILIDAD<select id="sb-expenses-archived"><option value="0">Activos</option><option value="1">Archivados</option></select></label>
+    <button type="button" id="sb-expenses-refresh" class="sb-ops__reload" title="Actualizar">↻</button>
+  </div>
+  <div class="sb-ops__meta"><span id="sb-expenses-counter">GASTOS / —</span><span id="sb-expenses-loading" aria-live="polite">CARGANDO…</span></div>
+  <div id="sb-expenses-rows" class="sb-ops__records" aria-live="polite"><div class="sb-ops__empty">Consultando gastos…</div></div>
+  <button type="button" id="sb-expenses-more" class="sb-ops__more" hidden>Mostrar más ↓</button>
+  <p id="sb-expenses-feedback" class="sb-ops__feedback" role="status" aria-live="polite"></p>
+  <footer class="sb-ops__footer">SOUTHBEAR OS / FINANZAS INTERNAS · IMPORTES EN EUR · NO ES UN LIBRO FISCAL NI CONTABLE</footer>
+</section>
+<dialog id="sb-expenses-dialog" class="sb-ops-dialog" aria-labelledby="sb-expenses-dialog-title">
+  <div class="sb-ops-dialog__head"><div><span>SOUTHBEAR / COST ENTRY</span><h2 id="sb-expenses-dialog-title">Nuevo gasto.</h2></div><button id="sb-expenses-close" class="sb-ops-dialog__close" type="button" aria-label="Cerrar">×</button></div>
+  <form id="sb-expenses-form">
+    <div class="sb-ops-form">
+      <label>Proveedor <b>*</b><input name="supplier_name" required maxlength="180" placeholder="Ej. Imprenta, Adobe, operador…" autocomplete="off"/></label>
+      <label>Concepto <b>*</b><input name="title" required maxlength="200" placeholder="Ej. Impresión de tarjetas"/></label>
+      <label>Categoría<select name="category">
+        <option value="software">Software y licencias</option><option value="materiales">Materiales y productos</option>
+        <option value="subcontratacion">Servicios subcontratados</option><option value="equipo">Equipos y material técnico</option>
+        <option value="transporte">Transporte y desplazamientos</option><option value="marketing">Publicidad y marketing</option>
+        <option value="alojamiento">Hosting, dominios e infraestructura</option><option value="otros">Otros gastos</option>
+      </select></label>
+      <label>Proyecto asociado<select name="project_id"><option value="">Sin proyecto vinculado</option></select></label>
+      <label>Fecha del gasto <b>*</b><input name="expense_date" type="date" required/></label>
+      <label>Fecha de vencimiento<input name="due_date" type="date"/></label>
+      <label>Importe total con IVA € <b>*</b><input name="gross" required type="number" min=".01" step=".01" max="1000000000" placeholder="Ej. 121.00"/></label>
+      <label>Tipo de IVA reflejado<select name="vat_bps"><option value="2100">21 %</option><option value="1000">10 %</option><option value="400">4 %</option><option value="0">0 %</option></select></label>
+      <div class="sb-ops__totals sb-ops-form__wide">
+        <span>Base imponible orientativa</span><strong id="sb-expenses-net">—</strong>
+        <span>IVA incluido en el total</span><strong id="sb-expenses-tax">—</strong>
+        <span>TOTAL DEL GASTO</span><strong id="sb-expenses-gross-preview" class="big">—</strong>
+      </div>
+      <label class="sb-ops-form__wide">N.º de factura o referencia del justificante<input name="document_ref" maxlength="120" placeholder="Referencia del documento, si la tienes"/></label>
+      <label class="sb-ops-form__wide">Notas internas<textarea name="notes" maxlength="3000" rows="3" placeholder="Detalles del pedido, condiciones acordadas, justificante guardado…"></textarea></label>
+      <p class="sb-ops-form__note sb-ops-form__wide">Selecciona el IVA que figure realmente en el justificante. El desglose es orientativo y no equivale a considerar el IVA deducible. Algunos gastos requieren un tratamiento especial todavía no modelado.</p>
+    </div>
+    <p class="sb-ops-form__error" id="sb-expenses-form-error" role="alert" hidden></p>
+    <div class="sb-ops-form__actions"><button type="button" id="sb-expenses-cancel">Cancelar</button><button class="sb-ops__primary" id="sb-expenses-save" type="submit">Guardar gasto ↗</button></div>
+  </form>
+</dialog>
+<dialog id="sb-expenses-pay-dialog" class="sb-ops-dialog" aria-labelledby="sb-expenses-pay-title">
+  <div class="sb-ops-dialog__head"><div><span>SOUTHBEAR / PAYMENT HISTORY</span><h2 id="sb-expenses-pay-title">Pagos del gasto.</h2></div><button id="sb-expenses-pay-close" type="button" class="sb-ops-dialog__close" aria-label="Cerrar">×</button></div>
+  <div class="sb-expenses__pay-body">
+    <div id="sb-expenses-balance" class="sb-expenses__balance" aria-live="polite"></div>
+    <form id="sb-expenses-pay-form">
+      <h3>Registrar un pago realizado.</h3>
+      <div class="sb-ops-form">
+        <label>Importe pagado € <b>*</b><input name="amount" type="number" min=".01" step=".01" required/></label>
+        <label>Fecha real del pago <b>*</b><input name="paid_date" type="date" required/></label>
+        <label>Método<select name="method"><option value="transferencia">Transferencia</option><option value="tarjeta">Tarjeta</option><option value="efectivo">Efectivo</option><option value="bizum">Bizum</option><option value="otro">Otro</option></select></label>
+        <label>Referencia del pago<input name="reference" maxlength="120" placeholder="Opcional"/></label>
+        <label class="sb-ops-form__wide">Notas<textarea name="notes" rows="2" maxlength="1200"></textarea></label>
+      </div>
+      <p class="sb-ops-form__error" id="sb-expenses-pay-error" role="alert" hidden></p>
+      <div class="sb-ops-form__actions"><button type="submit" class="sb-ops__primary" id="sb-expenses-pay-save">Registrar pago ↗</button></div>
+    </form>
+    <h3>Historial y anulaciones</h3>
+    <div id="sb-expenses-pay-history" class="sb-expenses__history"></div>
+    <p class="sb-ops-form__note">Para corregir un pago anotado, anúlalo indicando un motivo y registra el importe correcto. El movimiento anulado seguirá visible en el historial.</p>
+  </div>
+</dialog>
+<script>
+  import {requestApi,getAll,fillOptions,el,field,message,formatEuro,formatDate,todayLocal,minorUnits} from '../../../../scripts/private-commerce.js';
+  const $=id=>document.getElementById(id),base='/gastos';
+  const form=$('sb-expenses-form'),dialog=$('sb-expenses-dialog'),payForm=$('sb-expenses-pay-form'),payDialog=$('sb-expenses-pay-dialog');
+  const feedback=$('sb-expenses-feedback'),rows=$('sb-expenses-rows');
+  const categories={software:'Software',materiales:'Materiales',subcontratacion:'Subcontratación',equipo:'Equipamiento',transporte:'Desplazamientos',marketing:'Marketing',alojamiento:'Hosting y dominios',otros:'Otros'};
+  const methods={transferencia:'Transferencia',tarjeta:'Tarjeta',efectivo:'Efectivo',bizum:'Bizum',otro:'Otro'};
+  let items=[],projects=[],selected=null,paymentExpense=null,loading=0,busy=false,page=1,hasMore=false;
+  function calculate(){
+    try{
+      const total=minorUnits(field(form,'gross').value,2,'importe total');
+      const taxRate=Number(field(form,'vat_bps').value);
+      const net=Math.round(total*10000/(10000+taxRate));
+      $('sb-expenses-net').textContent=formatEuro(net);
+      $('sb-expenses-tax').textContent=formatEuro(total-net);
+      $('sb-expenses-gross-preview').textContent=formatEuro(total);
+    }catch{for(const k of ['net','tax','gross-preview'])$('sb-expenses-'+k).textContent='—';}
+  }
+  field(form,'gross').addEventListener('input',calculate);
+  field(form,'vat_bps').addEventListener('change',calculate);
+  async function getProjects(){projects=await getAll('/proyectos');}
+  async function open(id=null,fromProject=null){
+    if(busy)return;
+    selected=null;form.reset();field(form,'expense_date').value=todayLocal();$('sb-expenses-form-error').hidden=true;
+    $('sb-expenses-dialog-title').textContent=id?'Editar gasto.':'Nuevo gasto.';
+    try{
+      await getProjects();
+      const item=id?(await requestApi(base+'/'+id)).item:null;
+      selected=item;
+      fillOptions(field(form,'project_id'),projects.map(p=>({id:p.id,name:p.title})),{empty:'Sin proyecto asociado',selected:item?.project_id||fromProject||'',label:'name'});
+      if(item){
+        for(const key of ['supplier_name','title','category','expense_date','due_date','document_ref','notes','vat_bps'])field(form,key).value=item[key]??'';
+        field(form,'gross').value=(item.gross_cents/100).toFixed(2);
+        field(form,'project_id').value=item.project_id||'';
+      }
+      calculate();dialog.showModal();field(form,'title').focus();
+    }catch(e){message(feedback,e.message,true);}
+  }
+  function status(e){return e.paid_cents>=e.gross_cents?'PAGADO':e.paid_cents>0?'PAGO PARCIAL':'PENDIENTE';}
+  function paint(){
+    rows.replaceChildren();
+    $('sb-expenses-counter').textContent='GASTOS / '+items.length+(hasMore?'+':'');
+    $('sb-expenses-more').hidden=!hasMore;
+    if(!items.length){rows.append(el('div',$('sb-expenses-archived').value==='1'?'No hay gastos archivados.':'Todavía no hay gastos con estos filtros.','sb-ops__empty'));return;}
+    for(const item of items){
+      const remaining=Math.max(0,item.gross_cents-item.paid_cents);
+      const card=el('article',undefined,'sb-ops__record sb-expenses__record');
+      const main=el('div',undefined,'sb-ops__record-main');
+      main.append(el('div',item.supplier_name+' / '+(categories[item.category]||'Otros'),'sb-ops__record-index'),el('h3',item.title));
+      main.append(el('p',[
+        'Fecha: '+formatDate(item.expense_date),item.project_name?'Proyecto: '+item.project_name:null,
+        item.document_ref?'Ref.: '+item.document_ref:null,
+        item.due_date?'Vencimiento: '+formatDate(item.due_date):null
+      ].filter(Boolean).join(' · ')));
+      const side=el('div',undefined,'sb-ops__record-side');
+      side.append(el('strong',formatEuro(item.gross_cents),'sb-ops__record-money'),el('span',status(item),'sb-ops__status'));
+      side.append(el('small','Pagado: '+formatEuro(item.paid_cents)+' · Pendiente: '+formatEuro(remaining),'sb-expenses__detail-caption'));
+      const actions=el('div',undefined,'sb-ops__actions');
+      const act=(label,action)=>{const b=el('button',label);b.type='button';b.dataset.id=item.id;b.dataset.action=action;actions.append(b);};
+      act('Ver pagos ↗','pay');
+      if(!item.archived_at&&!item.paid_cents)act('Editar','edit');
+      act(item.archived_at?'Restaurar':'Archivar',item.archived_at?'restore':'archive');
+      card.append(main,side,actions);rows.append(card);
+    }
+  }
+  async function load(reset=true){
+    const token=++loading;if(reset){page=1;items=[];}
+    $('sb-expenses-loading').textContent='CARGANDO…';
+    try{
+      const query=new URLSearchParams({q:$('sb-expenses-search').value.trim(),category:$('sb-expenses-category').value,archived:$('sb-expenses-archived').value,page:String(page)});
+      const r=await requestApi(base+'?'+query);
+      if(token!==loading)return;
+      items=reset?r.items:items.concat(r.items);hasMore=r.hasMore;paint();
+      $('sb-expenses-month').textContent=formatEuro(r.summary.paid_month_cents);
+      $('sb-expenses-pending').textContent=formatEuro(r.summary.pending_cents);
+      $('sb-expenses-committed').textContent=formatEuro(r.summary.committed_cents);
+      $('sb-expenses-loading').textContent='ACTUALIZADO';
+    }catch(e){if(token!==loading)return;$('sb-expenses-loading').textContent='ERROR';rows.replaceChildren(el('div','No se han podido cargar los gastos.','sb-ops__empty'));message(feedback,e.message,true);}
+  }
+  form.addEventListener('submit',async e=>{
+    e.preventDefault();if(busy)return;
+    busy=true;$('sb-expenses-save').disabled=true;$('sb-expenses-form-error').hidden=true;
+    try{
+      const fields=['supplier_name','title','category','project_id','expense_date','due_date','document_ref','notes'];
+      const payload=Object.fromEntries(fields.map(name=>[name,field(form,name).value.trim()]));
+      payload.project_id||=null;
+      payload.gross_cents=minorUnits(field(form,'gross').value,2,'importe con IVA');
+      payload.vat_bps=Number(field(form,'vat_bps').value);
+      await requestApi(base+(selected?'/'+selected.id:''),{method:selected?'PATCH':'POST',payload});
+      dialog.close();message(feedback,selected?'Gasto actualizado.':'Gasto registrado; sus pagos se registran por separado.');
+      await load();
+    }catch(e){$('sb-expenses-form-error').textContent=e.message;$('sb-expenses-form-error').hidden=false;}
+    finally{busy=false;$('sb-expenses-save').disabled=false;}
+  });
+  function balance(item){
+    const remaining=Math.max(0,item.gross_cents-item.paid_cents);
+    const box=$('sb-expenses-balance');box.replaceChildren();
+    box.append(el('span','IMPORTE TOTAL'),el('strong',formatEuro(item.gross_cents)),el('span','PAGADO REGISTRADO'),el('strong',formatEuro(item.paid_cents)),el('span','PENDIENTE'),el('strong',formatEuro(remaining)));
+    field(payForm,'amount').max=String(remaining/100);
+    field(payForm,'amount').disabled=remaining<=0||!!item.archived_at;
+    $('sb-expenses-pay-save').disabled=remaining<=0||!!item.archived_at;
+    $('sb-expenses-pay-error').hidden=true;
+    if(item.archived_at||remaining===0){$('sb-expenses-pay-error').hidden=false;$('sb-expenses-pay-error').textContent=item.archived_at?'Restaura este gasto para introducir pagos.':'El gasto está pagado por completo.';}
+  }
+  function history(item){
+    const target=$('sb-expenses-pay-history');target.replaceChildren();
+    if(!item.payments?.length){target.append(el('p','Todavía no se han registrado pagos.','sb-expenses__history-empty'));return;}
+    for(const pay of item.payments){
+      const box=el('div',undefined,'sb-expenses__movement'+(pay.canceled_at?' sb-expenses__movement--void':''));
+      const info=el('div');
+      info.append(el('strong',formatEuro(pay.amount_cents)),el('span',formatDate(pay.paid_date)+' · '+(methods[pay.method]||pay.method)));
+      if(pay.reference)info.append(el('small','Ref.: '+pay.reference));
+      if(pay.notes)info.append(el('small',pay.notes));
+      if(pay.canceled_at)info.append(el('small','ANULADO · '+pay.cancel_reason));
+      box.append(info);
+      if(!pay.canceled_at){
+        const cancel=el('button','Anular');cancel.type='button';cancel.dataset.pay=pay.id;cancel.title='Anular sin eliminar del historial';box.append(cancel);
+      }
+      target.append(box);
+    }
+  }
+  async function openPayments(id){
+    if(busy)return;
+    paymentExpense=null;payForm.reset();$('sb-expenses-pay-error').hidden=true;
+    try{
+      const item=(await requestApi(base+'/'+id)).item;
+      paymentExpense=item;field(payForm,'paid_date').value=todayLocal();
+      $('sb-expenses-pay-title').textContent=item.title;
+      balance(item);history(item);payDialog.showModal();
+    }catch(e){message(feedback,e.message,true);}
+  }
+  payForm.addEventListener('submit',async e=>{
+    e.preventDefault();if(busy||!paymentExpense)return;
+    busy=true;$('sb-expenses-pay-save').disabled=true;$('sb-expenses-pay-error').hidden=true;
+    try{
+      const payload={
+        amount_cents:minorUnits(field(payForm,'amount').value,2,'importe pagado'),
+        paid_date:field(payForm,'paid_date').value,method:field(payForm,'method').value,
+        reference:field(payForm,'reference').value.trim(),notes:field(payForm,'notes').value.trim()
+      };
+      const r=await requestApi(base+'/'+paymentExpense.id+'/pagos',{method:'POST',payload});
+      paymentExpense=r.item;payForm.reset();field(payForm,'paid_date').value=todayLocal();
+      balance(paymentExpense);history(paymentExpense);
+      message(feedback,'Pago registrado. Guarda su justificante original.');await load();
+    }catch(e){$('sb-expenses-pay-error').textContent=e.message;$('sb-expenses-pay-error').hidden=false;}
+    finally{busy=false;if(paymentExpense)$('sb-expenses-pay-save').disabled=!!paymentExpense.archived_at||paymentExpense.paid_cents>=paymentExpense.gross_cents;}
+  });
+  $('sb-expenses-pay-history').addEventListener('click',async e=>{
+    const b=e.target.closest('button[data-pay]');if(!b||busy||!paymentExpense)return;
+    const reason=prompt('Indica por qué anulas este pago. El movimiento original seguirá en el historial.');
+    if(reason===null)return;
+    if(!reason.trim()){message(feedback,'Debes indicar el motivo de anulación.',true);return;}
+    busy=true;b.disabled=true;
+    try{
+      const res=await requestApi(base+'/'+paymentExpense.id+'/pagos/'+b.dataset.pay,{method:'PATCH',payload:{reason:reason.trim()}});
+      paymentExpense=res.item;balance(paymentExpense);history(paymentExpense);
+      message(feedback,'Pago anulado manteniendo el historial.');await load();
+    }catch(err){message(feedback,err.message,true);}finally{busy=false;b.disabled=false;}
+  });
+  rows.addEventListener('click',async e=>{
+    const b=e.target.closest('button[data-action]');if(!b||busy)return;
+    const item=items.find(x=>x.id===b.dataset.id);if(!item)return;
+    if(b.dataset.action==='pay'){await openPayments(item.id);return;}
+    if(b.dataset.action==='edit'){await open(item.id);return;}
+    const action=b.dataset.action;
+    if(action==='archive'&&!confirm('¿Archivar este gasto? El historial de pagos seguirá conservado.'))return;
+    busy=true;b.disabled=true;
+    try{
+      await requestApi(base+'/'+item.id,action==='archive'?{method:'DELETE'}:{method:'PATCH',payload:{archived:false}});
+      message(feedback,action==='archive'?'Gasto archivado.':'Gasto restaurado.');await load();
+    }catch(err){message(feedback,err.message,true);}finally{busy=false;b.disabled=false;}
+  });
+  $('sb-expenses-new').addEventListener('click',()=>open());
+  $('sb-expenses-close').addEventListener('click',()=>dialog.close());
+  $('sb-expenses-cancel').addEventListener('click',()=>dialog.close());
+  $('sb-expenses-pay-close').addEventListener('click',()=>payDialog.close());
+  dialog.addEventListener('click',e=>{if(e.target===dialog)dialog.close();});
+  payDialog.addEventListener('click',e=>{if(e.target===payDialog)payDialog.close();});
+  $('sb-expenses-refresh').addEventListener('click',()=>load());
+  $('sb-expenses-more').addEventListener('click',()=>{page++;load(false);});
+  let timer;
+  for(const id of ['sb-expenses-search','sb-expenses-category','sb-expenses-archived']){
+    $(id).addEventListener(id==='sb-expenses-search'?'input':'change',()=>{clearTimeout(timer);timer=setTimeout(()=>load(),230);});
+  }
+  const p=new URLSearchParams(location.search);
+  if(p.get('proyecto'))open(null,p.get('proyecto'));
+  load();
+</script>
+</Private>

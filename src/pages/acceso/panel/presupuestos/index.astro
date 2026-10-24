@@ -5,7 +5,7 @@ import '../../../../styles/private-commerce.css';
 <Private workspace title="Presupuestos" description="Presupuestos privados con líneas, precios e impuestos calculados en el servidor.">
 <section class="sb-ops" aria-labelledby="sb-quotes-title">
   <div class="sb-ws-topline"><span class="sb-ws-breadcrumb"><a href="/acceso/panel/">SOUTHBEAR OS</a> <span>/</span> COMERCIAL <span>/</span> PRESUPUESTOS</span><span class="sb-ws-topline__session"><i aria-hidden="true"></i> DATOS PRIVADOS</span></div>
-  <header class="sb-ops__hero"><div><span class="sb-ops__label">SOUTHBEAR / PROPUESTAS</span><h1 id="sb-quotes-title">TUS <em>PRESUPUESTOS.</em></h1><p>Crea propuestas económicas asociadas a tus clientes, añade conceptos e IVA y controla en qué fase se encuentra cada presupuesto.</p></div><button class="sb-ops__primary" id="sb-quotes-new" type="button">+ Nuevo presupuesto <span aria-hidden="true">↗</span></button></header>
+  <header class="sb-ops__hero"><div><span class="sb-ops__label">SOUTHBEAR / PROPUESTAS</span><h1 id="sb-quotes-title">TUS <em>PRESUPUESTOS.</em></h1><p>Crea propuestas económicas con precios finales que ya incluyen IVA. El desglose de base imponible e IVA se calcula automáticamente.</p></div><button class="sb-ops__primary" id="sb-quotes-new" type="button">+ Nuevo presupuesto <span aria-hidden="true">↗</span></button></header>
   <div class="sb-ops__info"><b aria-hidden="true">✳</b><span>Los importes e impuestos se recalculan en el servidor. Son presupuestos comerciales, <strong>no facturas ni documentos fiscales</strong>. Los estados «enviado» y «aceptado» se marcan manualmente: no se envían correos ni se obtiene una firma del cliente automáticamente.</span></div>
   <div class="sb-ops__controls">
     <label>BUSCAR PRESUPUESTO<input id="sb-quotes-search" type="search" placeholder="Título, cliente o referencia" maxlength="120"/></label>
@@ -31,7 +31,7 @@ import '../../../../styles/private-commerce.css';
       <section class="sb-ops__line-section" aria-labelledby="sb-quotes-line-title">
         <div class="sb-ops__line-header"><h3 id="sb-quotes-line-title">Conceptos.</h3><button type="button" id="sb-quotes-add">+ Añadir concepto</button></div>
         <div id="sb-quotes-lines"></div>
-        <p class="sb-ops-form__note">Precio por unidad sin IVA. El tipo impositivo se elige en cada concepto; confirma el tratamiento fiscal que corresponde a tu actividad.</p>
+        <p class="sb-ops-form__note">Introduce el precio final por unidad, IVA incluido. Según el tipo de IVA elegido, se extraen automáticamente la base imponible y el impuesto en el desglose inferior.</p>
       </section>
       <div class="sb-ops__totals">
         <span>Base imponible orientativa</span><strong id="sb-quotes-subtotal">—</strong>
@@ -100,7 +100,7 @@ import '../../../../styles/private-commerce.css';
     }
     formField('Concepto *','concept','text',line.concept??'',{maxLength:240}).required=true;
     formField('Cantidad *','quantity','number',line.quantity_milli!==undefined?String(line.quantity_milli/1000):'1',{min:.001,max:100000,step:.001}).required=true;
-    formField('Precio sin IVA € *','price','number',line.unit_cents!==undefined?String(line.unit_cents/100):'0',{min:0,max:10000000,step:.01}).required=true;
+    formField('Precio con IVA € *','price','number',line.unit_gross_cents!=null?String(line.unit_gross_cents/100):line.unit_cents!==undefined?String(Math.round(line.unit_cents*(10000+(line.vat_bps??2100))/10000)/100):'0',{min:0,max:10000000,step:.01}).required=true;
     formField('IVA','vat','select',line.vat_bps??2100);
     const remove=el('button','×','sb-ops__line-remove');remove.type='button';remove.title='Quitar concepto';remove.disabled=readOnly;
     remove.addEventListener('click',()=>{if(lineHolder.children.length>1){node.remove();preview();}});
@@ -111,16 +111,16 @@ import '../../../../styles/private-commerce.css';
   function readLines(){
     return Array.from(lineHolder.children).map(row=>{
       const val=key=>row.querySelector('[data-key="'+key+'"]').value.trim();
-      return {concept:val('concept'),details:val('details'),quantity_milli:minorUnits(val('quantity'),3,'cantidad'),unit_cents:minorUnits(val('price'),2,'precio'),vat_bps:Number(val('vat'))};
+      return {concept:val('concept'),details:val('details'),quantity_milli:minorUnits(val('quantity'),3,'cantidad'),unit_gross_cents:minorUnits(val('price'),2,'precio con IVA'),vat_bps:Number(val('vat'))};
     });
   }
   function preview(){
     let net=0,tax=0;
     try{
       for(const line of readLines()){
-        const b=Math.round(line.quantity_milli*line.unit_cents/1000);
-        const t=Math.round(b*line.vat_bps/10000);
-        net+=b;tax+=t;
+        const total=Math.round(line.quantity_milli*line.unit_gross_cents/1000);
+        const b=Math.round(total*10000/(10000+line.vat_bps));
+        net+=b;tax+=total-b;
       }
       $('sb-quotes-subtotal').textContent=formatEuro(net);
       $('sb-quotes-tax').textContent=formatEuro(tax);
@@ -184,6 +184,13 @@ import '../../../../styles/private-commerce.css';
     field(form,'valid_until').value=item?.valid_until??'';
     field(form,'notes').value=item?.notes??'';
     for(const line of item?.lines?.length?item.lines:[{}])createLine(line);
+    // Presupuestos históricos: respetar siempre los totales reales guardados,
+    // incluso cuando el precio original se introducía SIN IVA.
+    if(item){
+      $('sb-quotes-subtotal').textContent=formatEuro(item.subtotal_cents);
+      $('sb-quotes-tax').textContent=formatEuro(item.tax_cents);
+      $('sb-quotes-total').textContent=formatEuro(item.total_cents);
+    }
     for(const input of form.querySelectorAll('input,textarea,select'))input.disabled=readOnly||!!(item&&input.name==='client_id');
     $('sb-quotes-add').disabled=readOnly;
     $('sb-quotes-save').hidden=readOnly;

@@ -1,0 +1,69 @@
+---
+import Private from '../../../layouts/Private.astro';
+import {privateModules,privateIcons,privateSections} from '../../../data/private-modules.js';
+export function getStaticPaths(){
+  return privateModules.map(module=>({params:{modulo:module.slug},props:{module}}));
+}
+const {module}=Astro.props;
+const navItem=privateSections.flatMap(group=>group.items).find(item=>item.slug===module.slug);
+const icon=privateIcons[navItem?.icon]||[];
+const isFiscal=['facturas','impuestos','contabilidad'].includes(module.slug);
+const isMoney=['cobros','gastos','facturas','contabilidad','impuestos','presupuestos'].includes(module.slug);
+---
+<Private workspace title={module.title} description={module.intro}>
+  <div class="sb-ws-module">
+    <div class="sb-ws-topline">
+      <span class="sb-ws-breadcrumb"><a href="/acceso/panel/">SOUTHBEAR OS</a> <span>/</span> {module.tag} <span>/</span> {module.title.toUpperCase()}</span>
+      <span class="sb-ws-topline__session"><i aria-hidden="true"></i> ÁREA PROTEGIDA</span>
+    </div>
+    <a href="/acceso/panel/" class="sb-ws-module__back">← Volver al Dashboard</a>
+    <header class="sb-ws-module__hero">
+      <div class="sb-ws-module__hero-copy">
+        <span class="sb-ws-module__eyebrow">ÁREA DE TRABAJO / {module.tag}</span>
+        <h1>{module.title}<span>.</span></h1>
+        <p>{module.intro}</p>
+        <span class="sb-ws-module__status"><span aria-hidden="true"></span> ESTRUCTURA PREPARADA · DATOS SIN CONECTAR</span>
+      </div>
+      <div class="sb-ws-module__hero-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="88" height="88" fill="none" stroke="currentColor" stroke-width=".6" stroke-linecap="round" stroke-linejoin="round">
+          {icon.map(d=><path d={d}/>)}
+        </svg>
+        <span>SB / OS</span>
+      </div>
+    </header>
+    <div class="sb-ws-module__grid">
+      <section class="sb-ws-module__empty" aria-labelledby="sb-ws-module-empty">
+        <span class="sb-ws-module__num">01 / ÁREA PRINCIPAL</span>
+        <div class="sb-ws-module__empty-inner">
+          <svg viewBox="0 0 24 24" width="38" height="38" fill="none" stroke="currentColor" stroke-width="1.15" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            {icon.map(d=><path d={d}/>)}
+          </svg>
+          <h2 id="sb-ws-module-empty">Todavía no hay registros.</h2>
+          <p>Este módulo ya tiene su propia página. La creación y consulta de registros se habilitará al conectar el almacenamiento seguro y las operaciones correspondientes.</p>
+          <div class="sb-ws-module__empty-note"><i aria-hidden="true">●</i> No se muestran datos de ejemplo como si fueran reales.</div>
+        </div>
+      </section>
+      <section class="sb-ws-module__planned" aria-labelledby="sb-ws-module-planned">
+        <span class="sb-ws-module__num">02 / FUNCIONES PREVISTAS</span>
+        <h2 id="sb-ws-module-planned">Lo que podrás gestionar.</h2>
+        <ul>
+          {module.features.map((feature,index)=>(
+            <li><span>{String(index+1).padStart(2,'0')}</span><strong>{feature}</strong><span aria-hidden="true">↗</span></li>
+          ))}
+        </ul>
+        <p class="sb-ws-module__pending">Estas funciones están planificadas, todavía no están operativas.</p>
+      </section>
+    </div>
+    <div class="sb-ws-module__safety">
+      <span class="sb-ws-module__num">03 / SEGURIDAD Y DATOS</span>
+      <h3>{isFiscal?'Preparado para una gestión fiscal responsable.':isMoney?'Cifras fiables, no estimaciones.':'Información privada bajo control.'}</h3>
+      <p>{isFiscal
+        ? 'Antes de emitir facturas o generar libros y declaraciones, configuraremos los datos fiscales, la numeración, los registros, la conservación documental y las obligaciones normativas aplicables. La emisión real permanecerá desactivada hasta entonces.'
+        : isMoney
+          ? 'Los importes y movimientos solo aparecerán cuando procedan de registros reales guardados en una base de datos específica para SouthBear Studio y autorizados en el servidor.'
+          : 'No almacenaremos fichas de clientes ni archivos privados en los recursos públicos de la web. El acceso ya está limitado mediante Cloudflare Access; la base de datos también tendrá controles de acceso independientes.'
+      }</p>
+      <a href="/acceso/panel/configuracion/">Ver configuración del sistema <span aria-hidden="true">↗</span></a>
+    </div>
+  </div>
+</Private>

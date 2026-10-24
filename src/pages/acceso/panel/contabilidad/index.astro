@@ -1,0 +1,108 @@
+---
+import Private from '../../../../layouts/Private.astro';
+import '../../../../styles/private-commerce.css';
+---
+<Private workspace title="Contabilidad" description="Ingresos y gastos registrados en SouthBear Studio.">
+  <section class="sb-ops sb-simple-books">
+    <div class="sb-ws-topline"><span class="sb-ws-breadcrumb"><a href="/acceso/panel/">SOUTHBEAR OS</a> <span>/</span> CONTABILIDAD</span><span class="sb-ws-topline__session"><i aria-hidden="true"></i> REGISTRO PRIVADO</span></div>
+    <header class="sb-ops__hero">
+      <div><span class="sb-ops__label">SOUTHBEAR / INCOME & EXPENSES</span><h1>ENTRADAS Y <em>SALIDAS.</em></h1>
+        <p>Consulta los ingresos anotados, registra gastos y conserva tus justificantes. Las cifras son de gestión interna y no sustituyen los libros tributarios.</p></div>
+    </header>
+    <div class="sb-simple-books__quick">
+      <a href="/acceso/panel/cobros/" class="sb-simple-books__action"><span>01 · INGRESOS</span><strong>Anotar un cobro</strong><small>Fecha, cliente, importe y método de pago.</small><span>Ir a ingresos ↗</span></a>
+      <a href="/acceso/panel/gastos/" class="sb-simple-books__action"><span>02 · GASTOS</span><strong>Anotar un gasto</strong><small>Importe, proveedor, fecha e IVA indicado en el justificante.</small><span>Ir a gastos ↗</span></a>
+    </div>
+    <div class="sb-ops__info"><b aria-hidden="true">✳</b><span>Un cobro de un servicio puede exigir factura, incluso si es un anticipo. Aquí se registran movimientos manuales: <strong>no se generan facturas fiscales automáticamente</strong> al anotarlos. Para justificar un gasto, puedes vincular su factura desde la ficha del gasto. La subida digital estará operativa al activar R2.</span></div>
+    <section class="sb-ws-block" aria-labelledby="sb-simple-books-total">
+      <div class="sb-ws-section-head"><div><span class="sb-ws-section-id">RESUMEN DEL AÑO ACTUAL</span><h2 id="sb-simple-books-total">Movimiento de dinero.</h2></div></div>
+      <div class="sb-simple-books__metrics">
+        <div><span>COBROS ANOTADOS</span><strong id="sb-simple-in">—</strong></div>
+        <div><span>GASTOS PAGADOS</span><strong id="sb-simple-out">—</strong></div>
+        <div><span>SALDO DE CAJA ANOTADO</span><strong id="sb-simple-balance">—</strong></div>
+      </div>
+      <p class="sb-simple-books__caption">El saldo es cobrado menos pagado, según registros manuales. No es beneficio ni balance bancario. Los gastos registrados pero todavía no pagados se muestran en la pestaña Gastos.</p>
+    </section>
+    <section class="sb-ws-block" aria-labelledby="sb-simple-list-title">
+      <div class="sb-ws-section-head"><div><span class="sb-ws-section-id">REGISTROS EXISTENTES</span><h2 id="sb-simple-list-title">Tus anotaciones.</h2></div></div>
+      <div class="sb-simple-books__tabs" role="group" aria-label="Tipo de anotación">
+        <button type="button" id="sb-simple-show-in" aria-pressed="true">Ingresos</button>
+        <button type="button" id="sb-simple-show-out" aria-pressed="false">Gastos</button>
+      </div>
+      <div id="sb-simple-records" class="sb-ops__records" aria-live="polite"><div class="sb-ops__empty">Consultando registros…</div></div>
+      <div class="sb-simple-books__bottom"><a id="sb-simple-more" href="/acceso/panel/cobros/">Abrir todos los ingresos ↗</a><span>Los registros antiguos se conservan íntegros.</span></div>
+    </section>
+    <p role="status" id="sb-simple-msg" class="sb-ops__feedback" aria-live="polite"></p>
+    <footer class="sb-ops__footer">SOUTHBEAR OS / CONTABILIDAD INTERNA · MOVIMIENTOS NO VERIFICADOS CON ENTIDADES BANCARIAS</footer>
+  </section>
+  <style>
+    .sb-simple-books__quick{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin:25px 0}
+    .sb-simple-books__action{padding:25px;display:flex;flex-direction:column;gap:12px;min-height:178px;text-decoration:none!important;color:#fff!important;background:linear-gradient(125deg,rgba(255,255,255,.17),rgba(255,255,255,.055));border-radius:22px;border:1px solid rgba(255,255,255,.23);box-shadow:0 12px 30px rgba(0,0,0,.18),inset 0 1px rgba(255,255,255,.15)}
+    .sb-simple-books__action:hover{border-color:rgba(255,255,255,.5)}
+    .sb-simple-books__action>span:first-child{font-size:10px;letter-spacing:.16em;color:#cacbd2;font-weight:800}
+    .sb-simple-books__action strong{font-family:'Space Grotesk Variable',system-ui,sans-serif;font-size:clamp(22px,2.7vw,31px);letter-spacing:-.045em}
+    .sb-simple-books__action small{font-size:12px;color:#b7b8c3;line-height:1.6}
+    .sb-simple-books__action>span:last-child{font-size:11px;font-weight:800;margin-top:auto}
+    .sb-simple-books__metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}
+    .sb-simple-books__metrics>div{display:grid;gap:13px;padding:20px;border:1px solid rgba(255,255,255,.19);background:rgba(255,255,255,.09);border-radius:19px}
+    .sb-simple-books__metrics span{font-size:10px;color:#c7c8d1;letter-spacing:.1em;font-weight:750}
+    .sb-simple-books__metrics strong{font-size:clamp(21px,2.8vw,32px);letter-spacing:-.045em}
+    .sb-simple-books__caption{margin:17px 0 0;color:#b3b5bf;line-height:1.65;font-size:11px}
+    .sb-simple-books__tabs{display:flex;gap:9px;margin:22px 0}
+    .sb-simple-books__tabs button{border-radius:12px;padding:12px 24px;cursor:pointer;font-weight:750;font-size:12px;border:1px solid rgba(255,255,255,.3);background:rgba(255,255,255,.08);color:#fff}
+    .sb-simple-books__tabs button[aria-pressed=true]{background:#e9e9ef;color:#16161b}
+    .sb-simple-books__bottom{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:20px 0;color:#aab0b8;font-size:11px}
+    .sb-simple-books__bottom a{color:#fafafa!important;text-decoration:underline;text-underline-offset:3px}
+    .sb-simple-books__row{display:grid;gap:7px;padding:18px 22px;background:rgba(255,255,255,.085);border:1px solid rgba(255,255,255,.2);border-radius:17px}
+    .sb-simple-books__row>div{display:flex;align-items:center;gap:14px;justify-content:space-between}
+    .sb-simple-books__row strong{color:#fff;font-size:16px}
+    .sb-simple-books__row span{color:#bfc1cb;font-size:12px}
+    .sb-simple-books__row small{color:#b7bbc4;font-size:11px}
+    .sb-simple-books__row a{color:#fafafa!important;font-size:11px;text-decoration:underline}
+    @media(max-width:700px){.sb-simple-books__quick,.sb-simple-books__metrics{grid-template-columns:1fr}.sb-simple-books__bottom{align-items:flex-start;flex-direction:column}}
+  </style>
+  <script>
+    import {requestApi,el,formatEuro,formatDate} from '../../../../scripts/private-commerce.js';
+    const $=id=>document.getElementById(id),container=$('sb-simple-records'),msg=$('sb-simple-msg');
+    let income=[],expenses=[],current='in';
+    function show(){
+      $('sb-simple-show-in').setAttribute('aria-pressed',String(current==='in'));
+      $('sb-simple-show-out').setAttribute('aria-pressed',String(current==='out'));
+      $('sb-simple-more').href='/acceso/panel/'+(current==='in'?'cobros':'gastos')+'/';
+      $('sb-simple-more').textContent='Abrir todos los '+(current==='in'?'ingresos':'gastos')+' ↗';
+      container.replaceChildren();
+      const items=current==='in'?income:expenses;
+      if(!items.length){container.append(el('div','Todavía no hay anotaciones de '+(current==='in'?'ingresos':'gastos')+'.','sb-ops__empty'));return;}
+      for(const item of items){
+        const entry=el('article',undefined,'sb-simple-books__row');
+        const title=current==='in'?(item.title||'Cobro'):(item.title||'Gasto');
+        const amount=current==='in'?item.received_cents??item.paid_cents??0:item.gross_cents||0;
+        const main=el('div');main.append(el('strong',title),el('strong',formatEuro(amount)));
+        entry.append(main,el('span',current==='in'
+          ?'Cliente: '+(item.client_name||'Sin datos')+' · Total acordado: '+formatEuro(item.total_cents||0)
+          :'Proveedor: '+item.supplier_name+' · Pagado: '+formatEuro(item.paid_cents||0)));
+        const row=el('div');
+        row.append(el('small',current==='in'?'Registro de plan de cobro':'Fecha: '+formatDate(item.expense_date)));
+        const link=el('a',current==='in'?'Ver cobros ↗':'Ver gasto y justificante ↗');
+        link.href='/acceso/panel/'+(current==='in'?'cobros':'gastos')+'/';
+        row.append(link);entry.append(row);container.append(entry);
+      }
+    }
+    $('sb-simple-show-in').addEventListener('click',()=>{current='in';show();});
+    $('sb-simple-show-out').addEventListener('click',()=>{current='out';show();});
+    (async()=>{
+      try{
+        const [report,i,e]=await Promise.all([requestApi('/informes'),requestApi('/cobros'),requestApi('/gastos')]);
+        income=i.items||[];expenses=e.items||[];
+        const euros=key=>formatEuro(report.summary?.[key]||0);
+        $('sb-simple-in').textContent=euros('received_cents');
+        $('sb-simple-out').textContent=euros('paid_cents');
+        $('sb-simple-balance').textContent=euros('balance_cents');
+        show();
+      }catch(error){
+        container.replaceChildren(el('div','No se han podido cargar los datos.','sb-ops__empty'));
+        msg.textContent=error.message;msg.classList.add('is-error');
+      }
+    })();
+  </script>
+</Private>

@@ -1,5 +1,6 @@
 ---
 import Private from '../../../../layouts/Private.astro';
+import FiscalControl from '../../../../components/private/FiscalControl.astro';
 import '../../../../styles/private-commerce.css';
 ---
 <Private workspace title="Contabilidad" description="Ingresos y gastos registrados en SouthBear Studio.">
@@ -32,6 +33,7 @@ import '../../../../styles/private-commerce.css';
       <div id="sb-simple-records" class="sb-ops__records" aria-live="polite"><div class="sb-ops__empty">Consultando registros…</div></div>
       <div class="sb-simple-books__bottom"><a id="sb-simple-more" href="/acceso/panel/cobros/">Abrir todos los ingresos ↗</a><span>Los registros antiguos se conservan íntegros.</span></div>
     </section>
+    <FiscalControl/>
     <p role="status" id="sb-simple-msg" class="sb-ops__feedback" aria-live="polite"></p>
     <footer class="sb-ops__footer">SOUTHBEAR OS / CONTABILIDAD INTERNA · MOVIMIENTOS NO VERIFICADOS CON ENTIDADES BANCARIAS</footer>
   </section>

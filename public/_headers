@@ -1,0 +1,4 @@
+# Pantalla de acceso no indexable (Cloudflare Pages).
+/acceso/*
+  X-Robots-Tag: noindex, nofollow, noarchive, nosnippet
+  Cache-Control: no-store

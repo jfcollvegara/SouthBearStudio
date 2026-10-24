@@ -16,7 +16,8 @@ const shortcuts=[
   {slug:'gastos',label:'Gestionar gastos',caption:'Pagos, proveedores y costes',icon:'credit-card'},
   {slug:'proveedores',label:'Directorio de proveedores',caption:'Empresas y profesionales del estudio',icon:'truck'},
   {slug:'informes',label:'Informes y rentabilidad',caption:'Caja, costes y margen por proyecto',icon:'chart'},
-  {slug:'catalogo',label:'Servicios y tarifas',caption:'Paquetes, extras y precios IVA incluido',icon:'briefcase'}
+  {slug:'catalogo',label:'Servicios y tarifas',caption:'Paquetes, extras y precios IVA incluido',icon:'briefcase'},
+  {slug:'documentos',label:'Documentos privados',caption:'Contratos, entregables y justificantes',icon:'folder'}
 ];
 const getIcon = slug => {
   const item=privateSections.flatMap(group=>group.items).find(it=>it.slug===slug);

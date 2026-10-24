@@ -5,13 +5,13 @@ const highlights=[
   {key:'clients',label:'Clientes activos',unit:'N.º',note:'Dato real · CRM',icon:'users'},
   {key:'quotes_pending',label:'Presupuestos abiertos',unit:'N.º',note:'Borradores y enviados',icon:'file-text'},
   {key:'projects_active',label:'Proyectos en marcha',unit:'N.º',note:'Planificados, en curso y revisión',icon:'layers'},
-  {key:null,label:'Facturación del mes',unit:'EUR',note:'Pendiente de implantar',icon:'receipt'}
+  {key:'receipts_month_cents',label:'Cobrado registrado este mes',unit:'EUR',note:'Movimientos reales anotados manualmente',icon:'wallet'}
 ];
 const shortcuts=[
   {slug:'clientes',label:'Consultar clientes',caption:'Relaciones y CRM',icon:'users'},
   {slug:'presupuestos',label:'Gestionar presupuestos',caption:'Propuestas comerciales',icon:'file-text'},
   {slug:'proyectos',label:'Seguir proyectos',caption:'Fases y entregables',icon:'layers'},
-  {slug:'facturas',label:'Preparar facturación',caption:'Módulo aún en desarrollo',icon:'receipt'}
+  {slug:'cobros',label:'Cobros y anticipos',caption:'Pagos reales y pendientes',icon:'wallet'}
 ];
 const getIcon = slug => {
   const item=privateSections.flatMap(group=>group.items).find(it=>it.slug===slug);
@@ -41,7 +41,7 @@ const groupHref = group => (group.items[0]?.href||'/acceso/panel/');
     <div class="sb-ws-setup" role="status">
       <div>
         <strong><span aria-hidden="true">✳</span> Tu estudio ya tiene datos conectados</strong>
-        <p>Clientes, presupuestos y proyectos utilizan la base privada de SouthBear Studio. La facturación, los cobros y la contabilidad seguirán mostrando «—» hasta disponer de sus registros reales y reglas fiscales.</p>
+        <p>Clientes, presupuestos, proyectos, borradores de facturación y cobros utilizan la base privada del estudio. «Cobrado» muestra solo los movimientos de ingresos registrados manualmente, no facturas emitidas; la contabilidad fiscal permanece pendiente.</p>
       </div>
       <a href="/acceso/panel/configuracion/">Ver configuración <span aria-hidden="true">↗</span></a>
     </div>
@@ -140,7 +140,7 @@ const groupHref = group => (group.items[0]?.href||'/acceso/panel/');
         if(!result.ok)throw Error(result.error||'No se pudo consultar el resumen.');
         for(const [key,value] of Object.entries(result.metrics||{})){
           const node=document.querySelector('[data-metric="'+key+'"]');
-          if(node&&Number.isInteger(value)&&value>=0){node.textContent=new Intl.NumberFormat('es-ES').format(value);node.setAttribute('aria-label','Dato real: '+value);}
+          if(node&&Number.isInteger(value)&&value>=0){node.textContent=key.endsWith('_cents')?new Intl.NumberFormat('es-ES',{style:'currency',currency:'EUR'}).format(value/100):new Intl.NumberFormat('es-ES').format(value);node.setAttribute('aria-label','Dato real registrado: '+node.textContent);}
         }
         if(!result.activity?.length){
           container.querySelector('h3').textContent='Todavía no hay actividad.';
@@ -150,7 +150,7 @@ const groupHref = group => (group.items[0]?.href||'/acceso/panel/');
         container.classList.add('sb-ws-activity-list');
         container.replaceChildren();
         for(const item of result.activity){
-          const href=item.kind==='cliente'?'/acceso/panel/clientes/':item.kind==='proyecto'?'/acceso/panel/proyectos/':'/acceso/panel/presupuestos/';
+          const href=item.kind==='cliente'?'/acceso/panel/clientes/':item.kind==='proyecto'?'/acceso/panel/proyectos/':item.kind==='plan_cobro'?'/acceso/panel/cobros/':'/acceso/panel/presupuestos/';
           const row=document.createElement('a');row.href=href;row.className='sb-ws-activity-row';
           const intro=document.createElement('span');intro.className='sb-ws-activity-row__intro';
           const type=document.createElement('span');type.className='sb-ws-activity-row__type';

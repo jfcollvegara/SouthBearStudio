@@ -208,3 +208,27 @@
   .sb-ops-project-prompt__actions a{grid-row:1;justify-content:space-between}
   .sb-ops-project-prompt__actions button{grid-row:2}
 }
+
+
+/* Identidad del estudio: datos del emisor para presupuestos comerciales */
+.sb-issuer__layout{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(255px,.75fr);gap:16px;align-items:start;margin-top:30px}
+.sb-issuer__panel,.sb-issuer__side{min-width:0}
+.sb-issuer__panel{background:#181c17;border:1px solid #ffffff1e}
+.sb-issuer__panel-head{padding:30px 30px 15px;border-bottom:1px solid #ffffff17}
+.sb-issuer__index{color:#d3eca9;font-size:10px;font-weight:850;letter-spacing:.16em}
+.sb-issuer__panel-head h2{margin:13px 0 8px;font-family:'Space Grotesk Variable',system-ui,sans-serif;font-size:clamp(22px,2.5vw,38px);line-height:1.15;letter-spacing:-.06em}
+.sb-issuer__panel form{padding:27px 30px 30px}
+.sb-issuer__validation{padding:14px 16px;margin:27px 0 0;color:#ffddb5;border:1px solid #eeae6245;background:#db9c4010;font-size:11px;font-weight:730;line-height:1.6;letter-spacing:.025em}
+.sb-issuer__validation.is-ready{color:#d4ffb6;border-color:#a6f47d45;background:#b0f9900b}
+.sb-issuer__side{display:grid;gap:18px}
+.sb-issuer__preview{min-height:285px;padding:29px;display:flex;flex-direction:column;align-items:start;background:radial-gradient(circle at 70% 10%,#71954a19,transparent 52%),#0b0d0b;border:1px solid #d7ff9a3b}
+.sb-issuer__preview>span{color:#d1ff93;font-size:10px;font-weight:900;letter-spacing:.15em}
+.sb-issuer__preview strong{margin:37px 0 23px;font-family:'Space Grotesk Variable',system-ui,sans-serif;font-size:clamp(27px,3vw,39px);letter-spacing:-.065em;line-height:1.05}
+.sb-issuer__preview strong em{font-style:normal;color:#ddff9a}
+.sb-issuer__stripe{width:46px;height:4px;background:#ddff9a}
+.sb-issuer__preview p{font-size:12px;line-height:1.7;color:#aebba6;margin:auto 0 0;padding-top:25px}
+.sb-issuer__note{padding:25px;background:#ddff9a0a;border:1px solid #ddff9a2d}
+.sb-issuer__note strong{color:#ddff9a;font-size:14px}
+.sb-issuer__note p{margin:13px 0 0;font-size:12px;line-height:1.75;color:#b0c1a7}
+@media(max-width:1080px){.sb-issuer__layout{grid-template-columns:minmax(0,1fr)}.sb-issuer__side{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:650px){.sb-issuer__side{grid-template-columns:minmax(0,1fr)}.sb-issuer__panel form{padding:21px 18px}.sb-issuer__panel-head{padding:23px 18px 13px}.sb-issuer__preview{min-height:230px}.sb-issuer__preview strong{margin:28px 0 20px}}

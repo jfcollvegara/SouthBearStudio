@@ -1,0 +1,163 @@
+---
+/**
+ * Punto de entrada independiente para la futura administración.
+ * No recoge credenciales hasta que exista autenticación de servidor real.
+ * Esta ruta no aparece en la navegación pública ni se incluye en sitemap.
+ */
+import '@fontsource-variable/space-grotesk/wght.css';
+import '@fontsource-variable/inter/wght.css';
+const title = 'Acceso privado | SOUTHBEAR STUDIO';
+---
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta name="robots" content="noindex, nofollow, noarchive, nosnippet"/>
+    <meta name="googlebot" content="noindex, nofollow, noarchive, nosnippet"/>
+    <meta name="referrer" content="strict-origin-when-cross-origin"/>
+    <meta name="theme-color" content="#f4f5f0"/>
+    <meta name="description" content="Entrada reservada de SouthBear Studio."/>
+    <link rel="icon" href="/favicon.ico?v=4" sizes="any"/>
+    <link rel="apple-touch-icon" href="/apple-touch-icon-v4.png"/>
+    <title>{title}</title>
+  </head>
+  <body>
+    <div class="access-page">
+      <header class="access-topbar">
+        <a href="/" class="access-brand" aria-label="SouthBear Studio, volver a la web principal">
+          <img src="/southbear-logo.svg" alt="SouthBear Studio" width="196" height="42"/>
+        </a>
+        <span class="access-topline"><span class="status-dot" aria-hidden="true"></span> ENTORNO PRIVADO</span>
+      </header>
+
+      <main class="access-content">
+        <section class="access-intro" aria-labelledby="access-intro-title">
+          <div class="intro-glow" aria-hidden="true"></div>
+          <span class="intro-kicker"><span class="kicker-line"></span> SOUTHBEAR / WORKSPACE</span>
+          <h1 id="access-intro-title">Tu estudio.<br/><em>Todo bajo control.</em></h1>
+          <p>Un espacio propio para centralizar la actividad de SouthBear Studio, desde la organización de proyectos hasta la gestión del negocio.</p>
+          <div class="intro-preview" aria-hidden="true">
+            <span class="preview-heading">PRÓXIMAMENTE EN TU ESPACIO</span>
+            <div class="preview-item"><span class="preview-icon">01</span><span>Clientes y proyectos</span><span class="preview-arrow">↗</span></div>
+            <div class="preview-item"><span class="preview-icon">02</span><span>Presupuestos y trabajos</span><span class="preview-arrow">↗</span></div>
+            <div class="preview-item"><span class="preview-icon">03</span><span>Organización del estudio</span><span class="preview-arrow">↗</span></div>
+          </div>
+          <span class="intro-watermark" aria-hidden="true">SB.</span>
+        </section>
+
+        <section class="access-login" aria-labelledby="access-title">
+          <div class="login-inner">
+            <div class="login-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="4.5" y="10.5" width="15" height="10" rx="2.4"/><path d="M8 10.5V7a4 4 0 0 1 8 0v3.5"/><circle cx="12" cy="15.5" r="1"/></svg>
+            </div>
+            <p class="login-eyebrow">ADMINISTRACIÓN</p>
+            <h2 id="access-title">Acceso al<br/>área privada<span class="title-period">.</span></h2>
+            <p class="login-description">Esta zona estará reservada exclusivamente para la gestión interna de SouthBear Studio.</p>
+
+            <div class="access-form" role="group" aria-label="Acceso privado en preparación">
+              <div class="form-status">
+                <span class="status-icon" aria-hidden="true">✳</span>
+                <div><strong>Estamos preparando tu acceso</strong><span>El inicio de sesión se activará cuando configuremos la autenticación segura.</span></div>
+              </div>
+              <div class="form-field">
+                <label for="access-email">Correo electrónico</label>
+                <input id="access-email" type="email" autocomplete="off" placeholder="tu@correo.com" disabled aria-describedby="access-pending"/>
+              </div>
+              <div class="form-field">
+                <label for="access-password">Contraseña</label>
+                <input id="access-password" type="password" autocomplete="off" placeholder="••••••••••" disabled aria-describedby="access-pending"/>
+              </div>
+              <button class="login-button" type="button" disabled aria-describedby="access-pending">Acceder al panel <span aria-hidden="true">↗</span></button>
+              <p id="access-pending" class="login-note">Por seguridad, esta pantalla todavía no acepta credenciales.</p>
+            </div>
+
+            <a class="return-link" href="/"><span aria-hidden="true">←</span> Volver a SouthBear Studio</a>
+          </div>
+        </section>
+      </main>
+
+      <footer class="access-footer">
+        <span>© {new Date().getFullYear()} SOUTHBEAR STUDIO</span>
+        <span>ESPACIO DE GESTIÓN · ACCESO RESERVADO</span>
+      </footer>
+    </div>
+  </body>
+</html>
+<style>
+  :global(*){box-sizing:border-box}
+  :global(html){min-height:100%;background:#f4f5f0}
+  :global(body){margin:0;color:#162017;font-family:'Inter Variable',Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+  :global(a){color:inherit;text-decoration:none}
+  :global(button),:global(input){font:inherit}
+  :global(button:focus-visible),:global(a:focus-visible){outline:3px solid #88b452;outline-offset:5px}
+  .access-page{min-height:100svh;display:flex;flex-direction:column;max-width:1920px;margin:0 auto}
+  .access-topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:29px clamp(22px,4.8vw,88px)}
+  .access-brand{display:inline-flex;align-items:center;flex:none}
+  .access-brand img{display:block;width:clamp(150px,17vw,202px);height:auto}
+  .access-topline{display:inline-flex;align-items:center;gap:10px;white-space:nowrap;color:#596655;font-size:10px;font-weight:850;letter-spacing:.17em}
+  .status-dot{width:7px;height:7px;border-radius:50%;background:#73ad48;box-shadow:0 0 0 4px #73ad481a}
+  .access-content{flex:1;display:grid;grid-template-columns:minmax(0,1.14fr) minmax(395px,.86fr);gap:0;min-height:620px;padding:0 clamp(20px,3.2vw,58px)}
+  .access-intro{position:relative;isolation:isolate;overflow:hidden;display:flex;flex-direction:column;justify-content:center;min-width:0;padding:clamp(40px,6vw,100px);border-radius:28px 0 0 28px;color:#f9fff3;background:#16261b}
+  .intro-glow{position:absolute;z-index:-1;inset:0;background:radial-gradient(ellipse at 82% 18%,#659c576e,transparent 56%),radial-gradient(circle at 8% 100%,#26472d,transparent 58%);pointer-events:none}
+  .intro-kicker{display:flex;align-items:center;gap:12px;color:#d4f6b6;font-size:10px;letter-spacing:.22em;font-weight:850}
+  .kicker-line{width:24px;height:1px;background:#c1f18e}
+  h1,h2{font-family:'Space Grotesk Variable',system-ui,sans-serif}
+  .access-intro h1{position:relative;z-index:1;font-size:clamp(3.5rem,5.7vw,7.3rem);line-height:1.01;letter-spacing:-.085em;font-weight:750;margin:30px 0 26px}
+  .access-intro h1 em{font-style:normal;color:#d6f5ac}
+  .access-intro>p{max-width:470px;margin:0;color:#d2e0ce;font-size:clamp(.94rem,1.1vw,1.07rem);line-height:1.8}
+  .intro-preview{position:relative;z-index:1;width:min(100%,430px);margin-top:clamp(40px,6vw,82px)}
+  .preview-heading{display:block;color:#9cae9d;font-size:10px;font-weight:800;letter-spacing:.14em;margin-bottom:18px}
+  .preview-item{display:flex;align-items:center;gap:14px;padding:16px 1px;border-top:1px solid #ffffff2d;font-size:13px;font-weight:620}
+  .preview-icon{display:grid;place-items:center;width:29px;height:29px;border-radius:8px;background:#ffffff17;color:#c1e9ac;font-size:10px;font-weight:850}
+  .preview-arrow{margin-left:auto;color:#b6e6a0;font-size:19px}
+  .intro-watermark{position:absolute;bottom:-70px;right:-20px;font-family:'Space Grotesk Variable',system-ui,sans-serif;font-size:clamp(200px,29vw,540px);font-weight:900;letter-spacing:-.15em;line-height:.8;color:#ffffff05;pointer-events:none;user-select:none;z-index:0}
+  .access-login{display:flex;justify-content:center;align-items:center;min-width:0;padding:60px clamp(25px,4vw,70px);border-radius:0 28px 28px 0;background:#fff}
+  .login-inner{width:100%;max-width:398px}
+  .login-icon{width:52px;height:52px;padding:14px;display:grid;place-items:center;border:1px solid #dbe5d5;border-radius:17px;background:#f4f8ed;color:#3e6736}
+  .login-icon svg{display:block;width:100%;height:100%}
+  .login-eyebrow{margin:33px 0 12px;font-size:11px;font-weight:850;letter-spacing:.17em;color:#69904e}
+  .access-login h2{margin:0;font-weight:750;letter-spacing:-.074em;line-height:1.05;font-size:clamp(2.7rem,3.65vw,4.2rem)}
+  .title-period{color:#7ca851}
+  .login-description{margin:22px 0 28px;font-size:14px;line-height:1.75;color:#667163}
+  .access-form{display:grid;gap:18px}
+  .form-status{display:flex;align-items:flex-start;gap:12px;padding:16px;border:1px solid #dfe8d8;border-radius:15px;background:#f5f8f1}
+  .status-icon{display:grid;place-items:center;flex:none;width:27px;height:27px;border-radius:50%;background:#dcebcf;color:#456b38;font-size:16px}
+  .form-status strong{display:block;font-size:12px;line-height:1.5;color:#3a5635}
+  .form-status span:not(.status-icon){display:block;margin-top:3px;font-size:11px;color:#63715f;line-height:1.55}
+  .form-field{display:grid;gap:8px}
+  .form-field label{font-size:12px;font-weight:760;color:#273425}
+  .form-field input{width:100%;height:51px;padding:0 16px;border:1px solid #e2e6df;border-radius:12px;background:#f9faf8;color:#748072;font-size:14px;cursor:not-allowed;opacity:1}
+  .form-field input::placeholder{color:#a4aea0}
+  .login-button{display:flex;align-items:center;justify-content:space-between;width:100%;min-height:53px;padding:14px 18px;border:0;border-radius:12px;background:#253628;color:#cdd7cc;font-size:13px;font-weight:780;cursor:not-allowed;opacity:.7}
+  .login-button span{font-size:19px}
+  .login-note{margin:-6px 0 0;font-size:11px;line-height:1.55;text-align:center;color:#738071}
+  .return-link{display:inline-flex;align-items:center;gap:10px;margin-top:35px;color:#59734f;font-size:12px;font-weight:720;transition:color .2s}
+  .return-link:hover{color:#1f381c}
+  .return-link span{font-size:19px;font-weight:400}
+  .access-footer{display:flex;align-items:center;justify-content:space-between;gap:15px;padding:23px clamp(22px,4.8vw,88px);font-size:10px;font-weight:750;letter-spacing:.11em;color:#7d8678}
+  @media(max-width:920px){
+    .access-content{grid-template-columns:1fr;min-height:0}
+    .access-intro{min-height:360px;padding:48px clamp(26px,6vw,65px);border-radius:25px 25px 0 0}
+    .access-intro h1{font-size:clamp(3.3rem,8vw,5rem);margin:22px 0}
+    .intro-preview{display:none}
+    .access-login{padding:55px 28px;border-radius:0 0 25px 25px}
+    .login-inner{max-width:490px}
+  }
+  @media(max-width:520px){
+    .access-topbar{padding:23px 19px}
+    .access-brand img{width:147px}
+    .access-topline{font-size:8px;letter-spacing:.1em;gap:7px}
+    .access-content{padding:0 12px}
+    .access-intro{min-height:285px;padding:36px 26px;border-radius:22px 22px 0 0}
+    .intro-kicker{font-size:9px}
+    .access-intro h1{font-size:clamp(2.65rem,11vw,4rem)}
+    .access-intro>p{font-size:12px;line-height:1.65}
+    .access-login{padding:38px 24px 46px;border-radius:0 0 22px 22px}
+    .login-icon{width:46px;height:46px;padding:12px}
+    .login-eyebrow{margin-top:25px}
+    .access-login h2{font-size:clamp(2.8rem,11vw,3.6rem)}
+    .access-footer{padding:22px 18px;flex-wrap:wrap;font-size:9px;line-height:1.5}
+  }
+  @media(prefers-reduced-motion:reduce){.return-link{transition:none}}
+</style>

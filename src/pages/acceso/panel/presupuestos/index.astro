@@ -170,6 +170,7 @@ import '../../../../styles/private-commerce.css';
       const acts=el('div',undefined,'sb-ops__actions');
       function button(label,action){const b=el('button',label);b.type='button';b.dataset.id=item.id;b.dataset.action=action;acts.append(b);}
       button(item.status==='borrador'&&!item.archived_at?'Editar':'Ver detalle','view');
+      const docs=el('a','Documentos ↗');docs.href='/acceso/panel/documentos/?presupuesto='+encodeURIComponent(item.id);docs.title='Archivo de documentos asociados al presupuesto';acts.append(docs);
       button('Descargar PDF ↓','pdf');
       if(!item.archived_at){
         if(item.status==='borrador')button('Marcar enviado','enviado');

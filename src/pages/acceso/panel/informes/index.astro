@@ -193,6 +193,13 @@ function renderProjects(){
       projectMetric('PAGOS DE COSTES',p.paid_cost_cents),
       projectMetric('SALDO DE CAJA VINCULADO',p.cash_balance_cents,p.cash_balance_cents<0?'negative':'')
     );
+    const ratio=p.approved_quote_cents>0&&p.estimated_margin_cents!==null?Math.round(p.estimated_margin_cents/p.approved_quote_cents*1000)/10:null;
+    if(ratio!==null){
+      const marker=el('div',undefined,'sb-reports__ratio');
+      marker.append(el('span','DIFERENCIA COMERCIAL / PRESUPUESTO'),el('strong',new Intl.NumberFormat('es-ES',{maximumFractionDigits:1}).format(ratio)+' %'));
+      marker.classList.toggle('sb-reports__ratio--negative',ratio<0);
+      card.append(marker);
+    }
     const foot=el('p',p.approved_quote_cents===null
       ?'Sin presupuesto aceptado vinculado: no calculamos margen para evitar inventar ingresos.'
       :p.expense_count===0?'Aún no hay costes activos vinculados. El margen no contempla mano de obra propia ni costes generales.'

@@ -323,3 +323,76 @@
 .sb-expenses__linked-filter{margin:14px 0;padding:13px 17px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;align-items:center;background:#ddff9a0e;border:1px solid #ddff9a4d;color:#dfffa9;font-size:10px;font-weight:780;letter-spacing:.08em}
 @media(max-width:900px){.sb-suppliers__controls{grid-template-columns:minmax(0,1fr) 155px 145px 46px}}
 @media(max-width:650px){.sb-suppliers__controls{grid-template-columns:minmax(0,1fr) 46px}.sb-suppliers__controls label:nth-child(2){grid-column:1;grid-row:2}.sb-suppliers__controls label:nth-child(3){grid-column:1;grid-row:3}.sb-suppliers__numbers{text-align:left}}
+
+
+/* SouthBear OS — informes de tesorería y resultados comerciales */
+.sb-reports__period{margin:29px 0 18px;padding:26px;display:grid;grid-template-columns:minmax(250px,1fr) minmax(130px,175px) minmax(130px,175px) auto;align-items:end;gap:17px;background:#181d16;border:1px solid #ddff9a30}
+.sb-reports__period-intro{display:grid;gap:9px}
+.sb-reports__period-intro>span,.sb-reports__panel-head span,.sb-reports__projects-head>div>span{font-size:10px;font-weight:850;letter-spacing:.16em;color:#ddff9a}
+.sb-reports__period-intro strong{font-family:'Space Grotesk Variable',system-ui,sans-serif;letter-spacing:-.05em;font-size:29px}
+.sb-reports__period-intro small{font-size:11px;line-height:1.6;color:#aebaa5;max-width:420px}
+.sb-reports__period label,.sb-reports__filters label{display:grid;gap:10px;color:#c2d0b5;font-size:10px;letter-spacing:.08em;font-weight:730}
+.sb-reports__period input,.sb-reports__filters input,.sb-reports__filters select{min-width:0;max-width:100%;height:49px;padding:0 12px;border:1px solid #e3ffd633;background:#11160f;color:#f0f5eb;border-radius:0;font-size:13px;outline-offset:3px;color-scheme:dark}
+.sb-reports__period>.sb-ops__primary{min-height:49px;white-space:nowrap}
+.sb-reports__quick{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:9px;border-top:1px solid #ffffff1c;padding-top:15px}
+.sb-reports__quick button,.sb-reports__export{background:transparent;border:1px solid #ddff9a4d;color:#e6f5d3;padding:10px 16px;font-size:11px;font-weight:740;cursor:pointer;transition:background .16s,border-color .16s}
+.sb-reports__quick button:hover,.sb-reports__export:not(:disabled):hover{background:#ddff9a17;border-color:#ddff9a}
+.sb-reports__export:disabled{cursor:not-allowed;opacity:.45}
+.sb-reports__kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin:0 0 19px}
+.sb-reports__kpis>div{background:#151a14;padding:25px 24px;min-width:0;min-height:151px;border:1px solid #ddff9a26;display:flex;flex-direction:column;gap:12px}
+.sb-reports__kpis>div:first-child{border-color:#ddff9a89;background:radial-gradient(circle at 100% 0%,#b1e86b19,transparent 60%),#182117}
+.sb-reports__kpis span{font-size:10px;color:#bed5a9;font-weight:800;letter-spacing:.13em}
+.sb-reports__kpis strong{font-family:'Space Grotesk Variable',system-ui,sans-serif;font-size:clamp(27px,3.1vw,40px);line-height:1.1;letter-spacing:-.055em;color:#ddff9a;overflow-wrap:anywhere}
+.sb-reports__kpis small{font-size:10px;color:#9aaf90;line-height:1.6;margin-top:auto}
+.sb-reports__negative{color:#ffb7a4!important}
+.sb-reports__analysis{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(285px,.85fr);gap:17px;margin-bottom:54px}
+.sb-reports__panel{min-width:0;padding:26px 25px;background:#161b14;border:1px solid #ffffff24}
+.sb-reports__panel-head{display:flex;align-items:start;justify-content:space-between;gap:13px}
+.sb-reports__panel-head h2,.sb-reports__projects-head h2{font-family:'Space Grotesk Variable',system-ui,sans-serif;font-size:clamp(23px,2.7vw,32px);letter-spacing:-.058em;line-height:1.15;margin:12px 0 0}
+.sb-reports__legend{display:flex;gap:15px;flex-wrap:wrap;margin:27px 0 19px}
+.sb-reports__legend span{display:flex;align-items:center;gap:8px;font-size:11px;color:#b6c6ab}
+.sb-reports__legend i{display:block;width:9px;height:9px;border-radius:50%}
+.sb-reports__dot--in{background:#ddff9a}
+.sb-reports__dot--out{background:#72946e}
+.sb-reports__chart{display:grid;gap:12px}
+.sb-reports__chart>p,.sb-reports__no-data{font-size:12px;line-height:1.7;color:#9ba991}
+.sb-reports__month{display:grid;grid-template-columns:67px minmax(0,1fr) 108px;gap:12px;align-items:center}
+.sb-reports__month-name{font-size:11px;font-weight:750;text-transform:capitalize;color:#bcd1b2}
+.sb-reports__month-bars{display:grid;gap:5px}
+.sb-reports__bar-track{height:8px;background:#ffffff0b;border:1px solid #ffffff08}
+.sb-reports__bar{height:100%;transition:width .28s ease-out}
+.sb-reports__bar--in{background:#ddff9a}
+.sb-reports__bar--out{background:#779374}
+.sb-reports__month-amounts{display:grid;gap:1px;text-align:right;color:#d7e7cb;font-size:10px;line-height:1.2;font-variant-numeric:tabular-nums}
+.sb-reports__month-amounts span:nth-child(2){color:#91a78a}
+.sb-reports__explain{font-size:11px;line-height:1.75;color:#aebda2;margin:16px 0 23px}
+.sb-reports__categories{display:grid;gap:22px;margin-top:20px}
+.sb-reports__category{display:grid;gap:9px}
+.sb-reports__category-head{display:flex;align-items:center;justify-content:space-between;gap:12px;color:#c6d6bb;font-size:11px}
+.sb-reports__category-head strong{color:#eeffe2;font-size:12px;font-variant-numeric:tabular-nums}
+.sb-reports__category-track{height:7px;background:#ffffff0a}
+.sb-reports__category-track>div{height:100%;background:#a5cc80;max-width:100%}
+.sb-reports__projects{border-top:1px solid #ddff9a42;padding-top:30px}
+.sb-reports__projects-head{display:flex;align-items:center;justify-content:space-between;gap:25px}
+.sb-reports__projects-head p{color:#b0c0a7;line-height:1.75;font-size:12px;max-width:850px;margin:13px 0 0}
+.sb-reports__projects-head strong{color:#e2f0d6}
+.sb-reports__filters{display:grid;grid-template-columns:minmax(0,1fr) minmax(160px,210px) minmax(190px,245px);gap:16px;padding:26px 0 18px}
+.sb-reports__project-meta{padding:16px 0;color:#b6cba7;display:flex;justify-content:space-between;border-top:1px solid #ffffff22;font-size:10px;letter-spacing:.12em;font-weight:800}
+.sb-reports__project-list{display:grid;gap:14px}
+.sb-reports__project{background:#181e16;border:1px solid #ffffff1e}
+.sb-reports__project-header{padding:24px 26px 20px;display:flex;align-items:start;justify-content:space-between;gap:18px;border-bottom:1px solid #ffffff1c}
+.sb-reports__project-name>span{font-size:10px;letter-spacing:.13em;text-transform:uppercase;font-weight:790;color:#c8e6a4}
+.sb-reports__project-name h3{font-size:clamp(19px,2vw,25px);letter-spacing:-.05em;font-weight:720;line-height:1.2;margin:10px 0}
+.sb-reports__project-name p{font-size:11px;color:#aabda1}
+.sb-reports__project-header a{font-size:11px;white-space:nowrap;color:#ddff9a!important;text-decoration:none;border:1px solid #ddff9a47;padding:11px}
+.sb-reports__project-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}
+.sb-reports__project-metric{border-right:1px solid #ffffff16;border-bottom:1px solid #ffffff16;display:flex;flex-direction:column;gap:12px;min-width:0;padding:20px 25px}
+.sb-reports__project-metric:nth-child(3n){border-right:0}
+.sb-reports__project-metric span{font-size:10px;line-height:1.5;font-weight:720;letter-spacing:.075em;color:#93a58c}
+.sb-reports__project-metric strong{font-family:'Space Grotesk Variable',system-ui,sans-serif;color:#f3faee;font-size:clamp(17px,2vw,23px);letter-spacing:-.04em;overflow-wrap:anywhere}
+.sb-reports__project-metric--accent strong{color:#ddff9a}
+.sb-reports__project-metric--negative strong{color:#ffb29e}
+.sb-reports__project-note{padding:14px 25px;margin:0;font-size:11px;color:#a4b49a;line-height:1.7}
+@media(max-width:1200px){.sb-reports__period{grid-template-columns:minmax(240px,1fr) repeat(2,minmax(130px,170px))}.sb-reports__period>.sb-ops__primary{grid-column:1/-1;justify-self:start}.sb-reports__analysis{grid-template-columns:1fr}}
+@media(max-width:740px){.sb-reports__period{grid-template-columns:repeat(2,minmax(0,1fr));padding:18px}.sb-reports__period-intro{grid-column:1/-1}.sb-reports__period>.sb-ops__primary{grid-column:1/-1}.sb-reports__kpis{grid-template-columns:1fr}.sb-reports__kpis>div{min-height:114px;padding:20px}.sb-reports__projects-head{align-items:start;flex-direction:column}.sb-reports__filters{grid-template-columns:repeat(2,minmax(0,1fr))}.sb-reports__filters label:first-child{grid-column:1/-1}.sb-reports__project-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.sb-reports__project-metric:nth-child(3n){border-right:1px solid #ffffff16}.sb-reports__project-metric:nth-child(2n){border-right:0}.sb-reports__project-metric{padding:16px}}
+@media(max-width:500px){.sb-reports__period{grid-template-columns:1fr}.sb-reports__period-intro{grid-column:1}.sb-reports__period>.sb-ops__primary{grid-column:1}.sb-reports__filters{grid-template-columns:1fr}.sb-reports__filters label:first-child{grid-column:1}.sb-reports__panel{padding:18px}.sb-reports__month{grid-template-columns:54px minmax(0,1fr) 90px;gap:7px}.sb-reports__month-amounts{font-size:9px}.sb-reports__panel-head{flex-direction:column}.sb-reports__project-header{flex-direction:column;padding:19px}.sb-reports__project-note{padding:14px 17px}.sb-reports__project-metric{padding:15px 12px}.sb-reports__project-metric strong{font-size:16px}}

@@ -43,12 +43,45 @@ import '../../../../styles/private-commerce.css';
     <div class="sb-ops-form__actions"><button type="button" id="sb-quotes-cancel">Cerrar</button><button class="sb-ops__primary" id="sb-quotes-save" type="submit">Guardar borrador ↗</button></div>
   </form>
 </dialog>
+<dialog class="sb-ops-project-prompt" id="sb-quotes-project-prompt" aria-labelledby="sb-quotes-project-prompt-title" aria-describedby="sb-quotes-project-prompt-description">
+  <div class="sb-ops-project-prompt__top">
+    <span class="sb-ops-project-prompt__eyebrow"><span class="sb-ops-project-prompt__signal" aria-hidden="true"></span> SOUTHBEAR / SIGUIENTE PASO</span>
+    <button class="sb-ops-project-prompt__close" id="sb-quotes-project-prompt-close" type="button" aria-label="Cerrar">×</button>
+  </div>
+  <div class="sb-ops-project-prompt__body">
+    <span class="sb-ops-project-prompt__icon" aria-hidden="true">✓</span>
+    <h2 id="sb-quotes-project-prompt-title">Presupuesto <em>aceptado.</em></h2>
+    <p id="sb-quotes-project-prompt-description">El presupuesto se ha marcado como aceptado. ¿Quieres crear ahora un proyecto a partir de él?</p>
+    <div class="sb-ops-project-prompt__reference">
+      <span>PROPUESTA CONFIRMADA</span>
+      <strong id="sb-quotes-project-prompt-reference"></strong>
+      <small id="sb-quotes-project-prompt-name"></small>
+    </div>
+    <p class="sb-ops-project-prompt__hint">El cliente y el presupuesto se rellenarán automáticamente. El proyecto no se creará hasta que completes su formulario y lo guardes.</p>
+    <div class="sb-ops-project-prompt__actions">
+      <button type="button" id="sb-quotes-project-prompt-later">Ahora no</button>
+      <a id="sb-quotes-project-prompt-create" href="/acceso/panel/proyectos/">Crear proyecto <span aria-hidden="true">↗</span></a>
+    </div>
+  </div>
+</dialog>
 <script>
   import {requestApi,getAll,fillOptions,el,field,message,todayLocal,formatEuro,formatDate,minorUnits} from '../../../../scripts/private-commerce.js';
   const $=id=>document.getElementById(id),base='/presupuestos';
   const dialog=$('sb-quotes-dialog'),form=$('sb-quotes-form'),rows=$('sb-quotes-rows'),feedback=$('sb-quotes-message'),lineHolder=$('sb-quotes-lines');
   const statusLabels={borrador:'Borrador',enviado:'Enviado',aceptado:'Aceptado',rechazado:'Rechazado',caducado:'Caducado'};
   let clients=[],items=[],selected=null,readOnly=false,hasMore=false,page=1,loadingId=0,busy=false,initialized=false;
+  const projectPrompt=$('sb-quotes-project-prompt');
+  function offerProject(quote){
+    $('sb-quotes-project-prompt-reference').textContent=quote.code||'Presupuesto aceptado';
+    $('sb-quotes-project-prompt-name').textContent=quote.title||'';
+    $('sb-quotes-project-prompt-create').href='/acceso/panel/proyectos/?presupuesto='+encodeURIComponent(quote.id);
+    projectPrompt.showModal();
+    $('sb-quotes-project-prompt-create').focus();
+  }
+  $('sb-quotes-project-prompt-close').addEventListener('click',()=>projectPrompt.close());
+  $('sb-quotes-project-prompt-later').addEventListener('click',()=>projectPrompt.close());
+  projectPrompt.addEventListener('click',event=>{if(event.target===projectPrompt)projectPrompt.close();});
+
   function createLine(line={}){
     const node=el('div',undefined,'sb-ops__line');node.dataset.quoteLine='1';
     function formField(label,key,type,value,opts={}){
@@ -188,9 +221,11 @@ import '../../../../styles/private-commerce.css';
     if(ask&&!confirm(ask))return;
     busy=true;b.disabled=true;
     try{
-      await requestApi(base+'/'+item.id,action==='archive'?{method:'DELETE'}:
+      const result=await requestApi(base+'/'+item.id,action==='archive'?{method:'DELETE'}:
         {method:'PATCH',payload:action==='restore'?{archived:false}:{status:action}});
-      message(feedback,action==='archive'?'Presupuesto archivado.':action==='restore'?'Presupuesto restaurado.':'Estado actualizado.');await load();
+      message(feedback,action==='archive'?'Presupuesto archivado.':action==='restore'?'Presupuesto restaurado.':'Estado actualizado.');
+      await load();
+      if(action==='aceptado')offerProject(result.item||item);
     }catch(err){message(feedback,err.message,true);}finally{busy=false;b.disabled=false;}
   });
   let debounce;for(const id of ['sb-quotes-search','sb-quotes-state','sb-quotes-archived'])$(id).addEventListener(id==='sb-quotes-search'?'input':'change',()=>{clearTimeout(debounce);debounce=setTimeout(()=>load(),230);});

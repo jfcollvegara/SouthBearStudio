@@ -1,0 +1,179 @@
+---
+import Private from '../../../../layouts/Private.astro';
+import '../../../../styles/private-clients.css';
+---
+<Private workspace title="Clientes" description="Gestión de clientes y datos de contacto de SouthBear Studio.">
+  <section class="sb-crm" aria-labelledby="sb-crm-title">
+    <div class="sb-ws-topline">
+      <span class="sb-ws-breadcrumb"><a href="/acceso/panel/">SOUTHBEAR OS</a> <span>/</span> RELACIONES Y VENTAS <span>/</span> CLIENTES</span>
+      <span class="sb-ws-topline__session"><i aria-hidden="true"></i> DATOS PRIVADOS</span>
+    </div>
+    <header class="sb-crm__header">
+      <div>
+        <span class="sb-crm__eyebrow"><i aria-hidden="true"></i> CRM / DIRECTORIO DE CLIENTES</span>
+        <h1 id="sb-crm-title">TUS <em>CLIENTES.</em></h1>
+        <p>Organiza los contactos de SouthBear Studio y consulta sus datos desde cualquier dispositivo.</p>
+      </div>
+      <button type="button" class="sb-crm__create" id="sb-crm-new">+ Añadir cliente <span aria-hidden="true">↗</span></button>
+    </header>
+    <div class="sb-crm__notice"><span aria-hidden="true">✳</span><p>Los datos se guardan en la base de datos privada de SouthBear Studio, ubicada en la UE. La API requiere una sesión verificada con Cloudflare Access. No compartas datos que no sean necesarios para prestar tus servicios.</p></div>
+    <div class="sb-crm__toolbar">
+      <label class="sb-crm__search">
+        <span>BUSCAR CLIENTE</span>
+        <input id="sb-crm-search" type="search" autocomplete="off" placeholder="Nombre, empresa, correo o NIF…" maxlength="120"/>
+      </label>
+      <label class="sb-crm__status-filter">
+        <span>ESTADO</span>
+        <select id="sb-crm-filter">
+          <option value="active">Clientes activos</option>
+          <option value="archived">Clientes archivados</option>
+        </select>
+      </label>
+      <button id="sb-crm-refresh" type="button" class="sb-crm__refresh" aria-label="Actualizar listado">↻</button>
+    </div>
+    <div class="sb-crm__list-head">
+      <span id="sb-crm-count">CLIENTES / —</span>
+      <span id="sb-crm-loading" aria-live="polite">CARGANDO…</span>
+    </div>
+    <div class="sb-crm__list" id="sb-crm-list" aria-live="polite">
+      <div class="sb-crm__empty">Conectando con la base de datos…</div>
+    </div>
+    <div class="sb-crm__pagination" id="sb-crm-pagination" hidden>
+      <button type="button" id="sb-crm-more">Mostrar 50 más ↓</button>
+    </div>
+    <p class="sb-crm__feedback" id="sb-crm-feedback" role="status" aria-live="polite"></p>
+    <footer class="sb-crm__foot">SOUTHBEAR OS / CRM <span>— ARCHIVAR NO ELIMINA DEFINITIVAMENTE LOS DATOS</span></footer>
+  </section>
+
+  <dialog id="sb-crm-dialog" class="sb-crm-modal" aria-labelledby="sb-crm-form-title">
+    <div class="sb-crm-modal__head">
+      <div><span>CRM / FICHA DE CLIENTE</span><h2 id="sb-crm-form-title">Nuevo cliente.</h2></div>
+      <button id="sb-crm-close" type="button" aria-label="Cerrar formulario">×</button>
+    </div>
+    <form id="sb-crm-form">
+      <div class="sb-crm-form__grid">
+        <label class="sb-crm-form__field sb-crm-form__wide">Nombre identificativo <b>*</b><input name="display_name" required maxlength="160" placeholder="Ej. Empresa Ejemplo" autocomplete="off"/></label>
+        <label class="sb-crm-form__field">Tipo de cliente<select name="client_type"><option value="empresa">Empresa / profesional</option><option value="particular">Particular</option></select></label>
+        <label class="sb-crm-form__field">Nombre o razón social<input name="legal_name" maxlength="180" autocomplete="off"/></label>
+        <label class="sb-crm-form__field">NIF / CIF / NIE<input name="tax_id" maxlength="35" autocomplete="off"/></label>
+        <label class="sb-crm-form__field">Correo electrónico<input name="email" type="email" maxlength="180" autocomplete="off"/></label>
+        <label class="sb-crm-form__field">Teléfono<input name="phone" type="tel" maxlength="45" autocomplete="off"/></label>
+        <label class="sb-crm-form__field">Sitio web<input name="website" type="url" maxlength="250" placeholder="https://…" autocomplete="off"/></label>
+        <label class="sb-crm-form__field sb-crm-form__wide">Dirección<input name="address" maxlength="250" autocomplete="off"/></label>
+        <label class="sb-crm-form__field">Código postal<input name="postal_code" maxlength="25" autocomplete="off"/></label>
+        <label class="sb-crm-form__field">Localidad<input name="city" maxlength="100" autocomplete="off"/></label>
+        <label class="sb-crm-form__field">Provincia<input name="province" maxlength="100" autocomplete="off"/></label>
+        <label class="sb-crm-form__field">País<input name="country" maxlength="80" value="España" autocomplete="off"/></label>
+        <label class="sb-crm-form__field sb-crm-form__wide">Notas internas<textarea name="notes" maxlength="3000" rows="3" placeholder="Observaciones, preferencias, seguimiento…"></textarea></label>
+      </div>
+      <p id="sb-crm-form-error" class="sb-crm-form__error" role="alert" hidden></p>
+      <div class="sb-crm-form__actions">
+        <button id="sb-crm-cancel" type="button" class="sb-crm-form__cancel">Cancelar</button>
+        <button id="sb-crm-save" type="submit" class="sb-crm-form__save">Guardar cliente <span aria-hidden="true">↗</span></button>
+      </div>
+    </form>
+  </dialog>
+  <script>
+    const API='/api/southbear/clientes';
+    const fields=['display_name','client_type','legal_name','tax_id','email','phone','website','address','postal_code','city','province','country','notes'];
+    const $=id=>document.getElementById(id);
+    const form=$('sb-crm-form'),dialog=$('sb-crm-dialog'),list=$('sb-crm-list'),feedback=$('sb-crm-feedback');
+    let selectedId=null,items=[],page=1,hasMore=false,requestCounter=0,filterTimer=null,busy=false;
+    const search=$('sb-crm-search'),filter=$('sb-crm-filter');
+    const safeNode=(tag,text,cls='')=>{const node=document.createElement(tag);node.textContent=text;if(cls)node.className=cls;return node;};
+    function message(text,isError=false){feedback.textContent=text;feedback.classList.toggle('is-error',isError);}
+    function setLoading(text){$('sb-crm-loading').textContent=text;}
+    async function api(url,options={}){
+      const res=await fetch(url,{credentials:'same-origin',cache:'no-store',headers:{'X-SouthBear-Request':'1',...(options.body?{'Content-Type':'application/json'}:{})},...options});
+      let data;try{data=await res.json();}catch{throw new Error('No se pudo leer la respuesta del servidor. Si tu sesión ha caducado, vuelve a iniciar sesión.');}
+      if(!res.ok||!data.ok)throw new Error(data.error||'La solicitud no se pudo completar.');
+      return data;
+    }
+    function blank(text){
+      list.replaceChildren(safeNode('div',text,'sb-crm__empty'));
+    }
+    function render(){
+      list.replaceChildren();
+      if(!items.length){blank(filter.value==='archived'?'No hay clientes archivados.':'No hay clientes registrados. Utiliza «Añadir cliente» para crear el primero.');}
+      else for(const item of items){
+        const row=document.createElement('article');row.className='sb-crm__client';
+        const monogram=safeNode('span',item.display_name.trim().slice(0,2).toUpperCase(),'sb-crm__avatar');
+        const info=document.createElement('div');info.className='sb-crm__client-info';
+        info.append(safeNode('h3',item.display_name));
+        const details=[item.legal_name,item.email,item.phone].filter(Boolean).join(' · ');
+        info.append(safeNode('p',details||'Sin datos de contacto adicionales'));
+        const type=safeNode('span',item.client_type==='empresa'?'EMPRESA':'PARTICULAR','sb-crm__type');
+        const actions=document.createElement('div');actions.className='sb-crm__actions';
+        const edit=safeNode('button','Editar ↗');edit.type='button';edit.dataset.action='edit';edit.dataset.id=item.id;
+        const archive=safeNode('button',filter.value==='archived'?'Restaurar':'Archivar');archive.type='button';archive.dataset.action=filter.value==='archived'?'restore':'archive';archive.dataset.id=item.id;
+        actions.append(edit,archive);row.append(monogram,info,type,actions);list.append(row);
+      }
+      $('sb-crm-count').textContent=(filter.value==='archived'?'ARCHIVADOS':'CLIENTES ACTIVOS')+' / '+items.length+(hasMore?'+':'');
+      $('sb-crm-pagination').hidden=!hasMore;
+    }
+    async function load(reset=true){
+      if(reset){page=1;items=[];}
+      const counter=++requestCounter;
+      setLoading('CARGANDO…');
+      try{
+        const params=new URLSearchParams({page:String(page),archived:filter.value==='archived'?'1':'0',q:search.value.trim()});
+        const result=await api(API+'?'+params.toString());
+        if(counter!==requestCounter)return;
+        items=reset?result.items:items.concat(result.items);
+        hasMore=result.hasMore;
+        render();
+        setLoading('ACTUALIZADO');
+      }catch(error){
+        if(counter!==requestCounter)return;
+        if(reset)blank('No se ha podido conectar con la base de datos.');
+        setLoading('ERROR');
+        message(error.message,true);
+      }
+    }
+    function openForm(client){
+      selectedId=client?.id||null;form.reset();
+      $('sb-crm-form-title').textContent=client?'Editar cliente.':'Nuevo cliente.';
+      $('sb-crm-form-error').hidden=true;
+      $('sb-crm-save').disabled=false;
+      if(client)for(const name of fields){const field=form.elements.namedItem(name);if(field)field.value=client[name]??'';}
+      dialog.showModal();
+      form.elements.namedItem('display_name').focus();
+    }
+    $('sb-crm-new').addEventListener('click',()=>openForm(null));
+    $('sb-crm-close').addEventListener('click',()=>dialog.close());
+    $('sb-crm-cancel').addEventListener('click',()=>dialog.close());
+    dialog.addEventListener('click',event=>{if(event.target===dialog)dialog.close();});
+    form.addEventListener('submit',async event=>{
+      event.preventDefault();if(busy)return;
+      busy=true;$('sb-crm-save').disabled=true;$('sb-crm-form-error').hidden=true;
+      const payload=Object.fromEntries(fields.map(name=>[name,String(form.elements.namedItem(name).value||'').trim()]));
+      try{
+        await api(selectedId?API+'/'+encodeURIComponent(selectedId):API,{
+          method:selectedId?'PATCH':'POST',body:JSON.stringify(payload)
+        });
+        dialog.close();message(selectedId?'Cliente actualizado correctamente.':'Cliente guardado correctamente.');
+        await load();
+      }catch(error){$('sb-crm-form-error').textContent=error.message;$('sb-crm-form-error').hidden=false;}
+      finally{busy=false;$('sb-crm-save').disabled=false;}
+    });
+    list.addEventListener('click',async event=>{
+      const button=event.target.closest('button[data-action]');if(!button||busy)return;
+      const item=items.find(x=>x.id===button.dataset.id);if(!item)return;
+      if(button.dataset.action==='edit'){openForm(item);return;}
+      const restore=button.dataset.action==='restore';
+      if(!restore&&!window.confirm('¿Archivar a «'+item.display_name+'»? Sus datos se conservarán y podrás restaurarlo.'))return;
+      busy=true;button.disabled=true;
+      try{
+        await api(API+'/'+encodeURIComponent(item.id),restore?{method:'PATCH',body:JSON.stringify({archived:false})}:{method:'DELETE'});
+        message(restore?'Cliente restaurado.':'Cliente archivado.');
+        await load();
+      }catch(error){message(error.message,true);}
+      finally{busy=false;button.disabled=false;}
+    });
+    search.addEventListener('input',()=>{clearTimeout(filterTimer);filterTimer=setTimeout(()=>{message('');load();},250);});
+    filter.addEventListener('change',()=>{message('');load();});
+    $('sb-crm-refresh').addEventListener('click',()=>{message('');load();});
+    $('sb-crm-more').addEventListener('click',()=>{page++;load(false);});
+    load();
+  </script>
+</Private>

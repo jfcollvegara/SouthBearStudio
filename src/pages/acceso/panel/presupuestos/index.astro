@@ -151,7 +151,10 @@ import '../../../../styles/private-commerce.css';
         if(item.status==='borrador')button('Marcar enviado','enviado');
         if(['borrador','enviado'].includes(item.status)){button('Marcar aceptado','aceptado');button('Rechazar','rechazado');}
         if(item.status==='enviado')button('Caducado','caducado');
-        if(item.status==='aceptado'){const a=el('a','Crear proyecto ↗');a.href='/acceso/panel/proyectos/?presupuesto='+encodeURIComponent(item.id);acts.append(a);}
+        if(item.status==='aceptado'){
+          const a=el('a','Crear proyecto ↗');a.href='/acceso/panel/proyectos/?presupuesto='+encodeURIComponent(item.id);acts.append(a);
+          const invoice=el('a','Preparar factura ↗');invoice.href='/acceso/panel/facturas/?presupuesto='+encodeURIComponent(item.id);invoice.title='Crear borrador interno, no una factura emitida';acts.append(invoice);
+        }
         else button('Archivar','archive');
       }else button('Restaurar','restore');
       card.append(main,side,acts);rows.append(card);

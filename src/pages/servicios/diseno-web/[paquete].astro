@@ -27,7 +27,24 @@ const otherPackages=webPackages.filter(item=>item.slug!==pkg.slug);
   title={pkg.name+' | Diseño y desarrollo web'}
   description={pkg.summary+' Descubre todo lo que incluye '+pkg.name+', extras y condiciones. Desde '+formatWebPackagePrice(pkg)+' con IVA incluido. SOUTHBEAR STUDIO.'}
 >
-  <div class="sb-wpd">
+  <div class:list={['sb-wpd', {'sb-wpd--premium':pkg.slug==='web-premium'}]}>
+    {pkg.slug==='web-premium' && (
+      <div class="sb-wpd-premium-media">
+        <video
+          class="sb-wpd-premium-video"
+          autoplay
+          muted
+          loop
+          playsinline
+          preload="metadata"
+          poster="/southbear-diseno-web-portatil.webp"
+          disablepictureinpicture
+          aria-label="Vídeo de presentación de Web Premium, con una composición gráfica en la pantalla del portátil"
+        >
+          <source src="/videos/web-premium-hero.mp4" type="video/mp4"/>
+        </video>
+      </div>
+    )}
     <section class="sb-wpd-hero" aria-labelledby="sb-wpd-title">
       <div class="sb-wpd-shell">
         <a href="/servicios/diseno-web/" class="sb-wpd-back">← Volver a los paquetes</a>
@@ -142,6 +159,53 @@ const otherPackages=webPackages.filter(item=>item.slug!==pkg.slug);
   </div>
 </Base>
 <style>
+  /* Web Premium, en exclusiva: vídeo panorámico a sangre y degradado
+     blanco que elimina el corte entre el vídeo y el fondo de la página. */
+  .sb-wpd-premium-media{
+    position:relative;
+    isolation:isolate;
+    width:100%;
+    aspect-ratio:16/9;
+    overflow:hidden;
+    background:#eff0ed;
+  }
+  .sb-wpd-premium-video{
+    display:block;
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    object-position:center;
+  }
+  .sb-wpd-premium-media::after{
+    content:'';
+    position:absolute;
+    z-index:2;
+    pointer-events:none;
+    left:0;
+    right:0;
+    bottom:0;
+    height:23%;
+    background:linear-gradient(to bottom,
+      rgba(255,255,255,0) 0%,
+      rgba(255,255,255,.12) 28%,
+      rgba(255,255,255,.44) 65%,
+      #fff 100%);
+  }
+  .sb-wpd--premium .sb-wpd-hero::before{display:none}
+  .sb-wpd--premium .sb-wpd-hero-grid{
+    display:block;
+    min-height:0;
+    padding:clamp(35px,5vw,70px) 0 clamp(95px,9vw,145px);
+  }
+  .sb-wpd--premium .sb-wpd-copy{max-width:1080px}
+  .sb-wpd--premium .sb-wpd-showcase{display:none}
+  @media(max-width:700px){
+    .sb-wpd-premium-media{aspect-ratio:4/3}
+    .sb-wpd-premium-video{object-position:center center}
+    .sb-wpd-premium-media::after{height:26%}
+    .sb-wpd--premium .sb-wpd-hero-grid{padding:48px 0 85px}
+  }
+
   .sb-wpd{color:#192019;background:#f5f6f3;overflow:hidden}
   .sb-wpd *{box-sizing:border-box}
   .sb-wpd-shell{width:min(1430px,calc(100% - clamp(36px,8vw,170px)));margin:auto}

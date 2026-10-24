@@ -7,9 +7,11 @@
 import '@fontsource-variable/space-grotesk/wght.css';
 import '@fontsource-variable/inter/wght.css';
 import '../styles/private-audiovisual.css';
+import Navigation from '../components/private/Navigation.astro';
 const {
   title='Área privada',
-  description='Área de gestión interna de SouthBear Studio.'
+  description='Área de gestión interna de SouthBear Studio.',
+  workspace=false
 }=Astro.props;
 ---
 <!doctype html>
@@ -37,7 +39,35 @@ const {
           <span>CONTROL ROOM <span class="sb-private-header__slash">/</span> INTERNAL</span>
         </div>
       </header>
-      <main id="main-content" class="sb-private-main"><slot/></main>
+      {workspace ? (
+        <div class="sb-ws-shell">
+          <aside class="sb-ws-sidebar" aria-label="Menú lateral de administración">
+            <div class="sb-ws-sidebar__top">
+              <span class="sb-ws-sidebar__mark"><span class="sb-ws-sidebar__signal" aria-hidden="true"></span> SOUTHBEAR / OS</span>
+              <strong>CONTROL ROOM <span>01.</span></strong>
+              <p>Tu negocio, organizado.</p>
+            </div>
+            <Navigation/>
+            <div class="sb-ws-sidebar__bottom">
+              <a href="/acceso/">← Acceso privado</a>
+              <a href="/cdn-cgi/access/logout">Cerrar sesión ↗</a>
+            </div>
+          </aside>
+          <div class="sb-ws-body">
+            <details class="sb-ws-mobile-nav">
+              <summary>
+                <span><span class="sb-ws-mobile-nav__dot" aria-hidden="true"></span> PANEL DE GESTIÓN</span>
+                <span>SECCIONES <span aria-hidden="true">☰</span></span>
+              </summary>
+              <Navigation/>
+              <div class="sb-ws-mobile-nav__bottom"><a href="/cdn-cgi/access/logout">Cerrar sesión ↗</a></div>
+            </details>
+            <main id="main-content" class="sb-private-main sb-ws-main"><slot/></main>
+          </div>
+        </div>
+      ) : (
+        <main id="main-content" class="sb-private-main"><slot/></main>
+      )}
       <footer class="sb-private-footer">
         <span>© {new Date().getFullYear()} SOUTHBEAR STUDIO</span>
         <a href="/">← VOLVER A LA WEB</a>

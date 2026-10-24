@@ -74,7 +74,7 @@ import '../../../../styles/private-commerce.css';
   const $=id=>document.getElementById(id),base='/presupuestos';
   const dialog=$('sb-quotes-dialog'),form=$('sb-quotes-form'),rows=$('sb-quotes-rows'),feedback=$('sb-quotes-message'),lineHolder=$('sb-quotes-lines');
   const statusLabels={borrador:'Borrador',enviado:'Enviado',aceptado:'Aceptado',rechazado:'Rechazado',caducado:'Caducado'};
-  let clients=[],items=[],catalog=[],selected=null,readOnly=false,hasMore=false,page=1,loadingId=0,busy=false,initialized=false;
+  let clients=[],items=[],catalog=[],selected=null,readOnly=false,hasMore=false,page=1,loadingId=0,busy=false,initialized=false,originOpportunityId=null;
   const projectPrompt=$('sb-quotes-project-prompt');
   function offerProject(quote){
     $('sb-quotes-project-prompt-reference').textContent=quote.code||'Presupuesto aceptado';
@@ -196,7 +196,7 @@ import '../../../../styles/private-commerce.css';
     }catch(e){if(token!==loadingId)return;$('sb-quotes-loading').textContent='ERROR';if(reset)rows.replaceChildren(el('div','No se pueden cargar los presupuestos.','sb-ops__empty'));message(feedback,e.message,true);}
   }
   async function open(id=null){
-    selected=null;form.reset();lineHolder.replaceChildren();readOnly=false;
+    selected=null;originOpportunityId=null;form.reset();lineHolder.replaceChildren();readOnly=false;
     $('sb-quotes-form-error').hidden=true;
     let item=null;
     try{
@@ -248,7 +248,9 @@ import '../../../../styles/private-commerce.css';
       const payload={title:field(form,'title').value.trim(),client_id:selected?.client_id||field(form,'client_id').value,
         issue_date:field(form,'issue_date').value,valid_until:field(form,'valid_until').value,
         notes:field(form,'notes').value.trim(),lines:readLines()};
+      if(!selected&&originOpportunityId)payload.opportunity_id=originOpportunityId;
       await requestApi(base+(selected?'/'+selected.id:''),{method:selected?'PATCH':'POST',payload});
+      originOpportunityId=null;
       dialog.close();message(feedback,selected?'Borrador actualizado.':'Presupuesto creado en borrador.');await load();
     }catch(err){$('sb-quotes-form-error').textContent=err.message;$('sb-quotes-form-error').hidden=false;}
     finally{busy=false;$('sb-quotes-save').disabled=false;}
@@ -299,7 +301,33 @@ import '../../../../styles/private-commerce.css';
   let debounce;for(const id of ['sb-quotes-search','sb-quotes-state','sb-quotes-archived'])$(id).addEventListener(id==='sb-quotes-search'?'input':'change',()=>{clearTimeout(debounce);debounce=setTimeout(()=>load(),230);});
   $('sb-quotes-reload').addEventListener('click',()=>load());
   $('sb-quotes-more').addEventListener('click',()=>{page++;load(false);});
-  const serviceFromUrl=new URLSearchParams(location.search).get('servicio');
+  const urlParams=new URLSearchParams(location.search);
+  const quoteSearchFromUrl=urlParams.get('q');
+  if(quoteSearchFromUrl)$('sb-quotes-search').value=quoteSearchFromUrl.slice(0,120);
+  const opportunityFromUrl=urlParams.get('oportunidad');
+  if(opportunityFromUrl){
+    (async()=>{
+      try{
+        const opportunity=(await requestApi('/oportunidades/'+encodeURIComponent(opportunityFromUrl))).item;
+        if(opportunity.archived_at||opportunity.quote_id||['ganado','perdido'].includes(opportunity.stage)||!opportunity.client_id)
+          throw new Error('La oportunidad debe estar activa, vinculada a un cliente y sin presupuesto anterior.');
+        await open();
+        if(!dialog.open)return;
+        if(!clients.some(x=>x.id===opportunity.client_id)){
+          dialog.close();throw new Error('El cliente vinculado no está activo. Revísalo desde Clientes.');
+        }
+        field(form,'client_id').value=opportunity.client_id;
+        field(form,'title').value=opportunity.title;
+        const gross=opportunity.estimated_gross_cents<=1000000000?opportunity.estimated_gross_cents:0;
+        lineHolder.replaceChildren();
+        createLine({concept:opportunity.title,details:opportunity.description.slice(0,1000),
+          quantity_milli:1000,unit_gross_cents:gross,vat_bps:2100});
+        originOpportunityId=opportunity.id;
+        message(feedback,'Presupuesto preparado desde la oportunidad. Revisa y personaliza conceptos, precio e IVA (21 % de referencia) antes de guardarlo.');
+      }catch(error){message(feedback,error.message,true);}
+    })();
+  }
+  const serviceFromUrl=urlParams.get('servicio');
   if(serviceFromUrl){
     open().then(()=>{
       if(!dialog.open)return;

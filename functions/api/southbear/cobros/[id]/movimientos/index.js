@@ -1,4 +1,4 @@
-import {normalizeReceipt,receiptStatement,planDetail,failCollection,apiResponse,apiError,requestBody,validId,audit} from '../../../../../src/server/southbear-collections.js';
+import {normalizeReceipt,receiptStatement,planDetail,failCollection,apiResponse,apiError,requestBody,validId,audit} from '../../../../../../src/server/southbear-collections.js';
 
 export async function onRequestPost({env,params,request,data}){
   if(!validId(params.id))return apiError('Plan de cobro no válido.',400);

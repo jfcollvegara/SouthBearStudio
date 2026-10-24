@@ -406,3 +406,25 @@
 .sb-reports__ratio strong{color:#ddff9a;font-size:19px;font-variant-numeric:tabular-nums}
 .sb-reports__ratio--negative strong{color:#ffb29e}
 @media(max-width:550px){.sb-reports__ratio{padding:13px 16px}.sb-reports__link-notice{flex-direction:column;align-items:start}}
+
+
+/* SouthBear OS / catálogo privado de servicios y tarifas */
+.sb-catalog__controls{grid-template-columns:minmax(0,1.35fr) 160px 130px 125px 45px}
+.sb-catalog__record{border-left:3px solid #ddff9a}
+.sb-catalog__record .sb-ops__record-main p{max-width:740px;white-space:pre-wrap}
+.sb-catalog__history{padding:22px;margin-top:9px;background:#ddff9a08;border:1px solid #ddff9a33}
+.sb-catalog__history h3{font-family:'Space Grotesk Variable',system-ui,sans-serif;font-size:18px;letter-spacing:-.03em;margin:0 0 14px}
+.sb-catalog__history-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:11px 0;border-top:1px solid #ddff9a26}
+.sb-catalog__history-row span{font-size:11px;color:#b0c6a5}
+.sb-catalog__history-row strong{font-size:12px;color:#dfffbd}
+.sb-quotes__catalog-picker{padding:17px 19px;margin:14px 0 17px;background:#d6ff9d0b;border:1px solid #dcffa04a}
+.sb-quotes__catalog-picker[hidden]{display:none}
+.sb-quotes__catalog-picker>label{display:block;color:#ddff9a;font-size:10px;font-weight:820;letter-spacing:.12em;margin-bottom:12px}
+.sb-quotes__catalog-picker>div{display:flex;gap:9px;align-items:stretch}
+.sb-quotes__catalog-picker select{flex:1;min-width:0;height:46px;background:#10170e;color:#f3ffec;border:1px solid #c6e9a04b;padding:0 10px;font-size:12px}
+.sb-quotes__catalog-picker button{background:#d9ff9e;color:#182216;border:0;padding:0 16px;font-weight:830;font-size:11px;cursor:pointer}
+.sb-quotes__catalog-picker button:disabled{opacity:.45;cursor:not-allowed}
+.sb-quotes__catalog-picker small{display:block;font-size:11px;line-height:1.65;color:#a9c29d;margin-top:11px}
+.sb-quotes__catalog-picker a{color:#dcffa2!important;text-decoration:underline;text-underline-offset:3px}
+@media(max-width:1040px){.sb-catalog__controls{grid-template-columns:minmax(0,1fr) 155px 125px 110px 45px}}
+@media(max-width:790px){.sb-catalog__controls{grid-template-columns:minmax(0,1fr) 45px}.sb-catalog__controls label:nth-child(n+2){grid-column:1}.sb-quotes__catalog-picker>div{flex-direction:column}.sb-quotes__catalog-picker button{padding:13px}}

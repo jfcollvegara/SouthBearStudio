@@ -2,7 +2,7 @@
 import Private from '../../../layouts/Private.astro';
 import {privateModules,privateIcons,privateSections} from '../../../data/private-modules.js';
 export function getStaticPaths(){
-  return privateModules.filter(module=>!['clientes','proyectos','presupuestos'].includes(module.slug)).map(module=>({params:{modulo:module.slug},props:{module}}));
+  return privateModules.filter(module=>!['clientes','proyectos','presupuestos','configuracion'].includes(module.slug)).map(module=>({params:{modulo:module.slug},props:{module}}));
 }
 const {module}=Astro.props;
 const navItem=privateSections.flatMap(group=>group.items).find(item=>item.slug===module.slug);

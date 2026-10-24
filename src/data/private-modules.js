@@ -8,8 +8,7 @@ export const privateNavigation = [
     {slug:'clientes',title:'Clientes',icon:'users'},
     {slug:'oportunidades',title:'Oportunidades',icon:'target'},
     {slug:'presupuestos',title:'Presupuestos',icon:'file-text'},
-    {slug:'proyectos',title:'Proyectos',icon:'layers'},
-    {slug:'agenda',title:'Agenda y tareas',icon:'calendar'}
+    {slug:'proyectos',title:'Proyectos',icon:'layers'}
   ]},
   { label:'FINANZAS', items:[
     {slug:'facturas',title:'Facturación',icon:'receipt'},
@@ -23,7 +22,8 @@ export const privateNavigation = [
     {slug:'catalogo',title:'Servicios y tarifas',icon:'briefcase'},
     {slug:'documentos',title:'Documentos',icon:'folder'},
     {slug:'informes',title:'Informes',icon:'chart'},
-    {slug:'configuracion',title:'Configuración',icon:'settings'}
+    {slug:'configuracion',title:'Configuración',icon:'settings'},
+    {slug:'agenda',title:'Agenda y tareas · Google',icon:'calendar'}
   ]}
 ];
 
@@ -52,7 +52,7 @@ export const privateModules = [
   {slug:'oportunidades',title:'Oportunidades',tag:'CRM / VENTAS',intro:'Organiza solicitudes, contactos potenciales y negociaciones hasta convertirlos en proyectos.',features:['Embudo comercial por etapas','Importe previsto y probabilidad','Próximo contacto y recordatorios','Conversión a presupuesto o proyecto']},
   {slug:'presupuestos',title:'Presupuestos',tag:'VENTAS / DOCUMENTOS',intro:'Prepara, envía y sigue presupuestos vinculados a clientes y servicios del estudio.',features:['Líneas y servicios personalizables','Impuestos, descuentos y condiciones','Generación PDF y envío','Estados y aceptación del cliente']},
   {slug:'proyectos',title:'Proyectos',tag:'OPERACIONES / PRODUCCIÓN',intro:'Controla entregables, revisiones, costes, plazos y rentabilidad de cada trabajo.',features:['Fases, tareas y fechas límite','Archivos y revisiones','Costes y tiempo invertido','Presupuesto, factura y cobro relacionados']},
-  {slug:'agenda',title:'Agenda y tareas',tag:'OPERACIONES / CALENDARIO',intro:'Unifica reuniones, grabaciones, fechas de entrega, vencimientos y pendientes.',features:['Calendario de trabajos y reuniones','Tareas con prioridades','Alertas de vencimiento','Vista diaria y semanal']},
+  {slug:'agenda',title:'Agenda y tareas',tag:'OPERACIONES / CALENDARIO',intro:'Integra la organización y seguimiento de trabajos con Google Calendar, como última fase del sistema.',features:['Calendario de trabajos y reuniones','Tareas con prioridades','Alertas de vencimiento','Vista diaria y semanal']},
   {slug:'facturas',title:'Facturación',tag:'FINANZAS / EMISIÓN',intro:'Gestiona todo el ciclo de facturación, desde la emisión hasta las rectificaciones y el archivo.',features:['Series y numeración controladas','Facturas completas y simplificadas cuando proceda','PDF, estados y rectificativas','Registro y trazabilidad conforme a la normativa aplicable']},
   {slug:'cobros',title:'Cobros',tag:'FINANZAS / TESORERÍA',intro:'Controla lo pendiente, lo cobrado y los vencimientos de clientes.',features:['Cobros parciales y totales','Fechas de vencimiento','Métodos de pago y conciliación','Recordatorios de facturas pendientes']},
   {slug:'gastos',title:'Gastos',tag:'FINANZAS / COMPRAS',intro:'Clasifica compras, gastos recurrentes e inversiones, con sus justificantes.',features:['Categorías e impuestos soportados','Tickets y facturas de compra','Gastos recurrentes','Vinculación con proyectos y proveedores']},

@@ -17,7 +17,9 @@ export function choice(value,name,choices){
 export function dateValue(value,name,{required=false}={}){
   const text=textValue(value,name,10,{required});
   if(!text)return '';
-  if(!/^\d{4}-\d{2}-\d{2}$/.test(text)||new Date(text+'T00:00:00Z').toISOString().slice(0,10)!==text)throw new InputError('La fecha «'+name+'» no es válida.');
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(text))throw new InputError('La fecha «'+name+'» no es válida.');
+  const parsed=new Date(text+'T00:00:00Z');
+  if(!Number.isFinite(parsed.getTime())||parsed.toISOString().slice(0,10)!==text)throw new InputError('La fecha «'+name+'» no es válida.');
   return text;
 }
 export async function ensureClient(db,id){

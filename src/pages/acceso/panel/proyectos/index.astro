@@ -65,6 +65,7 @@ import '../../../../styles/private-commerce.css';
         const collections=el('a','Plan de cobro ↗');collections.href='/acceso/panel/cobros/?proyecto='+encodeURIComponent(item.id);collections.title='Seguimiento de cobros de este proyecto';actions.append(collections);
         const expense=el('a','Registrar gasto ↗');expense.href='/acceso/panel/gastos/?proyecto='+encodeURIComponent(item.id);expense.title='Registrar coste vinculado a este proyecto';actions.append(expense);
         const report=el('a','Ver rentabilidad ↗');report.href='/acceso/panel/informes/?proyecto='+encodeURIComponent(item.id);report.title='Analizar presupuesto, costes y cobros del proyecto';actions.append(report);
+        const documents=el('a','Documentos ↗');documents.href='/acceso/panel/documentos/?proyecto='+encodeURIComponent(item.id);documents.title='Consultar archivo privado del proyecto';actions.append(documents);
       }
       act(item.archived_at?'Restaurar':'Archivar',item.archived_at?'restore':'archive');
       card.append(main,side,actions);rows.append(card);

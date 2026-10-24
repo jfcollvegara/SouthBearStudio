@@ -1,6 +1,6 @@
 # SouthBear Studio — activar autenticación del área privada
 
-**Estado:** la web tiene preparadas las rutas y el diseño, pero **no se puede considerar protegida hasta activar Cloudflare Access en el dashboard**. No hay todavía datos personales ni operaciones administrativas en las rutas.
+**Estado (24 de octubre de 2026):** Cloudflare Zero Trust y la aplicación **SouthBear Studio · Área privada** están configuradas mediante la API. La política **Solo administrador SouthBear** autoriza exclusivamente `jf.collvegara@gmail.com` mediante One-time PIN, con sesiones de 8 horas. Las rutas `/acceso`, `/acceso/*`, en `southbearstudio.com`, `www.southbearstudio.com`, `southbearstudio.pages.dev` y `*.southbearstudio.pages.dev`, figuran en la aplicación. Queda pendiente comprobar de forma interactiva la redirección y el acceso real en navegador; aún no hay datos administrativos en las rutas.
 
 ## Tecnología y alcance
 
@@ -10,9 +10,9 @@
 - Zona privada: `https://southbearstudio.com/acceso/` y rutas hijas (por ejemplo, `/acceso/panel/`).
 - No crear usuarios en el proyecto Supabase de HyperDrive para SouthBear; son negocios/proyectos diferentes.
 
-## Configuración obligatoria en Cloudflare
+## Configuración existente en Cloudflare (ya realizada; solo como referencia)
 
-1. Entra en [Cloudflare Dashboard](https://dash.cloudflare.com/) con la cuenta que administra `southbearstudio.com`.
+1. Para revisar o modificar la configuración, entra en [Cloudflare Dashboard](https://dash.cloudflare.com/) con la cuenta que administra `southbearstudio.com`.
 2. Ve a **Zero Trust → Integrations → Identity providers**. Si no está disponible **One-time PIN**, añádelo como proveedor.
 3. Ve a **Zero Trust → Access controls → Applications → Create new application → Self-hosted and private**.
 4. Pon el nombre **SouthBear Studio — Área privada**.

@@ -1,7 +1,7 @@
 ---
 import {privateSections,privateIcons} from '../../data/private-modules.js';
-const current=(Astro.url.pathname.replace(/\\/+$/,'')||'/');
-const active=(href)=>current===(href.replace(/\\/+$/,'')||'/');
+const current=Astro.url.pathname.split('/').filter(Boolean).join('/');
+const active=(href)=>current===href.split('/').filter(Boolean).join('/');
 ---
 <nav class="sb-ws-nav" aria-label="Navegación del área privada">
   {privateSections.map(section=>(

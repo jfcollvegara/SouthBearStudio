@@ -126,6 +126,7 @@ import '../../../../styles/private-commerce.css';
     if(d.project_id)field(planForm,'project_id').value=d.project_id;
     if(!field(planForm,'title').value.trim())field(planForm,'title').value=d.title;
     field(planForm,'total').value=(d.total_cents/100).toFixed(2);
+    field(planForm,'total').readOnly=true;
     applyPreset();
   }
   function selectProject(id){
@@ -135,13 +136,13 @@ import '../../../../styles/private-commerce.css';
     if(p.quote_id&&quotes.some(q=>q.id===p.quote_id))selectQuote(p.quote_id);
     if(!field(planForm,'title').value.trim())field(planForm,'title').value=p.title;
   }
-  field(planForm,'client_id').addEventListener('change',()=>{for(const key of ['quote_id','draft_id','project_id'])field(planForm,key).value='';sourceOptions();});
-  field(planForm,'quote_id').addEventListener('change',()=>selectQuote(field(planForm,'quote_id').value));
-  field(planForm,'draft_id').addEventListener('change',()=>selectDraft(field(planForm,'draft_id').value));
+  field(planForm,'client_id').addEventListener('change',()=>{for(const key of ['quote_id','draft_id','project_id'])field(planForm,key).value='';field(planForm,'total').readOnly=false;sourceOptions();});
+  field(planForm,'quote_id').addEventListener('change',()=>{if(field(planForm,'quote_id').value)selectQuote(field(planForm,'quote_id').value);else field(planForm,'total').readOnly=false;});
+  field(planForm,'draft_id').addEventListener('change',()=>{if(field(planForm,'draft_id').value)selectDraft(field(planForm,'draft_id').value);else field(planForm,'total').readOnly=false;});
   field(planForm,'project_id').addEventListener('change',()=>selectProject(field(planForm,'project_id').value));
   async function openPlan(id=null,{quote=null,project=null,draft=null}={}){
     if(busy)return;
-    selectedPlan=null;planForm.reset();$('sb-collections-plan-error').hidden=true;
+    selectedPlan=null;planForm.reset();field(planForm,'total').readOnly=false;$('sb-collections-plan-error').hidden=true;
     $('sb-collections-plan-title').textContent=id?'Editar plan de cobro.':'Nuevo plan de cobro.';
     $('sb-collections-plan-save').textContent=id?'Guardar cambios ↗':'Guardar plan ↗';
     try{

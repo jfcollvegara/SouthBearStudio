@@ -236,3 +236,12 @@
 }
 .sb-ws-activity-row>span:last-child{color:#ddff9a;font-size:22px}
 @media(prefers-reduced-motion:reduce){.sb-ws-activity-row{transition:none}}
+
+
+/* Resumen de caja mensual: no es rentabilidad fiscal */
+.sb-ws-cash{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;padding:15px 0 0}
+.sb-ws-cash>div{display:grid;gap:12px;padding:18px 19px;background:#ddff9a09;border:1px solid #ddff9a28;min-width:0}
+.sb-ws-cash span{font-size:10px;letter-spacing:.1em;font-weight:820;color:#aecb99}
+.sb-ws-cash strong{font-family:'Space Grotesk Variable',system-ui,sans-serif;font-weight:730;font-size:clamp(19px,2.1vw,28px);letter-spacing:-.05em;overflow-wrap:anywhere;color:#e8f8d1}
+.sb-ws-cash p{grid-column:1/-1;margin:0 0 3px;color:#8c9b86;font-size:11px;line-height:1.7}
+@media(max-width:620px){.sb-ws-cash{grid-template-columns:minmax(0,1fr)}.sb-ws-cash p{grid-column:1}}

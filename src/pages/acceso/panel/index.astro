@@ -1,29 +1,135 @@
 ---
 import Private from '../../../layouts/Private.astro';
+import {privateSections,privateModules,privateIcons} from '../../../data/private-modules.js';
+const highlights=[
+  {label:'Facturación del mes',unit:'EUR',note:'Pendiente de conectar',icon:'receipt'},
+  {label:'Cobros pendientes',unit:'EUR',note:'Pendiente de conectar',icon:'wallet'},
+  {label:'Gastos del mes',unit:'EUR',note:'Pendiente de conectar',icon:'credit-card'},
+  {label:'Proyectos activos',unit:'N.º',note:'Pendiente de conectar',icon:'layers'}
+];
+const shortcuts=[
+  {slug:'clientes',label:'Consultar clientes',caption:'Relaciones y CRM',icon:'users'},
+  {slug:'presupuestos',label:'Gestionar presupuestos',caption:'Propuestas comerciales',icon:'file-text'},
+  {slug:'facturas',label:'Ir a facturación',caption:'Emisión y seguimiento',icon:'receipt'},
+  {slug:'gastos',label:'Controlar gastos',caption:'Compras y justificantes',icon:'credit-card'}
+];
+const getIcon = slug => {
+  const item=privateSections.flatMap(group=>group.items).find(it=>it.slug===slug);
+  return privateIcons[item?.icon]||[];
+};
+const groupHref = group => (group.items[0]?.href||'/acceso/panel/');
 ---
-<Private title="Panel privado" description="Área de trabajo reservada de SouthBear Studio.">
-  <section class="sb-private-panel" aria-labelledby="sb-private-panel-title">
-    <div class="sb-private-panel__header">
-      <span class="sb-private-panel__label"><i aria-hidden="true"></i> SOUTHBEAR / WORKSPACE</span>
-      <a href="/cdn-cgi/access/logout">Cerrar sesión ↗</a>
+<Private workspace title="Dashboard · Control Room" description="Panel central de administración de SouthBear Studio.">
+  <div class="sb-ws-dashboard">
+    <div class="sb-ws-topline">
+      <span class="sb-ws-breadcrumb">SOUTHBEAR OS <span>/</span> CONTROL ROOM <span>/</span> DASHBOARD</span>
+      <span class="sb-ws-topline__session"><i aria-hidden="true"></i> ÁREA PROTEGIDA</span>
     </div>
-    <div class="sb-private-panel__main">
-      <span class="sb-private-panel__eyebrow">CREATIVE CONTROL / 001</span>
-      <h1 id="sb-private-panel-title">CENTRO DE<br/><em>GESTIÓN.</em></h1>
-      <p>La estructura de tu panel privado está preparada. Aquí iremos incorporando la gestión de clientes, proyectos, presupuestos y operaciones del estudio.</p>
-      <div class="sb-private-panel__notice">
-        <strong>Área en preparación</strong>
-        <p>Todavía no se almacenan ni se muestran datos administrativos. Este panel ya está cubierto por la política de Cloudflare Access y reservado al correo autorizado.</p>
+    <header class="sb-ws-hero">
+      <div>
+        <div class="sb-ws-hero__label"><span class="sb-ws-mini-rec" aria-hidden="true"></span> VISTA GENERAL · ESTUDIO CREATIVO</div>
+        <h1>EL CENTRO DE<br/><span>TU NEGOCIO.</span></h1>
+        <p>Clientes, trabajos, presupuestos, facturas y finanzas. Una sola plataforma para dirigir SouthBear Studio.</p>
       </div>
-      <div class="sb-private-panel__modules" aria-label="Próximos módulos">
-        {['CLIENTES','PROYECTOS','PRESUPUESTOS','ADMINISTRACIÓN'].map((name,index)=>(
-          <div class="sb-private-panel__module">
-            <span>{String(index+1).padStart(2,'0')}</span>
-            <strong>{name}</strong>
-            <small>PRÓXIMAMENTE</small>
-          </div>
+      <div class="sb-ws-hero__side">
+        <span class="sb-ws-hero__caption">ESTADO DEL SISTEMA</span>
+        <strong>CONTROL ROOM <span>01</span></strong>
+        <p><span class="sb-ws-hero__safe" aria-hidden="true"></span> Acceso protegido con Cloudflare</p>
+        <span class="sb-ws-hero__date" id="sb-ws-date">—</span>
+      </div>
+    </header>
+    <div class="sb-ws-setup" role="status">
+      <div>
+        <strong><span aria-hidden="true">✳</span> Sistema preparado para la siguiente fase</strong>
+        <p>El acceso ya está protegido. Los módulos de gestión están estructurados, pero todavía no almacenan información. Conectaremos una base de datos independiente antes de operar con datos reales.</p>
+      </div>
+      <a href="/acceso/panel/configuracion/">Ver configuración <span aria-hidden="true">↗</span></a>
+    </div>
+
+    <section class="sb-ws-block" aria-labelledby="sb-ws-indicators">
+      <div class="sb-ws-section-head">
+        <div><span class="sb-ws-section-id">01 / ECONOMÍA</span><h2 id="sb-ws-indicators">Indicadores principales.</h2></div>
+        <span class="sb-ws-section-hint">CIFRAS REALES · CUANDO HAYA REGISTROS</span>
+      </div>
+      <div class="sb-ws-kpis">
+        {highlights.map((metric,index)=>(
+          <article class="sb-ws-kpi">
+            <div class="sb-ws-kpi__top">
+              <span>{String(index+1).padStart(2,'0')} / {metric.unit}</span>
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                {(privateIcons[metric.icon]||[]).map(d=><path d={d}/>)}
+              </svg>
+            </div>
+            <h3>{metric.label}</h3>
+            <div class="sb-ws-kpi__value" aria-label="Datos no disponibles">—</div>
+            <p><span aria-hidden="true"></span>{metric.note}</p>
+          </article>
         ))}
       </div>
+    </section>
+
+    <div class="sb-ws-two-col">
+      <section class="sb-ws-block" aria-labelledby="sb-ws-activity">
+        <div class="sb-ws-section-head">
+          <div><span class="sb-ws-section-id">02 / MOVIMIENTO</span><h2 id="sb-ws-activity">Actividad reciente.</h2></div>
+        </div>
+        <div class="sb-ws-empty">
+          <div class="sb-ws-empty__graphic" aria-hidden="true"><span>SB</span><i></i></div>
+          <h3>Todo empieza aquí.</h3>
+          <p>Cuando registremos clientes, proyectos, presupuestos y facturas, su actividad aparecerá en este espacio en tiempo real.</p>
+          <a href="/acceso/panel/clientes/">Explorar clientes <span aria-hidden="true">↗</span></a>
+        </div>
+      </section>
+
+      <section class="sb-ws-block" aria-labelledby="sb-ws-shortcuts">
+        <div class="sb-ws-section-head">
+          <div><span class="sb-ws-section-id">03 / ACCESOS DIRECTOS</span><h2 id="sb-ws-shortcuts">A un clic.</h2></div>
+        </div>
+        <div class="sb-ws-shortcuts">
+          {shortcuts.map((action,index)=>(
+            <a class="sb-ws-shortcut" href={'/acceso/panel/'+action.slug+'/'}>
+              <span class="sb-ws-shortcut__icon">
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  {(privateIcons[action.icon]||[]).map(d=><path d={d}/>)}
+                </svg>
+              </span>
+              <span class="sb-ws-shortcut__info">
+                <strong>{action.label}</strong>
+                <small>{action.caption}</small>
+              </span>
+              <span class="sb-ws-shortcut__arrow" aria-hidden="true">↗</span>
+            </a>
+          ))}
+        </div>
+      </section>
     </div>
-  </section>
+
+    <section class="sb-ws-block" aria-labelledby="sb-ws-departments">
+      <div class="sb-ws-section-head">
+        <div><span class="sb-ws-section-id">04 / ORGANIZACIÓN</span><h2 id="sb-ws-departments">Tu negocio, por áreas.</h2></div>
+        <span class="sb-ws-section-hint">{privateModules.length} MÓDULOS PLANIFICADOS</span>
+      </div>
+      <div class="sb-ws-areas">
+        {privateSections.slice(1).map((group,index)=>(
+          <article class="sb-ws-area">
+            <span class="sb-ws-area__number">0{index+1} / DEPARTAMENTO</span>
+            <h3>{group.label}</h3>
+            <p>{index===0?'Clientes, oportunidades, presupuestos y trabajos.':index===1?'El dinero que entra, sale y debe justificarse.':'Servicios, archivos, informes y configuración interna.'}</p>
+            <div class="sb-ws-area__links">
+              {group.items.map(item=>(
+                <a href={item.href}>
+                  <span>{item.title}</span><span aria-hidden="true">↗</span>
+                </a>
+              ))}
+            </div>
+          </article>
+        ))}
+      </div>
+    </section>
+    <div class="sb-ws-endnote"><span>●</span> SOUTHBEAR STUDIO / GESTIÓN INTEGRAL <span>— SISTEMA EN DESARROLLO</span></div>
+  </div>
+  <script>
+    const date=document.getElementById('sb-ws-date');
+    if(date)date.textContent=new Intl.DateTimeFormat('es-ES',{weekday:'long',day:'numeric',month:'long',year:'numeric'}).format(new Date()).toUpperCase();
+  </script>
 </Private>

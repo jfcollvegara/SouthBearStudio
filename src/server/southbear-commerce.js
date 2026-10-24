@@ -96,6 +96,6 @@ export async function quoteDetail(db,id){
   return item;
 }
 export function quoteInserts(db,quoteId,lines){
-  return lines.map(line=>db.prepare('INSERT INTO quote_lines(id,quote_id,position,concept,details,quantity_milli,unit_cents,vat_bps,base_cents,vat_cents,total_cents) VALUES (?,?,?,?,?,?,?,?,?,?)').bind(
+  return lines.map(line=>db.prepare('INSERT INTO quote_lines(id,quote_id,position,concept,details,quantity_milli,unit_cents,vat_bps,base_cents,vat_cents,total_cents) VALUES (?,?,?,?,?,?,?,?,?,?,?)').bind(
     crypto.randomUUID(),quoteId,line.position,line.concept,line.details,line.quantity_milli,line.unit_cents,line.vat_bps,line.base_cents,line.vat_cents,line.total_cents));
 }

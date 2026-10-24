@@ -20,7 +20,7 @@ import '../../../../styles/private-commerce.css';
       <span class="sb-billing__warning-mark">!</span>
       <div>
         <strong>ETAPA DE PREPARACIÓN · EMISIÓN FISCAL BLOQUEADA</strong>
-        <p>Este módulo crea exclusivamente <b>borradores internos</b>. No emite facturas legales, no asigna series o números fiscales, no registra cobros ni genera un PDF presentable como factura. Los importes son previsiones, no facturación realizada.</p>
+        <p>Este módulo crea exclusivamente <b>borradores internos</b>. No emite facturas legales ni asigna series o números fiscales. El IRPF es una previsión manual y no se aplicará automáticamente. <a href="/acceso/panel/contabilidad/#sb-tax-area" style="color:inherit;text-decoration:underline;text-underline-offset:3px;font-weight:800">Registrar una factura que ya hayas emitido y ver el IVA del trimestre ↗</a></p>
       </div>
     </div>
     <div class="sb-ops__controls sb-billing__controls">
@@ -51,6 +51,8 @@ import '../../../../styles/private-commerce.css';
         <label>Fecha prevista <b>*</b><input type="date" name="planned_date" required/></label>
         <label>Vencimiento previsto<input type="date" name="due_date"/></label>
         <label class="sb-ops-form__wide">Notas internas<textarea name="notes" maxlength="4000" rows="3" placeholder="Por ejemplo: primer pago 50 %, saldo pendiente o entrega acordada…"></textarea></label>
+        <label>Retención IRPF manual (%)<input name="withholding_rate" type="number" step="0.01" min="0" max="100" placeholder="Sin configurar"/></label>
+        <p class="sb-ops-form__note">Déjalo vacío hasta saber qué retención corresponde. Pon 0 % si no se aplica, 7 %, 15 % u otro porcentaje cuando lo confirmes. Se calcula sobre la base sin IVA.</p>
         <section class="sb-ops__line-section">
           <div class="sb-ops__line-header"><h3>Conceptos de la previsión.</h3><button id="sb-billing-add" type="button">+ Añadir concepto</button></div>
           <div id="sb-billing-lines"></div>
@@ -59,9 +61,11 @@ import '../../../../styles/private-commerce.css';
         <div class="sb-ops__totals">
           <span>Base imponible estimada</span><strong id="sb-billing-subtotal">—</strong>
           <span>IVA estimado</span><strong id="sb-billing-tax">—</strong>
-          <span>TOTAL PREVISTO</span><strong class="big" id="sb-billing-total">—</strong>
+          <span>TOTAL CON IVA (ANTES DEL IRPF)</span><strong class="big" id="sb-billing-total">—</strong>
+          <span>IRPF previsto (manual)</span><strong id="sb-billing-irpf">Sin configurar</strong>
+          <span>A COBRAR TRAS IRPF</span><strong class="big" id="sb-billing-payable">—</strong>
         </div>
-        <p class="sb-ops-form__note sb-ops-form__wide">Estos importes no incluyen retenciones de IRPF u otros supuestos tributarios especiales. Deben revisarse antes de una futura emisión válida.</p>
+        <p class="sb-ops-form__note sb-ops-form__wide">Retención orientativa a revisar según tu alta fiscal y el cliente. El borrador NO es factura emitida y NO aparece en el cálculo del IVA trimestral.</p>
       </div>
       <p class="sb-ops-form__error" id="sb-billing-error" role="alert" hidden></p>
       <div class="sb-ops-form__actions">
@@ -127,12 +131,16 @@ import '../../../../styles/private-commerce.css';
         $('sb-billing-subtotal').textContent=formatEuro(net);
         $('sb-billing-tax').textContent=formatEuro(tax);
         $('sb-billing-total').textContent=formatEuro(net+tax);
+        const rate=field(form,'withholding_rate').value;
+        if(rate===''){$('sb-billing-irpf').textContent='Sin configurar';$('sb-billing-payable').textContent='—';}
+        else {const irpf=Math.round(net*minorUnits(rate,2,'IRPF')/10000);$('sb-billing-irpf').textContent='−'+formatEuro(irpf);$('sb-billing-payable').textContent=formatEuro(net+tax-irpf);}
       }catch{
         for(const key of ['subtotal','tax','total'])$('sb-billing-'+key).textContent='—';
       }
     }
     lineHolder.addEventListener('input',preview);
     lineHolder.addEventListener('change',preview);
+    field(form,'withholding_rate').addEventListener('input',preview);
     $('sb-billing-add').addEventListener('click',()=>{
       if(lineHolder.children.length<25)createLine();
     });
@@ -180,6 +188,7 @@ import '../../../../styles/private-commerce.css';
         selected=item;
         fillOptions(field(form,'client_id'),clients,{selected:item?.client_id,empty:'Selecciona un cliente'});
         for(const name of ['title','planned_date','due_date','notes'])field(form,name).value=item?.[name]||'';
+        field(form,'withholding_rate').value=item?.withholding_bps==null?'':(item.withholding_bps/100).toFixed(2);
         if(!item)field(form,'planned_date').value=todayLocal();
         options();
         if(item){
@@ -239,6 +248,7 @@ import '../../../../styles/private-commerce.css';
         ].filter(Boolean).join(' · ')));
         const side=el('div',undefined,'sb-ops__record-side');
         side.append(el('strong',formatEuro(item.total_cents),'sb-ops__record-money'),el('span','BORRADOR INTERNO','sb-ops__status'));
+        side.append(el('small',item.withholding_bps==null?'IRPF: sin configurar':'IRPF: '+(item.withholding_bps/100).toLocaleString('es-ES')+' % (estimado)'));
         const acts=el('div',undefined,'sb-ops__actions');
         const action=(name,code)=>{const b=el('button',name);b.type='button';b.dataset.id=item.id;b.dataset.action=code;acts.append(b);};
         if(!item.archived_at){
@@ -278,6 +288,7 @@ import '../../../../styles/private-commerce.css';
           planned_date:field(form,'planned_date').value,
           due_date:field(form,'due_date').value,
           notes:field(form,'notes').value.trim(),
+          withholding_bps:field(form,'withholding_rate').value===''?null:minorUnits(field(form,'withholding_rate').value,2,'IRPF'),
           lines:getLines()
         };
         await requestApi(base+(selected?'/'+selected.id:''),{method:selected?'PATCH':'POST',payload:obj});

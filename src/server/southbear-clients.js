@@ -10,11 +10,11 @@ const EMAIL_RE=/^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const TYPE_ALLOWED=new Set(['empresa','particular']);
 export const CLIENT_COLUMNS='id,display_name,client_type,legal_name,tax_id,email,phone,website,address,postal_code,city,province,country,notes,created_at,updated_at,archived_at';
 
-export async function requestBody(request){
+export async function requestBody(request,maxBytes=20000){
   if(!request.headers.get('content-type')?.toLowerCase().startsWith('application/json'))throw Error('El formato debe ser JSON.');
-  if(Number(request.headers.get('content-length')||0)>20000)throw Error('La solicitud supera el tamaño permitido.');
+  if(Number(request.headers.get('content-length')||0)>maxBytes)throw Error('La solicitud supera el tamaño permitido.');
   const text=await request.text();
-  if(text.length>20000)throw Error('La solicitud supera el tamaño permitido.');
+  if(text.length>maxBytes)throw Error('La solicitud supera el tamaño permitido.');
   let parsed;
   try{parsed=JSON.parse(text);}catch{throw Error('El JSON de la solicitud no es válido.');}
   if(!parsed||typeof parsed!=='object'||Array.isArray(parsed))throw Error('Los datos enviados no son válidos.');

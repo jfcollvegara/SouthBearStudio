@@ -1,0 +1,234 @@
+---
+import Private from '../../../../layouts/Private.astro';
+import '../../../../styles/private-commerce.css';
+---
+<Private workspace title="Oportunidades comerciales" description="Embudo privado para contactos interesados, propuestas y previsiones de SouthBear Studio.">
+<section class="sb-ops sb-leads" aria-labelledby="sb-leads-title">
+  <div class="sb-ws-topline"><span class="sb-ws-breadcrumb"><a href="/acceso/panel/">SOUTHBEAR OS</a> <span>/</span> COMERCIAL <span>/</span> OPORTUNIDADES</span><span class="sb-ws-topline__session"><i aria-hidden="true"></i> CRM PRIVADO</span></div>
+  <header class="sb-ops__hero">
+    <div><span class="sb-ops__label">SOUTHBEAR / SALES PIPELINE</span><h1 id="sb-leads-title">TUS <em>OPORTUNIDADES.</em></h1>
+      <p>De la primera consulta a la negociación. Registra los proyectos potenciales y conviértelos en clientes y presupuestos cuando avancen.</p>
+    </div>
+    <button id="sb-leads-new" class="sb-ops__primary" type="button">+ Nueva oportunidad <span aria-hidden="true">↗</span></button>
+  </header>
+  <div class="sb-ops__info"><b aria-hidden="true">✳</b><span>Los importes y probabilidades son <strong>previsiones comerciales manuales</strong>, no facturación ni dinero cobrado. Marcar «Ganado» no emite facturas ni acepta automáticamente un presupuesto. Las fechas de seguimiento se muestran aquí; la Agenda con Google se incorporará en la última fase.</span></div>
+
+  <div class="sb-leads__metrics" aria-label="Embudo comercial">
+    <div><span>OPORTUNIDADES ABIERTAS</span><strong id="sb-leads-open">—</strong><small>No incluye ganadas ni perdidas</small></div>
+    <div><span>VOLUMEN POTENCIAL CON IVA</span><strong id="sb-leads-potential">—</strong><small>Importes estimados de oportunidades abiertas</small></div>
+    <div><span>PREVISIÓN PONDERADA</span><strong id="sb-leads-weighted">—</strong><small>Importe × probabilidad asignada</small></div>
+    <div><span>SEGUIMIENTOS VENCIDOS</span><strong id="sb-leads-overdue">—</strong><small>Fechas anteriores a hoy, sin cerrar</small></div>
+  </div>
+
+  <div class="sb-ops__controls sb-leads__controls">
+    <label>BUSCAR CONTACTO O TRABAJO<input id="sb-leads-search" type="search" maxlength="120" placeholder="Empresa, servicio, contacto, email" autocomplete="off"/></label>
+    <label>ETAPA<select id="sb-leads-filter"><option value="">Todas las etapas</option>
+      <option value="nuevo">Nuevo contacto</option><option value="contactado">Contactado</option>
+      <option value="propuesta">Propuesta</option><option value="negociacion">Negociación</option>
+      <option value="ganado">Ganado</option><option value="perdido">Perdido</option>
+    </select></label>
+    <label>VISIBILIDAD<select id="sb-leads-archived"><option value="0">Activas</option><option value="1">Archivadas</option></select></label>
+    <button class="sb-ops__reload" id="sb-leads-refresh" type="button" title="Actualizar">↻</button>
+  </div>
+  <div class="sb-ops__meta"><span id="sb-leads-count">OPORTUNIDADES / —</span><span id="sb-leads-loading" aria-live="polite">CARGANDO…</span></div>
+  <div id="sb-leads-board" class="sb-leads__board" aria-live="polite"><div class="sb-ops__empty">Consultando oportunidades…</div></div>
+  <button id="sb-leads-more" class="sb-ops__more" type="button" hidden>Mostrar más ↓</button>
+  <p id="sb-leads-feedback" class="sb-ops__feedback" role="status" aria-live="polite"></p>
+  <footer class="sb-ops__footer">SOUTHBEAR OS / PIPELINE COMERCIAL · PREVISIONES NO FISCALES · SEGUIMIENTO MANUAL</footer>
+</section>
+<dialog id="sb-leads-dialog" class="sb-ops-dialog" aria-labelledby="sb-leads-dialog-title">
+  <div class="sb-ops-dialog__head"><div><span>SOUTHBEAR / CRM WORKSPACE</span><h2 id="sb-leads-dialog-title">Nueva oportunidad.</h2></div><button id="sb-leads-close" type="button" class="sb-ops-dialog__close" aria-label="Cerrar">×</button></div>
+  <form id="sb-leads-form">
+    <div class="sb-ops-form">
+      <label class="sb-ops-form__wide">Servicio o posible proyecto <b>*</b><input name="title" maxlength="200" required placeholder="Ej. Rediseño de web corporativa" autocomplete="off"/></label>
+      <label>Nombre del contacto <b>*</b><input name="contact_name" maxlength="160" required placeholder="Persona interesada" autocomplete="off"/></label>
+      <label>Empresa / marca<input name="company_name" maxlength="160" placeholder="Opcional" autocomplete="off"/></label>
+      <label>Email<input name="email" type="email" maxlength="190" autocomplete="off"/></label>
+      <label>Teléfono<input name="phone" type="tel" maxlength="60" autocomplete="off"/></label>
+      <label class="sb-ops-form__wide">Vincular cliente existente<select name="client_id"><option value="">Contacto potencial sin cliente</option></select></label>
+      <label>Área<select name="category"><option value="web">Desarrollo web</option><option value="diseno">Diseño gráfico</option><option value="audiovisual">Producción audiovisual</option><option value="otro">Otro</option></select></label>
+      <label>Cómo llegó<select name="source"><option value="web">Formulario / web</option><option value="redes">Redes sociales</option><option value="referido">Recomendación</option><option value="email">Email</option><option value="telefono">Teléfono</option><option value="presencial">Presencial</option><option value="otro">Otro</option></select></label>
+      <label>Etapa<select name="stage"><option value="nuevo">Nuevo contacto</option><option value="contactado">Contactado</option><option value="propuesta">Propuesta</option><option value="negociacion">Negociación</option><option value="ganado">Ganado</option><option value="perdido">Perdido</option></select></label>
+      <label>Probabilidad de cerrar (%) <input name="probability" type="number" min="0" max="100" step="1" required value="10"/></label>
+      <label>Importe previsto con IVA (€) <input name="gross" type="number" min="0" max="1000000000" step=".01" required value="0.00"/></label>
+      <label>Próximo contacto<input name="next_contact_date" type="date"/></label>
+      <label class="sb-ops-form__wide">Descripción del posible encargo<textarea name="description" rows="3" maxlength="3000" placeholder="Qué solicita, entregables posibles, requisitos…"></textarea></label>
+      <label class="sb-ops-form__wide">Notas de seguimiento<textarea name="notes" rows="3" maxlength="4000" placeholder="Última conversación, próximos pasos, negociación…"></textarea></label>
+      <label class="sb-ops-form__wide" id="sb-leads-loss-wrap" hidden>Motivo de pérdida <b>*</b><textarea name="loss_reason" maxlength="500" rows="2" placeholder="Por qué no se ha cerrado la oportunidad"></textarea></label>
+      <p class="sb-ops-form__note sb-ops-form__wide">La probabilidad es editable. Un importe estimado de 0 € es válido si todavía no has definido el presupuesto. Crear cliente o preparar presupuesto son acciones separadas y explícitas.</p>
+    </div>
+    <p id="sb-leads-error" class="sb-ops-form__error" hidden role="alert"></p>
+    <div class="sb-ops-form__actions"><button id="sb-leads-cancel" type="button">Cerrar</button><button id="sb-leads-save" class="sb-ops__primary" type="submit">Guardar oportunidad ↗</button></div>
+  </form>
+</dialog>
+<script>
+  import {requestApi,getAll,fillOptions,el,field,message,formatEuro,formatDate,minorUnits,todayLocal} from '../../../../scripts/private-commerce.js';
+  const $=id=>document.getElementById(id),base='/oportunidades';
+  const stages=['nuevo','contactado','propuesta','negociacion','ganado','perdido'];
+  const labels={nuevo:'Nuevo contacto',contactado:'Contactado',propuesta:'Propuesta',negociacion:'Negociación',ganado:'Ganado',perdido:'Perdido'};
+  const categories={diseno:'Diseño gráfico',web:'Desarrollo web',audiovisual:'Audiovisual',otro:'Otro'};
+  const suggested={nuevo:10,contactado:25,propuesta:50,negociacion:75,ganado:100,perdido:0};
+  const form=$('sb-leads-form'),dialog=$('sb-leads-dialog'),feedback=$('sb-leads-feedback'),board=$('sb-leads-board');
+  const fields=['title','contact_name','company_name','email','phone','client_id','category','source','stage','probability','next_contact_date','description','notes','loss_reason'];
+  let clients=[],items=[],selected=null,busy=false,page=1,hasMore=false,loadId=0;
+  function toggleLoss(){
+    const lost=field(form,'stage').value==='perdido';
+    $('sb-leads-loss-wrap').hidden=!lost;field(form,'loss_reason').required=lost;
+  }
+  field(form,'stage').addEventListener('change',()=>{
+    field(form,'probability').value=String(suggested[field(form,'stage').value]);
+    toggleLoss();
+  });
+  field(form,'client_id').addEventListener('change',()=>{
+    const client=clients.find(x=>x.id===field(form,'client_id').value);
+    if(!client)return;
+    if(!field(form,'company_name').value.trim()&&client.client_type==='empresa')field(form,'company_name').value=client.display_name;
+    if(!field(form,'contact_name').value.trim())field(form,'contact_name').value=client.display_name;
+    if(!field(form,'email').value.trim())field(form,'email').value=client.email||'';
+    if(!field(form,'phone').value.trim())field(form,'phone').value=client.phone||'';
+  });
+  function renderMetrics(summary){
+    $('sb-leads-open').textContent=new Intl.NumberFormat('es-ES').format(summary.open_count);
+    $('sb-leads-potential').textContent=formatEuro(summary.open_gross_cents);
+    $('sb-leads-weighted').textContent=formatEuro(summary.weighted_cents);
+    $('sb-leads-overdue').textContent=new Intl.NumberFormat('es-ES').format(summary.overdue_count);
+  }
+  function paint(){
+    board.replaceChildren();
+    $('sb-leads-count').textContent='OPORTUNIDADES / '+items.length+(hasMore?'+':'');
+    $('sb-leads-more').hidden=!hasMore;
+    if(!items.length){board.append(el('div','Todavía no hay oportunidades con estos filtros.','sb-ops__empty'));return;}
+    const today=todayLocal();
+    const filteredStage=$('sb-leads-filter').value;
+    const columns=filteredStage?[filteredStage]:stages;
+    for(const stage of columns){
+      const group=items.filter(x=>x.stage===stage);
+      const col=el('section',undefined,'sb-leads__column sb-leads__column--'+stage);
+      const header=el('div',undefined,'sb-leads__column-head');
+      header.append(el('h2',labels[stage]),el('span',String(group.length)));
+      col.append(header);
+      const list=el('div',undefined,'sb-leads__cards');
+      for(const item of group){
+        const card=el('article',undefined,'sb-leads__card');
+        const category=el('span',categories[item.category]||'Otro','sb-leads__category');
+        card.append(category,el('h3',item.title));
+        card.append(el('p',item.company_name||item.client_name||item.contact_name,'sb-leads__contact'));
+        if(item.company_name&&item.contact_name)card.append(el('small','Contacto: '+item.contact_name));
+        if(item.email)card.append(el('small',item.email));
+        const amount=el('div',undefined,'sb-leads__amount');
+        amount.append(el('strong',formatEuro(item.estimated_gross_cents)),el('span',item.probability+' % probable'));
+        card.append(amount);
+        if(item.next_contact_date&& !['ganado','perdido'].includes(item.stage)){
+          const late=item.next_contact_date<today;
+          card.append(el('p',(late?'SEGUIMIENTO VENCIDO · ':'Próximo contacto · ')+formatDate(item.next_contact_date),'sb-leads__due'+(late?' sb-leads__due--late':'')));
+        }
+        if(item.quote_code)card.append(el('p','Presupuesto vinculado: '+item.quote_code,'sb-leads__quote-ref'));
+        if(item.loss_reason&&item.stage==='perdido')card.append(el('p','Motivo: '+item.loss_reason,'sb-leads__loss'));
+        const acts=el('div',undefined,'sb-leads__actions');
+        const act=(title,code)=>{const b=el('button',title);b.type='button';b.dataset.action=code;b.dataset.id=item.id;acts.append(b);};
+        act(item.archived_at?'Ver ficha':'Editar ↗','edit');
+        if(!item.archived_at){
+          if(!item.client_id)act('Crear cliente ↗','convert');
+          if(item.client_id&&!item.quote_id&&!['ganado','perdido'].includes(item.stage)){
+            const a=el('a','Preparar presupuesto ↗');a.href='/acceso/panel/presupuestos/?oportunidad='+encodeURIComponent(item.id);
+            a.title='Abrir presupuesto en borrador con este cliente';acts.append(a);
+          }
+        }
+        if(item.quote_code){
+          const a=el('a','Abrir presupuesto ↗');a.href='/acceso/panel/presupuestos/?q='+encodeURIComponent(item.quote_code);acts.append(a);
+        }
+        act(item.archived_at?'Restaurar':'Archivar',item.archived_at?'restore':'archive');
+        card.append(acts);list.append(card);
+      }
+      if(!group.length)list.append(el('p','Sin oportunidades en esta etapa.','sb-leads__empty-column'));
+      col.append(list);board.append(col);
+    }
+  }
+  async function load(reset=true){
+    const token=++loadId;
+    if(reset){items=[];page=1;}
+    $('sb-leads-loading').textContent='CARGANDO…';
+    try{
+      const params=new URLSearchParams({q:$('sb-leads-search').value.trim(),stage:$('sb-leads-filter').value,archived:$('sb-leads-archived').value,page:String(page)});
+      const data=await requestApi(base+'?'+params);
+      if(token!==loadId)return;
+      items=reset?data.items:items.concat(data.items);hasMore=data.hasMore;
+      renderMetrics(data.summary);paint();
+      $('sb-leads-loading').textContent='ACTUALIZADO';
+    }catch(e){
+      if(token!==loadId)return;
+      $('sb-leads-loading').textContent='ERROR';board.replaceChildren(el('div','No se han podido cargar las oportunidades.','sb-ops__empty'));message(feedback,e.message,true);
+    }
+  }
+  async function open(id=null){
+    if(busy)return;
+    selected=null;form.reset();$('sb-leads-error').hidden=true;
+    $('sb-leads-dialog-title').textContent=id?'Editar oportunidad.':'Nueva oportunidad.';
+    try{
+      clients=await getAll('/clientes');
+      const item=id?(await requestApi(base+'/'+id)).item:null;
+      selected=item;
+      fillOptions(field(form,'client_id'),clients,{empty:'Contacto potencial sin cliente',selected:item?.client_id});
+      if(item?.client_id&&!clients.some(x=>x.id===item.client_id)){
+        field(form,'client_id').add(new Option(item.client_name+' (archivado)',item.client_id));
+        field(form,'client_id').value=item.client_id;
+      }
+      for(const key of fields.filter(x=>x!=='client_id'))field(form,key).value=item?.[key]??(
+        key==='stage'?'nuevo':key==='probability'?10:key==='source'?'otro':key==='category'?'web':''
+      );
+      field(form,'gross').value=item?(item.estimated_gross_cents/100).toFixed(2):'0.00';
+      field(form,'client_id').disabled=!!item?.quote_id||!!item?.archived_at;
+      for(const control of form.querySelectorAll('input,select,textarea'))if(item?.archived_at)control.disabled=true;else if(control.name!=='client_id')control.disabled=false;
+      $('sb-leads-save').hidden=!!item?.archived_at;
+      toggleLoss();dialog.showModal();
+      if(!item?.archived_at)field(form,'title').focus();
+    }catch(e){message(feedback,e.message,true);}
+  }
+  form.addEventListener('submit',async e=>{
+    e.preventDefault();if(busy)return;
+    busy=true;$('sb-leads-save').disabled=true;$('sb-leads-error').hidden=true;
+    try{
+      const obj=Object.fromEntries(fields.map(x=>[x,field(form,x).value.trim()]));
+      obj.client_id=selected?.quote_id?selected.client_id:obj.client_id||null;
+      obj.probability=Number(obj.probability);
+      obj.estimated_gross_cents=minorUnits(field(form,'gross').value,2,'importe previsto');
+      await requestApi(base+(selected?'/'+selected.id:''),{method:selected?'PATCH':'POST',payload:obj});
+      dialog.close();message(feedback,selected?'Oportunidad actualizada.':'Oportunidad creada. No se ha creado todavía ningún cliente ni presupuesto.');
+      await load();
+    }catch(err){$('sb-leads-error').textContent=err.message;$('sb-leads-error').hidden=false;}
+    finally{busy=false;$('sb-leads-save').disabled=false;}
+  });
+  board.addEventListener('click',async e=>{
+    const b=e.target.closest('button[data-action]');if(!b||busy)return;
+    const item=items.find(x=>x.id===b.dataset.id);if(!item)return;
+    if(b.dataset.action==='edit'){await open(item.id);return;}
+    if(b.dataset.action==='convert'){
+      if(!confirm('¿Crear una ficha de cliente a partir de este contacto? Revisa después los datos fiscales antes de contratar.'))return;
+      busy=true;b.disabled=true;
+      try{
+        await requestApi(base+'/'+item.id+'/convertir',{method:'POST',payload:{confirm:true}});
+        message(feedback,'Cliente creado y vinculado. Ya puedes preparar el presupuesto.');
+        await load();
+      }catch(err){message(feedback,err.message,true);}finally{busy=false;b.disabled=false;}
+      return;
+    }
+    if(b.dataset.action==='archive'&&!confirm('¿Archivar esta oportunidad? Conservará los clientes y presupuestos que tenga vinculados.'))return;
+    busy=true;b.disabled=true;
+    try{
+      await requestApi(base+'/'+item.id,b.dataset.action==='archive'?{method:'DELETE'}:{method:'PATCH',payload:{archived:false}});
+      message(feedback,b.dataset.action==='archive'?'Oportunidad archivada.':'Oportunidad restaurada.');await load();
+    }catch(err){message(feedback,err.message,true);}finally{busy=false;b.disabled=false;}
+  });
+  $('sb-leads-new').addEventListener('click',()=>open());
+  $('sb-leads-close').addEventListener('click',()=>dialog.close());
+  $('sb-leads-cancel').addEventListener('click',()=>dialog.close());
+  dialog.addEventListener('click',e=>{if(e.target===dialog)dialog.close();});
+  $('sb-leads-refresh').addEventListener('click',()=>load());
+  $('sb-leads-more').addEventListener('click',()=>{page++;load(false);});
+  let timer;
+  for(const key of ['sb-leads-search','sb-leads-filter','sb-leads-archived']){
+    $(key).addEventListener(key==='sb-leads-search'?'input':'change',()=>{clearTimeout(timer);timer=setTimeout(()=>load(),250);});
+  }
+  load();
+</script>
+</Private>

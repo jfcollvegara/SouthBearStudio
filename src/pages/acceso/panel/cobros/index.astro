@@ -116,6 +116,7 @@ import '../../../../styles/private-commerce.css';
     const project=projects.find(p=>p.quote_id===q.id&&p.client_id===q.client_id);
     if(project)field(planForm,'project_id').value=project.id;
     field(planForm,'total').value=(q.total_cents/100).toFixed(2);
+    field(planForm,'total').readOnly=true;
     applyPreset();
   }
   function selectDraft(id){

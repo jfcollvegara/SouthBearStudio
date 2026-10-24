@@ -52,25 +52,18 @@ import Private from '../layouts/Private.astro';
         <div class="sb-private-gate__notice" role="status">
           <span class="sb-private-gate__notice-icon" aria-hidden="true">✳</span>
           <div>
-            <strong>Configuración de acceso pendiente</strong>
-            <p>El panel se habilitará cuando configuremos la autenticación segura.</p>
+            <strong>Acceso mediante Cloudflare Access</strong>
+            <p>La verificación de identidad se realizará fuera de esta web, mediante un código temporal enviado a tu correo autorizado.</p>
           </div>
         </div>
-        <div class="sb-private-gate__form" role="group" aria-label="Inicio de sesión todavía no disponible">
-          <div class="sb-private-gate__field">
-            <label for="sb-private-email">CORREO ELECTRÓNICO</label>
-            <input type="email" id="sb-private-email" placeholder="Correo de administración" autocomplete="off" disabled aria-describedby="sb-private-pending"/>
-          </div>
-          <div class="sb-private-gate__field">
-            <label for="sb-private-password">CONTRASEÑA</label>
-            <input type="password" id="sb-private-password" placeholder="••••••••" autocomplete="off" disabled aria-describedby="sb-private-pending"/>
-          </div>
-          <button class="sb-private-gate__submit" type="button" disabled aria-describedby="sb-private-pending">
-            Entrar al espacio <span aria-hidden="true">↗</span>
-          </button>
-          <p class="sb-private-gate__note" id="sb-private-pending">
-            Por seguridad, este acceso aún no admite credenciales.
+        <div class="sb-private-gate__form">
+          <a class="sb-private-gate__submit sb-private-gate__submit--link" href="/acceso/panel/">
+            Ir al espacio de gestión <span aria-hidden="true">↗</span>
+          </a>
+          <p class="sb-private-gate__note">
+            Protección pendiente de activación en Cloudflare. Hasta entonces, las páginas contienen únicamente información de demostración.
           </p>
+          <a class="sb-private-gate__logout" href="/cdn-cgi/access/logout">Cerrar sesión de Cloudflare Access <span aria-hidden="true">↗</span></a>
         </div>
       </div>
       <div class="sb-private-gate__bottom">

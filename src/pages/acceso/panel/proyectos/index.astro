@@ -63,6 +63,7 @@ import '../../../../styles/private-commerce.css';
         act('Editar ↗','edit');
         const billing=el('a','Preparar factura ↗');billing.href='/acceso/panel/facturas/?proyecto='+encodeURIComponent(item.id);billing.title='Crear un borrador interno, no una factura emitida';actions.append(billing);
         const collections=el('a','Plan de cobro ↗');collections.href='/acceso/panel/cobros/?proyecto='+encodeURIComponent(item.id);collections.title='Seguimiento de cobros de este proyecto';actions.append(collections);
+        const expense=el('a','Registrar gasto ↗');expense.href='/acceso/panel/gastos/?proyecto='+encodeURIComponent(item.id);expense.title='Registrar coste vinculado a este proyecto';actions.append(expense);
       }
       act(item.archived_at?'Restaurar':'Archivar',item.archived_at?'restore':'archive');
       card.append(main,side,actions);rows.append(card);

@@ -314,3 +314,12 @@
 .sb-expenses__movement button:disabled{opacity:.55;cursor:wait}
 @media(max-width:950px){.sb-expenses__controls{grid-template-columns:minmax(0,1fr) 160px 145px 46px}}
 @media(max-width:720px){.sb-expenses__metrics{grid-template-columns:1fr}.sb-expenses__metrics>div{min-height:100px;padding:20px}.sb-expenses__controls{grid-template-columns:minmax(0,1fr) 46px}.sb-expenses__controls label:nth-child(2){grid-column:1;grid-row:2}.sb-expenses__controls label:nth-child(3){grid-column:1;grid-row:3}.sb-expenses__pay-body{padding:19px}.sb-expenses__movement{padding:13px}}
+
+/* Proveedores · directorio de compras */
+.sb-suppliers__controls{grid-template-columns:minmax(0,1fr) 180px 155px 46px}
+.sb-suppliers__record{border-left:3px solid #d7fa9d}
+.sb-suppliers__numbers{color:#a9bf9b;font-size:11px;text-align:right}
+.sb-expenses__supplier-link,.sb-expenses__linked-filter a{color:#ddff9a!important;text-decoration:underline;text-decoration-color:#ddff9a77;text-underline-offset:4px}
+.sb-expenses__linked-filter{margin:14px 0;padding:13px 17px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;align-items:center;background:#ddff9a0e;border:1px solid #ddff9a4d;color:#dfffa9;font-size:10px;font-weight:780;letter-spacing:.08em}
+@media(max-width:900px){.sb-suppliers__controls{grid-template-columns:minmax(0,1fr) 155px 145px 46px}}
+@media(max-width:650px){.sb-suppliers__controls{grid-template-columns:minmax(0,1fr) 46px}.sb-suppliers__controls label:nth-child(2){grid-column:1;grid-row:2}.sb-suppliers__controls label:nth-child(3){grid-column:1;grid-row:3}.sb-suppliers__numbers{text-align:left}}

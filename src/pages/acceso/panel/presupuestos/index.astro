@@ -146,6 +146,7 @@ import '../../../../styles/private-commerce.css';
       const acts=el('div',undefined,'sb-ops__actions');
       function button(label,action){const b=el('button',label);b.type='button';b.dataset.id=item.id;b.dataset.action=action;acts.append(b);}
       button(item.status==='borrador'&&!item.archived_at?'Editar':'Ver detalle','view');
+      button('Descargar PDF ↓','pdf');
       if(!item.archived_at){
         if(item.status==='borrador')button('Marcar enviado','enviado');
         if(['borrador','enviado'].includes(item.status)){button('Marcar aceptado','aceptado');button('Rechazar','rechazado');}
@@ -221,6 +222,30 @@ import '../../../../styles/private-commerce.css';
     const item=items.find(x=>x.id===b.dataset.id);if(!item)return;
     const action=b.dataset.action;
     if(action==='view'){await open(item.id);return;}
+    if(action==='pdf'){
+      busy=true;b.disabled=true;
+      try{
+        const settings=await requestApi('/configuracion');
+        if(!settings.issuer_ready&&!confirm('Faltan datos fiscales del emisor en Configuración. El PDF llevará una advertencia de documento provisional. ¿Quieres descargarlo igualmente?'))return;
+        const response=await fetch('/api/southbear/presupuestos/pdf?id='+encodeURIComponent(item.id),{
+          credentials:'same-origin',cache:'no-store',headers:{Accept:'application/pdf'}
+        });
+        if(!response.ok){
+          let detail='No se ha podido generar el PDF.';
+          try{const obj=await response.json();detail=obj.error||detail;}catch{}
+          throw new Error(detail);
+        }
+        const pdf=await response.blob();
+        if(pdf.type!=='application/pdf'||pdf.size<100)throw new Error('El servidor no ha generado un documento PDF válido.');
+        const link=document.createElement('a'),url=URL.createObjectURL(pdf);
+        link.href=url;link.download=(item.code||'presupuesto').replace(/[^a-zA-Z0-9_-]/g,'_')+'.pdf';
+        document.body.append(link);link.click();link.remove();
+        setTimeout(()=>URL.revokeObjectURL(url),60000);
+        message(feedback,'Documento PDF generado. Si no aparece la descarga, comprueba la carpeta Descargas.');
+      }catch(err){message(feedback,err.message,true);}
+      finally{busy=false;b.disabled=false;}
+      return;
+    }
     const ask=action==='aceptado'?'¿Confirmas que el cliente ha aceptado realmente este presupuesto? El estado no representa una firma electrónica.':
       action==='enviado'?'¿Confirmas que ya has enviado este presupuesto al cliente?':
       action==='rechazado'?'¿Marcar el presupuesto como rechazado?':

@@ -1,4 +1,4 @@
-import {listSQL,normalizeDraft,validateReferences,insertDraftLines,draftDetail,draftError,apiResponse,apiError,audit} from '../../../../src/server/southbear-invoice-drafts.js';
+import {listSQL,normalizeDraft,validateReferences,insertDraftLines,draftDetail,draftError,apiResponse,requestBody,audit} from '../../../../src/server/southbear-invoice-drafts.js';
 
 export async function onRequestGet({request,env}){
   try{
@@ -19,7 +19,7 @@ export async function onRequestGet({request,env}){
 
 export async function onRequestPost({request,env,data}){
   try{
-    const raw=await (await import('../../../../src/server/southbear-clients.js')).requestBody(request,80000);
+    const raw=await requestBody(request,80000);
     const obj=normalizeDraft(raw),db=env.SOUTHBEAR_DB;
     await validateReferences(db,obj);
     const id=crypto.randomUUID();

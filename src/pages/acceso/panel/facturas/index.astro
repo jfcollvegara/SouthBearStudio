@@ -1,0 +1,316 @@
+---
+import Private from '../../../../layouts/Private.astro';
+import '../../../../styles/private-commerce.css';
+---
+<Private workspace title="Preparación de facturas" description="Borradores internos para preparar la facturación comercial. Emisión fiscal no habilitada.">
+  <section class="sb-ops sb-billing" aria-labelledby="sb-billing-title">
+    <div class="sb-ws-topline">
+      <span class="sb-ws-breadcrumb"><a href="/acceso/panel/">SOUTHBEAR OS</a> <span>/</span> FINANZAS <span>/</span> FACTURACIÓN</span>
+      <span class="sb-ws-topline__session"><i aria-hidden="true"></i> GESTIÓN PRIVADA</span>
+    </div>
+    <header class="sb-ops__hero">
+      <div>
+        <span class="sb-ops__label">SOUTHBEAR / BILLING WORKSPACE</span>
+        <h1 id="sb-billing-title">TUS <em>FACTURAS.</em></h1>
+        <p>Prepara borradores vinculados a tus clientes, presupuestos aceptados y proyectos. El sistema calcula la base imponible y el IVA a partir del precio final.</p>
+      </div>
+      <button id="sb-billing-new" class="sb-ops__primary" type="button">+ Nuevo borrador <span aria-hidden="true">↗</span></button>
+    </header>
+    <div class="sb-billing__warning" role="note">
+      <span class="sb-billing__warning-mark">!</span>
+      <div>
+        <strong>ETAPA DE PREPARACIÓN · EMISIÓN FISCAL BLOQUEADA</strong>
+        <p>Este módulo crea exclusivamente <b>borradores internos</b>. No emite facturas legales, no asigna series o números fiscales, no registra cobros ni genera un PDF presentable como factura. Los importes son previsiones, no facturación realizada.</p>
+      </div>
+    </div>
+    <div class="sb-ops__controls sb-billing__controls">
+      <label>BUSCAR BORRADOR<input id="sb-billing-search" type="search" maxlength="120" placeholder="Referencia, título o cliente" autocomplete="off"/></label>
+      <label>VISIBILIDAD<select id="sb-billing-archived"><option value="0">Activos</option><option value="1">Archivados</option></select></label>
+      <button class="sb-ops__reload" id="sb-billing-refresh" title="Actualizar" type="button">↻</button>
+    </div>
+    <div class="sb-ops__meta">
+      <span id="sb-billing-counter">BORRADORES / —</span>
+      <span id="sb-billing-loading" aria-live="polite">CARGANDO…</span>
+    </div>
+    <div id="sb-billing-rows" class="sb-ops__records" aria-live="polite"><div class="sb-ops__empty">Consultando borradores de facturación…</div></div>
+    <button class="sb-ops__more" id="sb-billing-more" hidden type="button">Mostrar más ↓</button>
+    <p id="sb-billing-feedback" role="status" class="sb-ops__feedback" aria-live="polite"></p>
+    <footer class="sb-ops__footer">SOUTHBEAR OS / PREFACTURACIÓN INTERNA · NO ES UN REGISTRO FISCAL DE FACTURAS EMITIDAS</footer>
+  </section>
+  <dialog class="sb-ops-dialog sb-billing__dialog" id="sb-billing-dialog" aria-labelledby="sb-billing-dialog-heading">
+    <div class="sb-ops-dialog__head">
+      <div><span>SOUTHBEAR / DOCUMENTO INTERNO · NO ES FACTURA</span><h2 id="sb-billing-dialog-heading">Nuevo borrador.</h2></div>
+      <button class="sb-ops-dialog__close" id="sb-billing-close" type="button" aria-label="Cerrar">×</button>
+    </div>
+    <form id="sb-billing-form">
+      <div class="sb-ops-form">
+        <label class="sb-ops-form__wide">Concepto general o título <b>*</b><input name="title" required maxlength="200" placeholder="Ej. Diseño de marca para cliente" autocomplete="off"/></label>
+        <label>Cliente <b>*</b><select name="client_id" required><option value="">Cargando clientes…</option></select></label>
+        <label>Presupuesto aceptado (opcional)<select name="quote_id"><option value="">Sin presupuesto de origen</option></select></label>
+        <label>Proyecto vinculado (opcional)<select name="project_id"><option value="">Sin proyecto de origen</option></select></label>
+        <label>Fecha prevista <b>*</b><input type="date" name="planned_date" required/></label>
+        <label>Vencimiento previsto<input type="date" name="due_date"/></label>
+        <label class="sb-ops-form__wide">Notas internas<textarea name="notes" maxlength="4000" rows="3" placeholder="Por ejemplo: primer pago 50 %, saldo pendiente o entrega acordada…"></textarea></label>
+        <section class="sb-ops__line-section">
+          <div class="sb-ops__line-header"><h3>Conceptos de la previsión.</h3><button id="sb-billing-add" type="button">+ Añadir concepto</button></div>
+          <div id="sb-billing-lines"></div>
+          <p class="sb-ops-form__note">El precio unitario que introduces <b>ya incluye el IVA</b>. Si partes de un presupuesto aceptado, sus conceptos se copian a este borrador y puedes adaptarlos sin modificar el presupuesto original.</p>
+        </section>
+        <div class="sb-ops__totals">
+          <span>Base imponible estimada</span><strong id="sb-billing-subtotal">—</strong>
+          <span>IVA estimado</span><strong id="sb-billing-tax">—</strong>
+          <span>TOTAL PREVISTO</span><strong class="big" id="sb-billing-total">—</strong>
+        </div>
+        <p class="sb-ops-form__note sb-ops-form__wide">Estos importes no incluyen retenciones de IRPF u otros supuestos tributarios especiales. Deben revisarse antes de una futura emisión válida.</p>
+      </div>
+      <p class="sb-ops-form__error" id="sb-billing-error" role="alert" hidden></p>
+      <div class="sb-ops-form__actions">
+        <button id="sb-billing-cancel" type="button">Cerrar</button>
+        <button id="sb-billing-save" class="sb-ops__primary" type="submit">Guardar borrador ↗</button>
+      </div>
+    </form>
+  </dialog>
+  <script>
+    import {requestApi,getAll,fillOptions,el,field,message,todayLocal,minorUnits,formatEuro,formatDate} from '../../../../scripts/private-commerce.js';
+    const $=id=>document.getElementById(id);
+    const base='/facturas';
+    const form=$('sb-billing-form'),dialog=$('sb-billing-dialog'),rows=$('sb-billing-rows');
+    const feedback=$('sb-billing-feedback'),lineHolder=$('sb-billing-lines');
+    let items=[],clients=[],quotes=[],projects=[],selected=null,busy=false,loadingId=0,page=1,hasMore=false;
+    function createLine(line={}){
+      const node=el('div',undefined,'sb-ops__line');
+      const make=(title,key,type,value,opts={})=>{
+        const lab=el('label',title);
+        if(key==='concept')lab.className='sb-ops__line-concept';
+        if(key==='details')lab.className='sb-ops__line-details';
+        const control=el(type==='select'?'select':'input');
+        if(type!=='select')control.type=type;
+        if(type==='select')for(const [val,label] of [[0,'0 %'],[400,'4 %'],[1000,'10 %'],[2100,'21 %']])control.add(new Option(label,String(val)));
+        control.dataset.key=key;
+        if(opts.maxLength)control.maxLength=opts.maxLength;
+        if(opts.min!==undefined)control.min=String(opts.min);
+        if(opts.max!==undefined)control.max=String(opts.max);
+        if(opts.step!==undefined)control.step=String(opts.step);
+        control.value=String(value);
+        if(opts.required)control.required=true;
+        lab.append(control);node.append(lab);
+      };
+      make('Concepto *','concept','text',line.concept??'',{maxLength:240,required:true});
+      make('Cantidad *','quantity','number',line.quantity_milli!==undefined?line.quantity_milli/1000:1,{min:.001,max:100000,step:.001,required:true});
+      make('Precio con IVA € *','price','number',line.unit_gross_cents!==undefined&&line.unit_gross_cents!==null?line.unit_gross_cents/100:0,{min:0,max:10000000,step:.01,required:true});
+      make('IVA','vat','select',line.vat_bps??2100);
+      const remove=el('button','×','sb-ops__line-remove');
+      remove.type='button';remove.title='Eliminar concepto';
+      remove.addEventListener('click',()=>{if(lineHolder.children.length>1){node.remove();preview();}});
+      node.append(remove);
+      make('Descripción opcional','details','text',line.details??'',{maxLength:1000});
+      lineHolder.append(node);
+      preview();
+    }
+    function getLines(){
+      return Array.from(lineHolder.children).map(node=>{
+        const val=key=>node.querySelector('[data-key="'+key+'"]').value.trim();
+        return {concept:val('concept'),details:val('details'),
+          quantity_milli:minorUnits(val('quantity'),3,'cantidad'),
+          unit_gross_cents:minorUnits(val('price'),2,'precio'),
+          vat_bps:Number(val('vat'))};
+      });
+    }
+    function preview(){
+      try{
+        let net=0,tax=0;
+        for(const line of getLines()){
+          const gross=Math.round(line.quantity_milli*line.unit_gross_cents/1000);
+          const base=Math.round(gross*10000/(10000+line.vat_bps));
+          net+=base;tax+=gross-base;
+        }
+        $('sb-billing-subtotal').textContent=formatEuro(net);
+        $('sb-billing-tax').textContent=formatEuro(tax);
+        $('sb-billing-total').textContent=formatEuro(net+tax);
+      }catch{
+        for(const key of ['subtotal','tax','total'])$('sb-billing-'+key).textContent='—';
+      }
+    }
+    lineHolder.addEventListener('input',preview);
+    lineHolder.addEventListener('change',preview);
+    $('sb-billing-add').addEventListener('click',()=>{
+      if(lineHolder.children.length<25)createLine();
+    });
+    function options(){
+      const clientId=field(form,'client_id').value;
+      const quoteSelected=field(form,'quote_id').value;
+      const projectSelected=field(form,'project_id').value;
+      const relevantQuotes=quotes.filter(x=>x.client_id===clientId);
+      const relevantProjects=projects.filter(x=>x.client_id===clientId);
+      fillOptions(field(form,'quote_id'),relevantQuotes.map(q=>({id:q.id,name:q.code+' · '+q.title})),{selected:quoteSelected,empty:'Sin presupuesto de origen',label:'name'});
+      fillOptions(field(form,'project_id'),relevantProjects.map(p=>({id:p.id,name:p.title})),{selected:projectSelected,empty:'Sin proyecto de origen',label:'name'});
+    }
+    async function fetchSources(){
+      const [cl,q,p]=await Promise.all([
+        getAll('/clientes'),getAll('/presupuestos?status=aceptado'),getAll('/proyectos')
+      ]);
+      clients=cl;quotes=q;projects=p;
+    }
+    async function copyQuote(id,{force=false}={}){
+      if(!id)return;
+      const item=(await requestApi('/presupuestos/'+id)).item;
+      if(item.status!=='aceptado')throw new Error('Solo pueden importarse presupuestos aceptados.');
+      field(form,'client_id').value=item.client_id;
+      options();
+      field(form,'quote_id').value=item.id;
+      const match=projects.find(p=>p.quote_id===item.id&&p.client_id===item.client_id);
+      if(match)field(form,'project_id').value=match.id;
+      if(force||!field(form,'title').value.trim())field(form,'title').value=item.title;
+      lineHolder.replaceChildren();
+      for(const line of item.lines){
+        const gross=line.unit_gross_cents!=null?line.unit_gross_cents:Math.round(line.unit_cents*(10000+line.vat_bps)/10000);
+        createLine({...line,unit_gross_cents:gross});
+      }
+      preview();
+      message(feedback,'Conceptos importados. Revisa el desglose: el borrador no modifica el presupuesto original.');
+    }
+    async function open(id=null,fromQuote=null,fromProject=null){
+      if(busy)return;
+      selected=null;form.reset();lineHolder.replaceChildren();
+      $('sb-billing-error').hidden=true;
+      $('sb-billing-dialog-heading').textContent=id?'Editar borrador.':'Nuevo borrador.';
+      try{
+        await fetchSources();
+        let item=id?(await requestApi(base+'/'+id)).item:null;
+        selected=item;
+        fillOptions(field(form,'client_id'),clients,{selected:item?.client_id,empty:'Selecciona un cliente'});
+        for(const name of ['title','planned_date','due_date','notes'])field(form,name).value=item?.[name]||'';
+        if(!item)field(form,'planned_date').value=todayLocal();
+        options();
+        if(item){
+          field(form,'quote_id').value=item.quote_id||'';
+          field(form,'project_id').value=item.project_id||'';
+          lineHolder.replaceChildren();for(const line of item.lines)createLine(line);
+          field(form,'client_id').disabled=true;
+          // Al editar: solo se modifican datos del propio borrador.
+        }else{
+          field(form,'client_id').disabled=false;
+          if(fromQuote)await copyQuote(fromQuote,{force:true});
+          else if(fromProject){
+            const project=projects.find(p=>p.id===fromProject);
+            if(project){
+              field(form,'client_id').value=project.client_id;options();
+              field(form,'project_id').value=project.id;
+              if(project.quote_id)await copyQuote(project.quote_id,{force:true});
+              field(form,'project_id').value=project.id;
+              if(!field(form,'title').value.trim())field(form,'title').value=project.title;
+            }
+          }
+          if(!lineHolder.children.length)createLine();
+        }
+        if(!clients.length){message(feedback,'Primero registra un cliente.',true);return;}
+        dialog.showModal();
+        field(form,'title').focus();
+      }catch(e){message(feedback,e.message,true);}
+    }
+    field(form,'client_id').addEventListener('change',()=>{
+      field(form,'quote_id').value='';field(form,'project_id').value='';options();
+    });
+    field(form,'quote_id').addEventListener('change',async()=>{
+      const id=field(form,'quote_id').value;
+      if(id&&confirm('¿Importar conceptos y precios del presupuesto aceptado? Sustituirá los conceptos actuales del formulario.')){
+        try{await copyQuote(id,{force:false});}
+        catch(e){message(feedback,e.message,true);}
+      }
+    });
+    field(form,'project_id').addEventListener('change',()=>{
+      const project=projects.find(x=>x.id===field(form,'project_id').value);
+      if(project?.quote_id&&!field(form,'quote_id').value&&quotes.some(q=>q.id===project.quote_id))field(form,'quote_id').value=project.quote_id;
+    });
+    function paint(){
+      rows.replaceChildren();
+      $('sb-billing-counter').textContent='BORRADORES / '+items.length+(hasMore?'+':'');
+      $('sb-billing-more').hidden=!hasMore;
+      if(!items.length){rows.append(el('div',$('sb-billing-archived').value==='1'?'No hay borradores archivados.':'Todavía no hay borradores de facturación.','sb-ops__empty'));return;}
+      for(const item of items){
+        const article=el('article',undefined,'sb-ops__record sb-billing__record');
+        const main=el('div',undefined,'sb-ops__record-main');
+        main.append(el('div',item.reference+' / '+item.client_name,'sb-ops__record-index'),el('h3',item.title));
+        main.append(el('p',[
+          'Fecha prevista: '+formatDate(item.planned_date),
+          item.due_date?'Vencimiento: '+formatDate(item.due_date):null,
+          item.quote_code?'Presupuesto: '+item.quote_code:null,
+          item.project_name?'Proyecto: '+item.project_name:null
+        ].filter(Boolean).join(' · ')));
+        const side=el('div',undefined,'sb-ops__record-side');
+        side.append(el('strong',formatEuro(item.total_cents),'sb-ops__record-money'),el('span','BORRADOR INTERNO','sb-ops__status'));
+        const acts=el('div',undefined,'sb-ops__actions');
+        const action=(name,code)=>{const b=el('button',name);b.type='button';b.dataset.id=item.id;b.dataset.action=code;acts.append(b);};
+        if(!item.archived_at)action('Editar ↗','edit');
+        action(item.archived_at?'Restaurar':'Archivar',item.archived_at?'restore':'archive');
+        article.append(main,side,acts);rows.append(article);
+      }
+    }
+    async function load(reset=true){
+      const token=++loadingId;
+      if(reset){page=1;items=[];}
+      $('sb-billing-loading').textContent='CARGANDO…';
+      try{
+        const params=new URLSearchParams({q:$('sb-billing-search').value.trim(),archived:$('sb-billing-archived').value,page:String(page)});
+        const r=await requestApi(base+'?'+params);
+        if(token!==loadingId)return;
+        items=reset?r.items:items.concat(r.items);
+        hasMore=r.hasMore;paint();
+        $('sb-billing-loading').textContent='ACTUALIZADO';
+      }catch(e){
+        if(token!==loadingId)return;
+        $('sb-billing-loading').textContent='ERROR';rows.replaceChildren(el('div','No se pueden cargar los borradores.','sb-ops__empty'));
+        message(feedback,e.message,true);
+      }
+    }
+    form.addEventListener('submit',async e=>{
+      e.preventDefault();if(busy)return;
+      busy=true;$('sb-billing-save').disabled=true;$('sb-billing-error').hidden=true;
+      try{
+        const obj={
+          client_id:selected?.client_id||field(form,'client_id').value,
+          quote_id:field(form,'quote_id').value||null,
+          project_id:field(form,'project_id').value||null,
+          title:field(form,'title').value.trim(),
+          planned_date:field(form,'planned_date').value,
+          due_date:field(form,'due_date').value,
+          notes:field(form,'notes').value.trim(),
+          lines:getLines()
+        };
+        await requestApi(base+(selected?'/'+selected.id:''),{method:selected?'PATCH':'POST',payload:obj});
+        dialog.close();message(feedback,selected?'Borrador actualizado.':'Borrador interno guardado. No es una factura emitida.');
+        await load();
+      }catch(err){
+        $('sb-billing-error').textContent=err.message;
+        $('sb-billing-error').hidden=false;
+      }finally{busy=false;$('sb-billing-save').disabled=false;}
+    });
+    rows.addEventListener('click',async e=>{
+      const b=e.target.closest('button[data-action]');if(!b||busy)return;
+      const item=items.find(x=>x.id===b.dataset.id);if(!item)return;
+      if(b.dataset.action==='edit'){await open(item.id);return;}
+      const restore=b.dataset.action==='restore';
+      if(!restore&&!confirm('¿Archivar el borrador «'+item.reference+'»? No afecta a ningún presupuesto ni proyecto.'))return;
+      busy=true;b.disabled=true;
+      try{
+        await requestApi(base+'/'+item.id,restore?{method:'PATCH',payload:{archived:false}}:{method:'DELETE'});
+        message(feedback,restore?'Borrador restaurado.':'Borrador archivado.');
+        await load();
+      }catch(err){message(feedback,err.message,true);}
+      finally{busy=false;b.disabled=false;}
+    });
+    $('sb-billing-new').addEventListener('click',()=>open());
+    $('sb-billing-close').addEventListener('click',()=>dialog.close());
+    $('sb-billing-cancel').addEventListener('click',()=>dialog.close());
+    dialog.addEventListener('click',e=>{if(e.target===dialog)dialog.close();});
+    $('sb-billing-refresh').addEventListener('click',()=>load());
+    $('sb-billing-more').addEventListener('click',()=>{page++;load(false);});
+    let timer;for(const id of ['sb-billing-search','sb-billing-archived']){
+      $(id).addEventListener(id==='sb-billing-search'?'input':'change',()=>{clearTimeout(timer);timer=setTimeout(()=>load(),230);});
+    }
+    const request=new URLSearchParams(location.search);
+    if(request.get('presupuesto'))open(null,request.get('presupuesto'));
+    else if(request.get('proyecto'))open(null,null,request.get('proyecto'));
+    load();
+  </script>
+</Private>

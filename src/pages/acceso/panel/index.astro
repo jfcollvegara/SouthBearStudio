@@ -1,0 +1,29 @@
+---
+import Private from '../../../layouts/Private.astro';
+---
+<Private title="Panel privado" description="Área de trabajo reservada de SouthBear Studio.">
+  <section class="sb-private-panel" aria-labelledby="sb-private-panel-title">
+    <div class="sb-private-panel__header">
+      <span class="sb-private-panel__label"><i aria-hidden="true"></i> SOUTHBEAR / WORKSPACE</span>
+      <a href="/cdn-cgi/access/logout">Cerrar sesión ↗</a>
+    </div>
+    <div class="sb-private-panel__main">
+      <span class="sb-private-panel__eyebrow">CREATIVE CONTROL / 001</span>
+      <h1 id="sb-private-panel-title">CENTRO DE<br/><em>GESTIÓN.</em></h1>
+      <p>La estructura de tu panel privado está preparada. Aquí iremos incorporando la gestión de clientes, proyectos, presupuestos y operaciones del estudio.</p>
+      <div class="sb-private-panel__notice">
+        <strong>Área en preparación</strong>
+        <p>Por ahora no se almacenan ni se muestran datos administrativos. Activa primero Cloudflare Access para restringir estas páginas a tu correo autorizado.</p>
+      </div>
+      <div class="sb-private-panel__modules" aria-label="Próximos módulos">
+        {['CLIENTES','PROYECTOS','PRESUPUESTOS','ADMINISTRACIÓN'].map((name,index)=>(
+          <div class="sb-private-panel__module">
+            <span>{String(index+1).padStart(2,'0')}</span>
+            <strong>{name}</strong>
+            <small>PRÓXIMAMENTE</small>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+</Private>

@@ -93,6 +93,12 @@ import '../../../../styles/private-commerce.css';
       expenses.href='/acceso/panel/gastos/?proveedor='+encodeURIComponent(item.id);
       expenses.title='Mostrar únicamente los gastos vinculados a este proveedor';
       actions.append(expenses);
+      if(!item.archived_at){
+        const addExpense=el('a','Registrar gasto ↗');
+        addExpense.href='/acceso/panel/gastos/?proveedor='+encodeURIComponent(item.id)+'&nuevo=1';
+        addExpense.title='Crear un gasto con esta ficha de proveedor seleccionada';
+        actions.append(addExpense);
+      }
       act(item.archived_at?'Restaurar':'Archivar',item.archived_at?'restore':'archive');
       card.append(body,side,actions);rows.append(card);
     }

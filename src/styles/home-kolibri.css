@@ -937,3 +937,62 @@ body.landing-page,body.landing-page main{background:#FFFFFF;color:#101010}
   .kb-top-nav:not(.kb-top-nav--stuck),
   .kb-top-nav:not(.kb-top-nav--stuck) .kb-services-nav-panel{transition:none}
 }
+
+
+/* Cambio ES / EN integrado en la navegación de la portada y hamburguesa. */
+.kb-top-nav .kb-lang-selector{
+  display:inline-flex;
+  flex:none;
+  align-items:center;
+  justify-content:center;
+  gap:4px;
+  margin-left:4px;
+  font-family:var(--font-heading);
+  font-size:clamp(.69rem,.86vw,.79rem);
+  font-weight:750;
+  color:#869181;
+}
+.kb-top-nav .kb-lang-selector a,
+.kb-top-nav .kb-nav-links .kb-lang-selector a{
+  width:auto;
+  padding:6px 2px;
+  border:0;
+  color:#4c5945;
+  font-size:inherit;
+  text-decoration:none;
+}
+.kb-top-nav .kb-lang-selector a:focus-visible{outline:2px solid #668941;outline-offset:4px}
+.kb-top-nav .kb-lang-selector a:hover{color:#658f37}
+html[lang="es"] .kb-top-nav .kb-lang-selector a[data-sb-lang="es"],
+html[lang="en"] .kb-top-nav .kb-lang-selector a[data-sb-lang="en"]{
+  color:#36571d;
+  text-decoration:underline;
+  text-underline-offset:4px;
+}
+.kb-top-nav--stuck.kb-menu-open .kb-lang-selector{
+  margin:6px 0 0;
+  padding:9px 14px;
+  gap:13px;
+  align-self:center;
+  border-top:1px solid rgba(0,0,0,.09);
+}
+.kb-top-nav--stuck.kb-menu-open .kb-lang-selector a{
+  flex:none;
+  width:auto;
+  padding:5px;
+  color:#415b35;
+}
+@media(max-width:730px){
+  .kb-top-nav:not(.kb-top-nav--stuck) .kb-lang-selector{font-size:.65rem;gap:2px;margin-left:0}
+}
+@media(max-width:390px){
+  .kb-top-nav:not(.kb-top-nav--stuck) .kb-lang-selector{font-size:.6rem}
+}
+
+/* En móviles estrechos, mostrar únicamente el idioma al que se puede
+   cambiar mantiene las cinco categorías de la cabecera en una sola línea. */
+@media(max-width:480px){
+  html[lang="es"] .kb-top-nav:not(.kb-top-nav--stuck) .kb-lang-selector [data-sb-lang="es"],
+  html[lang="en"] .kb-top-nav:not(.kb-top-nav--stuck) .kb-lang-selector [data-sb-lang="en"],
+  .kb-top-nav:not(.kb-top-nav--stuck) .kb-lang-selector > span{display:none}
+}

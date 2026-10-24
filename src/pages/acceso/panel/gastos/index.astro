@@ -36,7 +36,9 @@ import '../../../../styles/private-commerce.css';
   <div class="sb-ops-dialog__head"><div><span>SOUTHBEAR / COST ENTRY</span><h2 id="sb-expenses-dialog-title">Nuevo gasto.</h2></div><button id="sb-expenses-close" class="sb-ops-dialog__close" type="button" aria-label="Cerrar">×</button></div>
   <form id="sb-expenses-form">
     <div class="sb-ops-form">
-      <label>Proveedor <b>*</b><input name="supplier_name" required maxlength="180" placeholder="Ej. Imprenta, Adobe, operador…" autocomplete="off"/></label>
+      <label>Proveedor del directorio<select name="supplier_id"><option value="">Sin vincular a una ficha</option></select></label>
+      <label>Nombre del proveedor <b>*</b><input name="supplier_name" required maxlength="180" placeholder="Selecciona una ficha o escribe el nombre" autocomplete="off"/></label>
+      <p class="sb-ops-form__note sb-ops-form__wide">¿No aparece? <a href="/acceso/panel/proveedores/" class="sb-expenses__supplier-link">Crear o editar proveedores ↗</a>. Puedes registrar gastos sin ficha; los existentes no se vincularán automáticamente.</p>
       <label>Concepto <b>*</b><input name="title" required maxlength="200" placeholder="Ej. Impresión de tarjetas"/></label>
       <label>Categoría<select name="category">
         <option value="software">Software y licencias</option><option value="materiales">Materiales y productos</option>
@@ -90,7 +92,8 @@ import '../../../../styles/private-commerce.css';
   const feedback=$('sb-expenses-feedback'),rows=$('sb-expenses-rows');
   const categories={software:'Software',materiales:'Materiales',subcontratacion:'Subcontratación',equipo:'Equipamiento',transporte:'Desplazamientos',marketing:'Marketing',alojamiento:'Hosting y dominios',otros:'Otros'};
   const methods={transferencia:'Transferencia',tarjeta:'Tarjeta',efectivo:'Efectivo',bizum:'Bizum',otro:'Otro'};
-  let items=[],projects=[],selected=null,paymentExpense=null,loading=0,busy=false,page=1,hasMore=false;
+  let items=[],projects=[],suppliers=[],selected=null,paymentExpense=null,loading=0,busy=false,page=1,hasMore=false;
+  const supplierFilter=new URLSearchParams(location.search).get('proveedor')||'';
   function calculate(){
     try{
       const total=minorUnits(field(form,'gross').value,2,'importe total');
@@ -103,7 +106,11 @@ import '../../../../styles/private-commerce.css';
   }
   field(form,'gross').addEventListener('input',calculate);
   field(form,'vat_bps').addEventListener('change',calculate);
-  async function getProjects(){projects=await getAll('/proyectos');}
+  async function getProjects(){[projects,suppliers]=await Promise.all([getAll('/proyectos'),getAll('/proveedores')]);}
+  field(form,'supplier_id').addEventListener('change',()=>{
+    const found=suppliers.find(s=>s.id===field(form,'supplier_id').value);
+    if(found)field(form,'supplier_name').value=found.display_name;
+  });
   async function open(id=null,fromProject=null){
     if(busy)return;
     selected=null;form.reset();field(form,'expense_date').value=todayLocal();$('sb-expenses-form-error').hidden=true;
@@ -113,6 +120,9 @@ import '../../../../styles/private-commerce.css';
       const item=id?(await requestApi(base+'/'+id)).item:null;
       selected=item;
       fillOptions(field(form,'project_id'),projects.map(p=>({id:p.id,name:p.title})),{empty:'Sin proyecto asociado',selected:item?.project_id||fromProject||'',label:'name'});
+      const supplierChoices=suppliers.map(s=>({id:s.id,name:s.display_name}));
+      if(item?.supplier_id&&!supplierChoices.some(s=>s.id===item.supplier_id))supplierChoices.push({id:item.supplier_id,name:item.supplier_name+' (ficha archivada)'});
+      fillOptions(field(form,'supplier_id'),supplierChoices,{empty:'Sin vincular a una ficha',selected:item?.supplier_id||'',label:'name'});
       if(item){
         for(const key of ['supplier_name','title','category','expense_date','due_date','document_ref','notes','vat_bps'])field(form,key).value=item[key]??'';
         field(form,'gross').value=(item.gross_cents/100).toFixed(2);
@@ -153,6 +163,7 @@ import '../../../../styles/private-commerce.css';
     $('sb-expenses-loading').textContent='CARGANDO…';
     try{
       const query=new URLSearchParams({q:$('sb-expenses-search').value.trim(),category:$('sb-expenses-category').value,archived:$('sb-expenses-archived').value,page:String(page)});
+      if(supplierFilter)query.set('supplier_id',supplierFilter);
       const r=await requestApi(base+'?'+query);
       if(token!==loading)return;
       items=reset?r.items:items.concat(r.items);hasMore=r.hasMore;paint();
@@ -166,9 +177,10 @@ import '../../../../styles/private-commerce.css';
     e.preventDefault();if(busy)return;
     busy=true;$('sb-expenses-save').disabled=true;$('sb-expenses-form-error').hidden=true;
     try{
-      const fields=['supplier_name','title','category','project_id','expense_date','due_date','document_ref','notes'];
+      const fields=['supplier_id','supplier_name','title','category','project_id','expense_date','due_date','document_ref','notes'];
       const payload=Object.fromEntries(fields.map(name=>[name,field(form,name).value.trim()]));
       payload.project_id||=null;
+      payload.supplier_id||=null;
       payload.gross_cents=minorUnits(field(form,'gross').value,2,'importe con IVA');
       payload.vat_bps=Number(field(form,'vat_bps').value);
       await requestApi(base+(selected?'/'+selected.id:''),{method:selected?'PATCH':'POST',payload});
@@ -268,6 +280,12 @@ import '../../../../styles/private-commerce.css';
     $(id).addEventListener(id==='sb-expenses-search'?'input':'change',()=>{clearTimeout(timer);timer=setTimeout(()=>load(),230);});
   }
   const p=new URLSearchParams(location.search);
+  if(supplierFilter){
+    const note=el('div',undefined,'sb-expenses__linked-filter');
+    note.append(el('span','LISTADO FILTRADO POR PROVEEDOR · SOLO GASTOS VINCULADOS'));
+    const reset=el('a','Ver todos los gastos ↗');reset.href='/acceso/panel/gastos/';note.append(reset);
+    $('sb-expenses-rows').before(note);
+  }
   if(p.get('proyecto'))open(null,p.get('proyecto'));
   load();
 </script>

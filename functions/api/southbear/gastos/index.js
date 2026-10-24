@@ -1,4 +1,4 @@
-import {expensesQuery,normalizeExpense,validateProject,expenseDetail,expenseError,apiResponse,requestBody,audit} from '../../../../src/server/southbear-expenses.js';
+import {expensesQuery,normalizeExpense,resolveExpenseSupplier,validateProject,expenseDetail,expenseError,apiResponse,requestBody,audit} from '../../../../src/server/southbear-expenses.js';
 
 export async function onRequestGet({env,request}){
   try{
@@ -6,6 +6,11 @@ export async function onRequestGet({env,request}){
     const archived=p.get('archived')==='1',search=(p.get('q')||'').trim().slice(0,120),category=p.get('category')||'';
     const where=['e.archived_at IS '+(archived?'NOT NULL':'NULL')],args=[];
     if(search){where.push('(instr(lower(e.title),lower(?))>0 OR instr(lower(e.supplier_name),lower(?))>0 OR instr(lower(e.document_ref),lower(?))>0)');args.push(search,search,search);}
+    const supplier=p.get('supplier_id')||'';
+    if(supplier){
+      if(!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(supplier))return new Response(JSON.stringify({ok:false,error:'Proveedor no válido.'}),{status:400,headers:{'Content-Type':'application/json'}});
+      where.push('e.supplier_id=?');args.push(supplier);
+    }
     if(category){if(!['software','materiales','subcontratacion','equipo','transporte','marketing','alojamiento','otros'].includes(category))return new Response(JSON.stringify({ok:false,error:'Filtro no válido.'}),{status:400,headers:{'Content-Type':'application/json'}});where.push('e.category=?');args.push(category);}
     const page=Math.min(10000,Math.max(1,parseInt(p.get('page')||'1',10)||1));
     const [list,sum]=await Promise.all([
@@ -30,8 +35,9 @@ export async function onRequestPost({env,request,data}){
     const db=env.SOUTHBEAR_DB;
     const expense=normalizeExpense(await requestBody(request,25000));
     await validateProject(db,expense.project_id);
+    await resolveExpenseSupplier(db,expense);
     const id=crypto.randomUUID();
-    const fields=['supplier_name','title','category','project_id','expense_date','due_date','document_ref','notes','gross_cents','vat_bps','base_cents','vat_cents'];
+    const fields=['supplier_id','supplier_name','title','category','project_id','expense_date','due_date','document_ref','notes','gross_cents','vat_bps','base_cents','vat_cents'];
     const stmt=db.prepare('INSERT INTO expenses(id,'+fields.join(',')+') VALUES (?,'+fields.map(()=>'?').join(',')+')')
       .bind(id,...fields.map(f=>expense[f]));
     await db.batch([stmt,audit(db,'expense',id,'create',data.southbearUser,fields)]);

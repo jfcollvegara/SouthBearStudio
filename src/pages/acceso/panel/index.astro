@@ -13,7 +13,8 @@ const shortcuts=[
   {slug:'proyectos',label:'Seguir proyectos',caption:'Fases y entregables',icon:'layers'},
   {slug:'cobros',label:'Cobros y anticipos',caption:'Pagos reales y pendientes',icon:'wallet'},
   {slug:'gastos',label:'Gestionar gastos',caption:'Pagos, proveedores y costes',icon:'credit-card'},
-  {slug:'proveedores',label:'Directorio de proveedores',caption:'Empresas y profesionales del estudio',icon:'truck'}
+  {slug:'proveedores',label:'Directorio de proveedores',caption:'Empresas y profesionales del estudio',icon:'truck'},
+  {slug:'informes',label:'Informes y rentabilidad',caption:'Caja, costes y margen por proyecto',icon:'chart'}
 ];
 const getIcon = slug => {
   const item=privateSections.flatMap(group=>group.items).find(it=>it.slug===slug);

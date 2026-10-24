@@ -122,7 +122,11 @@ import '../../../../styles/private-commerce.css';
       fillOptions(field(form,'project_id'),projects.map(p=>({id:p.id,name:p.title})),{empty:'Sin proyecto asociado',selected:item?.project_id||fromProject||'',label:'name'});
       const supplierChoices=suppliers.map(s=>({id:s.id,name:s.display_name}));
       if(item?.supplier_id&&!supplierChoices.some(s=>s.id===item.supplier_id))supplierChoices.push({id:item.supplier_id,name:item.supplier_name+' (ficha archivada)'});
-      fillOptions(field(form,'supplier_id'),supplierChoices,{empty:'Sin vincular a una ficha',selected:item?.supplier_id||'',label:'name'});
+      fillOptions(field(form,'supplier_id'),supplierChoices,{empty:'Sin vincular a una ficha',selected:item?.supplier_id||(!item?SupplierFromUrl():'')||'',label:'name'});
+      if(!item&&field(form,'supplier_id').value){
+        const s=suppliers.find(x=>x.id===field(form,'supplier_id').value);
+        if(s)field(form,'supplier_name').value=s.display_name;
+      }
       if(item){
         for(const key of ['supplier_name','title','category','expense_date','due_date','document_ref','notes','vat_bps'])field(form,key).value=item[key]??'';
         field(form,'gross').value=(item.gross_cents/100).toFixed(2);
@@ -279,6 +283,7 @@ import '../../../../styles/private-commerce.css';
   for(const id of ['sb-expenses-search','sb-expenses-category','sb-expenses-archived']){
     $(id).addEventListener(id==='sb-expenses-search'?'input':'change',()=>{clearTimeout(timer);timer=setTimeout(()=>load(),230);});
   }
+  function SupplierFromUrl(){return supplierFilter;}
   const p=new URLSearchParams(location.search);
   if(supplierFilter){
     const note=el('div',undefined,'sb-expenses__linked-filter');
@@ -287,6 +292,7 @@ import '../../../../styles/private-commerce.css';
     $('sb-expenses-rows').before(note);
   }
   if(p.get('proyecto'))open(null,p.get('proyecto'));
+  else if(p.get('nuevo')==='1')open();
   load();
 </script>
 </Private>

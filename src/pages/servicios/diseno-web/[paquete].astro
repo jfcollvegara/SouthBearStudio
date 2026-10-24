@@ -1,75 +1,331 @@
 ---
 import Base from '../../../layouts/Base.astro';
-import { webPackages, formatWebPackagePrice } from '../../../data/web-packages.js';
+import { catalog } from '../../../data/catalog.js';
+import { webPackages, webExtras, formatWebPackagePrice, formatWebExtraPrice } from '../../../data/web-packages.js';
 
-export function getStaticPaths(){
-  return webPackages.map(pkg=>({
-    params:{ paquete:pkg.slug },
-    props:{ pkg }
-  }));
+// Misma plantilla para los cuatro paquetes; la información comercial
+// procede siempre del catálogo, sin duplicar los importes ni el alcance.
+export function getStaticPaths() {
+  return webPackages.map(pkg=>({params:{paquete:pkg.slug},props:{pkg}}));
 }
-const { pkg }=Astro.props;
-const url='/presupuesto/?servicio=diseno-web&paquete='+encodeURIComponent(pkg.name);
+const {pkg}=Astro.props;
+const service=catalog.find(item=>item.slug==='diseno-web');
+const quoteUrl='/presupuesto/?servicio=diseno-web&paquete='+encodeURIComponent(pkg.name);
+const conditions=service.common.map((detail,index)=>({
+  title:[
+    'Diseño adaptable y SEO básico',
+    'Textos legales',
+    'Alojamiento y dominio',
+    'Blog autogestionable',
+    'Entrega y garantía'
+  ][index],
+  detail
+}));
+const otherPackages=webPackages.filter(item=>item.slug!==pkg.slug);
 ---
 <Base
-  title={pkg.name+' | Diseño web'}
-  description={pkg.summary+' SouthBear Studio. Paquete de diseño web desde '+formatWebPackagePrice(pkg)+'.'}
+  title={pkg.name+' | Diseño y desarrollo web'}
+  description={pkg.summary+' Descubre todo lo que incluye '+pkg.name+', extras y condiciones. Desde '+formatWebPackagePrice(pkg)+' con IVA incluido. SOUTHBEAR STUDIO.'}
 >
-  <article class="sb-web-detail">
-    <div class="sb-web-detail-inner">
-      <a class="sb-web-detail-back" href="/servicios/diseno-web/">← Volver a los paquetes</a>
-      <div class="sb-web-detail-grid">
-        <div>
-          <p class="sb-web-detail-eyebrow">DISEÑO Y DESARROLLO WEB</p>
-          <h1>{pkg.name}</h1>
-          <p class="sb-web-detail-summary">{pkg.summary}</p>
-          <p class="sb-web-detail-price">Desde {formatWebPackagePrice(pkg)}</p>
-          <a class="sb-web-detail-action" href={url}>Solicitar presupuesto <span aria-hidden="true">↗</span></a>
-        </div>
-        <div class="sb-web-detail-features">
-          <h2>Qué incluye este paquete</h2>
-          <ul>{pkg.features.map(feature=><li>{feature}</li>)}</ul>
-          <p>Precio con IVA incluido. Los extras y condiciones adicionales se detallarán en el presupuesto.</p>
+  <div class="sb-wpd">
+    <section class="sb-wpd-hero" aria-labelledby="sb-wpd-title">
+      <div class="sb-wpd-shell">
+        <a href="/servicios/diseno-web/" class="sb-wpd-back">← Volver a los paquetes</a>
+        <div class="sb-wpd-hero-grid">
+          <div class="sb-wpd-copy">
+            <h1 id="sb-wpd-title">{pkg.name}</h1>
+            <p class="sb-wpd-lead">{pkg.summary}</p>
+            <div class="sb-wpd-pricing">
+              <span>Tu web desde</span>
+              <strong>{formatWebPackagePrice(pkg)}</strong>
+              <small>IVA incluido · Precio inicial según el alcance contratado</small>
+            </div>
+            <a class="sb-wpd-button sb-wpd-button--dark" href={quoteUrl}>Solicitar presupuesto <span aria-hidden="true">↗</span></a>
+          </div>
+          <div class:list={['sb-wpd-showcase','sb-wpd-showcase--'+pkg.slug]} aria-label="Representación conceptual de una página web">
+            <div class="sb-wpd-browser" aria-hidden="true">
+              <div class="sb-wpd-browser-bar"><i></i><i></i><i></i><span></span></div>
+              <div class="sb-wpd-browser-content">
+                <div class="sb-wpd-browser-nav"><b></b><i></i><i></i><i></i></div>
+                <div class="sb-wpd-browser-main">
+                  <div class="sb-wpd-browser-words"><i></i><b></b><b></b><b></b><em></em></div>
+                  <div class="sb-wpd-browser-art"><span></span><i></i></div>
+                </div>
+                <div class="sb-wpd-browser-tiles">
+                  <div><i></i><span></span><span></span></div>
+                  <div><i></i><span></span><span></span></div>
+                  <div><i></i><span></span><span></span></div>
+                </div>
+              </div>
+            </div>
+            <div class="sb-wpd-float" aria-hidden="true"><span>↗</span> Diseño pensado para tu marca</div>
+          </div>
         </div>
       </div>
-    </div>
-  </article>
+    </section>
+
+    <section class="sb-wpd-section sb-wpd-includes" aria-labelledby="sb-wpd-includes-title">
+      <div class="sb-wpd-shell">
+        <header class="sb-wpd-heading"><h2 id="sb-wpd-includes-title">Todo lo que incluye tu web</h2><p>El alcance de tu paquete, claro desde el principio.</p></header>
+        <div class="sb-wpd-features">
+          {pkg.features.map((feature,index)=>(
+            <div class="sb-wpd-feature"><span>{String(index+1).padStart(2,'0')}</span><p>{feature}</p><b aria-hidden="true">✓</b></div>
+          ))}
+        </div>
+        <p class="sb-wpd-fine">Los límites de páginas, las integraciones y las revisiones son los indicados en este paquete. Las funciones no contempladas se valoran aparte.</p>
+      </div>
+    </section>
+
+    <section class="sb-wpd-section sb-wpd-extras" aria-labelledby="sb-wpd-extras-title">
+      <div class="sb-wpd-shell">
+        <header class="sb-wpd-heading"><h2 id="sb-wpd-extras-title">Haz que encaje contigo</h2><p>Añade lo que necesites. Estos complementos son opcionales y se presupuestan por separado.</p></header>
+        <div class="sb-wpd-extras-grid">
+          {webExtras.map(item=>(
+            <article class="sb-wpd-extra">
+              <div class="sb-wpd-extra-top"><h3>{item.name}</h3><strong>{formatWebExtraPrice(item)}</strong></div>
+              <p>{item.detail}</p>
+              <a href={quoteUrl+'&extra='+encodeURIComponent(item.name)}>Añadir al presupuesto <span aria-hidden="true">↗</span></a>
+            </article>
+          ))}
+        </div>
+        <p class="sb-wpd-fine">Los dominios, servicios y funcionalidades adicionales están sujetos a disponibilidad y a su viabilidad técnica.</p>
+      </div>
+    </section>
+
+    <section class="sb-wpd-section sb-wpd-terms" aria-labelledby="sb-wpd-terms-title">
+      <div class="sb-wpd-shell">
+        <header class="sb-wpd-heading"><h2 id="sb-wpd-terms-title">Todo lo que necesitas saber</h2><p>Condiciones, entregables y servicios no incluidos, explicados desde el principio.</p></header>
+        <div class="sb-wpd-terms-list">
+          {conditions.map(item=>(
+            <details class="sb-wpd-term">
+              <summary><span>{item.title}</span><span class="sb-wpd-plus" aria-hidden="true"></span></summary>
+              <div><p>{item.detail}</p></div>
+            </details>
+          ))}
+          <details class="sb-wpd-term">
+            <summary><span>Servicios no incluidos</span><span class="sb-wpd-plus" aria-hidden="true"></span></summary>
+            <div><p>{service.notIncluded}</p></div>
+          </details>
+          <details class="sb-wpd-term">
+            <summary><span>Cambios y revisiones</span><span class="sb-wpd-plus" aria-hidden="true"></span></summary>
+            <div><p>Los cambios adicionales requieren presupuesto previo. Las revisiones no incluyen nuevos diseños completos ni trabajos fuera del alcance contratado. Se respetan siempre los derechos legales del cliente.</p></div>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <section class="sb-wpd-cta-area" aria-labelledby="sb-wpd-cta-title">
+      <div class="sb-wpd-shell">
+        <div class="sb-wpd-cta">
+          <div>
+            <h2 id="sb-wpd-cta-title">Tu próxima gran idea empieza aquí</h2>
+            <p>Cuéntanos qué tienes en mente. Prepararemos un presupuesto adaptado a tu proyecto y al paquete que has elegido.</p>
+          </div>
+          <a class="sb-wpd-button sb-wpd-button--light" href={quoteUrl}>Solicitar presupuesto <span aria-hidden="true">↗</span></a>
+        </div>
+      </div>
+    </section>
+
+    <section class="sb-wpd-other" aria-labelledby="sb-wpd-other-title">
+      <div class="sb-wpd-shell">
+        <div class="sb-wpd-other-head"><h2 id="sb-wpd-other-title">Descubre otros paquetes</h2><a href="/servicios/diseno-web/">Ver todos los paquetes ↗</a></div>
+        <div class="sb-wpd-other-grid">
+          {otherPackages.map(item=>(
+            <a href={'/servicios/diseno-web/'+item.slug+'/'} class="sb-wpd-other-link">
+              <h3>{item.name}</h3><strong>Desde {formatWebPackagePrice(item)}</strong>
+              <span aria-hidden="true">↗</span>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+  </div>
 </Base>
 <style>
-  .sb-web-detail{
-    background:radial-gradient(ellipse at 87% 8%,rgba(221,255,154,.27),transparent 43%),#fff;
-    min-height:75svh;padding:clamp(38px,5vw,75px) clamp(20px,6vw,100px) clamp(100px,12vw,170px);
-    color:#111;
+  .sb-wpd{color:#192019;background:#f5f6f3;overflow:hidden}
+  .sb-wpd *{box-sizing:border-box}
+  .sb-wpd-shell{width:min(1430px,calc(100% - clamp(36px,8vw,170px)));margin:auto}
+  .sb-wpd-hero{position:relative;isolation:isolate;background:#fff;overflow:hidden}
+  .sb-wpd-hero::before{content:'';position:absolute;z-index:-1;width:min(85vw,1100px);aspect-ratio:1;
+    right:-23%;top:-45%;pointer-events:none;border-radius:50%;
+    background:radial-gradient(circle,rgba(178,223,134,.31),rgba(223,239,210,.08) 52%,transparent 73%);filter:blur(25px)}
+  .sb-wpd-back{display:inline-flex;align-items:center;gap:12px;margin-top:clamp(29px,4vw,60px);
+    color:#55714a;font-size:.88rem;font-weight:750;text-decoration:none}
+  .sb-wpd-back:hover{color:#111}
+  .sb-wpd-back:focus-visible,.sb-wpd-extra a:focus-visible,.sb-wpd-other-head a:focus-visible{outline:2px solid #608c3d;outline-offset:5px}
+  .sb-wpd-hero-grid{display:grid;grid-template-columns:minmax(0,1.04fr) minmax(0,.96fr);
+    align-items:center;gap:clamp(35px,5vw,100px);min-height:clamp(550px,53vw,760px);
+    padding:clamp(74px,7.5vw,126px) 0 clamp(99px,9vw,150px)}
+  .sb-wpd-copy h1{max-width:810px;margin:0;font-family:var(--font-heading);
+    font-size:clamp(3.65rem,6.5vw,7.4rem);font-weight:750;line-height:.98;letter-spacing:-.09em;text-wrap:balance}
+  .sb-wpd-lead{max-width:610px;margin:clamp(22px,2.5vw,34px) 0 0;color:#596459;
+    font-size:clamp(1.07rem,1.39vw,1.32rem);line-height:1.7}
+  .sb-wpd-pricing{display:flex;flex-direction:column;align-items:flex-start;gap:9px;margin:36px 0}
+  .sb-wpd-pricing>span{font-size:.87rem;color:#687367;font-weight:750}
+  .sb-wpd-pricing strong,.sb-wpd-extra-top strong,.sb-wpd-other-link strong{
+    color:#4e792b;background:linear-gradient(105deg,#487328,#83b442 55%,#40671f);
+    background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+  .sb-wpd-pricing strong{font-size:clamp(2.5rem,4.1vw,4.25rem);line-height:1.1;letter-spacing:-.07em;font-weight:850}
+  .sb-wpd-pricing small{font-size:.84rem;color:#747e70;line-height:1.55}
+  .sb-wpd-button{display:inline-flex;justify-content:space-between;align-items:center;gap:40px;min-height:58px;
+    padding:16px 27px;text-decoration:none;border:1px solid transparent;border-radius:999px;
+    font-size:.97rem;font-weight:750;transition:transform .24s ease,background .24s ease}
+  .sb-wpd-button:hover{transform:translateY(-3px)}
+  .sb-wpd-button:focus-visible{outline:3px solid #80aa54;outline-offset:5px}
+  .sb-wpd-button span{font-size:1.2rem}
+  .sb-wpd-button--dark{background:#151b14;color:#fff}
+  .sb-wpd-button--dark:hover{background:#37542a}
+  .sb-wpd-button--light{background:#e3f7bc;color:#263b1d}
+  /* Vista conceptual de una web: formas CSS, nunca una captura engañosa. */
+  .sb-wpd-showcase{position:relative;display:grid;place-items:center;min-width:0;aspect-ratio:1.06}
+  .sb-wpd-showcase::before{content:'';position:absolute;inset:1%;border-radius:50%;filter:blur(37px);
+    background:radial-gradient(circle,rgba(124,182,72,.27),transparent 70%)}
+  .sb-wpd-browser{position:relative;z-index:1;width:100%;overflow:hidden;border:1px solid #fff;border-radius:20px;
+    background:#f8faf6;box-shadow:0 32px 80px rgba(31,52,26,.21),0 3px 13px rgba(31,52,26,.06);
+    transform:perspective(1050px) rotateY(-5deg) rotateX(3deg) rotateZ(-2deg)}
+  .sb-wpd-browser-bar{display:flex;align-items:center;gap:5px;height:clamp(32px,4vw,48px);
+    padding:0 6%;background:#fff;border-bottom:1px solid #e5eae0}
+  .sb-wpd-browser-bar i{width:6px;height:6px;border-radius:50%;background:#b5c0b1}
+  .sb-wpd-browser-bar>span{width:33%;height:7px;background:#e7eee2;border-radius:7px;margin-left:auto}
+  .sb-wpd-browser-content{aspect-ratio:1.19;background:#e7eedd;overflow:hidden}
+  .sb-wpd-browser-nav{display:flex;gap:11px;align-items:center;padding:7%}
+  .sb-wpd-browser-nav b{width:20%;height:10px;background:#416337;border-radius:2px}
+  .sb-wpd-browser-nav i{width:12%;height:5px;border-radius:4px;background:#a1b298}
+  .sb-wpd-browser-nav i:nth-child(2){margin-left:auto}
+  .sb-wpd-browser-main{display:grid;grid-template-columns:1fr 1fr;gap:7%;align-items:center;padding:2% 7%}
+  .sb-wpd-browser-words{display:flex;flex-direction:column;gap:clamp(6px,.9vw,12px)}
+  .sb-wpd-browser-words>i{display:block;width:43%;height:6px;border-radius:4px;background:#7b9f5d}
+  .sb-wpd-browser-words>b{display:block;height:clamp(9px,1.8vw,23px);border-radius:4px;background:#273e26}
+  .sb-wpd-browser-words>b:nth-child(3){width:84%}
+  .sb-wpd-browser-words>b:nth-child(4){width:59%;background:#69885f}
+  .sb-wpd-browser-words>em{width:43%;height:clamp(13px,1.8vw,25px);margin-top:7%;border-radius:5px;background:#34592a}
+  .sb-wpd-browser-art{position:relative;aspect-ratio:1.04;border-radius:12px;overflow:hidden;
+    background:linear-gradient(135deg,#82b173,#c9e7b4)}
+  .sb-wpd-browser-art span{position:absolute;inset:-18% -20% 19% 27%;border-radius:50%;
+    background:radial-gradient(circle at 35% 36%,#ebf6d6,#84ae65)}
+  .sb-wpd-browser-art i{position:absolute;bottom:-33%;left:16%;width:57%;aspect-ratio:1;
+    border-radius:30%;transform:rotate(26deg);background:#427342}
+  .sb-wpd-browser-tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:3%;padding:7%}
+  .sb-wpd-browser-tiles>div{display:flex;flex-direction:column;gap:7px;padding:10%;
+    border-radius:7px;background:#fff9}
+  .sb-wpd-browser-tiles i{width:30%;aspect-ratio:1;background:#a7c891;border-radius:4px}
+  .sb-wpd-browser-tiles span{width:88%;height:5px;background:#c9d7bf;border-radius:4px}
+  .sb-wpd-browser-tiles span:last-child{width:65%}
+  .sb-wpd-float{position:absolute;z-index:2;left:-5%;bottom:8%;display:flex;align-items:center;gap:13px;
+    padding:14px 20px;border-radius:16px;border:1px solid #fff;
+    background:rgba(255,255,255,.73);backdrop-filter:blur(15px);
+    box-shadow:0 13px 33px rgba(35,54,27,.12);font-size:.83rem;font-weight:750;color:#3a5930}
+  .sb-wpd-float span{display:grid;place-items:center;width:30px;height:30px;
+    background:#d9efc2;border-radius:10px;font-size:1.12rem}
+  .sb-wpd-showcase--web-esencial .sb-wpd-browser-content{background:#f1e9de}
+  .sb-wpd-showcase--web-esencial .sb-wpd-browser-art{background:linear-gradient(115deg,#957e6a,#e5c4a6)}
+  .sb-wpd-showcase--web-esencial .sb-wpd-browser-art span{background:#efdbc3}
+  .sb-wpd-showcase--web-esencial .sb-wpd-browser-art i{background:#ae8977}
+  .sb-wpd-showcase--web-profesional .sb-wpd-browser-content{background:#e2ebea}
+  .sb-wpd-showcase--web-profesional .sb-wpd-browser-art{background:linear-gradient(130deg,#315558,#92b9b3)}
+  .sb-wpd-showcase--web-profesional .sb-wpd-browser-art span{background:#c9dfd8}
+  .sb-wpd-showcase--web-profesional .sb-wpd-browser-art i{background:#2a6062}
+  .sb-wpd-showcase--web-premium .sb-wpd-browser-content{background:#eee4ef}
+  .sb-wpd-showcase--web-premium .sb-wpd-browser-art{background:linear-gradient(130deg,#4e3856,#c8aad3)}
+  .sb-wpd-showcase--web-premium .sb-wpd-browser-art span{background:#e6d3e9}
+  .sb-wpd-showcase--web-premium .sb-wpd-browser-art i{background:#654b72}
+  .sb-wpd-section{padding:clamp(83px,9vw,142px) 0}
+  .sb-wpd-includes,.sb-wpd-terms{background:#edf0ea}
+  .sb-wpd-extras{background:#fafbf8}
+  .sb-wpd-heading{display:flex;align-items:end;justify-content:space-between;gap:33px;
+    margin-bottom:clamp(34px,4vw,58px)}
+  .sb-wpd-heading h2{max-width:815px;margin:0;font-family:var(--font-heading);
+    font-size:clamp(2.45rem,4.4vw,4.8rem);font-weight:750;letter-spacing:-.075em;line-height:1.08}
+  .sb-wpd-heading>p{max-width:320px;margin:0;color:#657164;line-height:1.7;font-size:.96rem}
+  .sb-wpd-features,.sb-wpd-extras-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+  .sb-wpd-feature{display:flex;align-items:flex-start;gap:18px;padding:clamp(23px,2.6vw,36px);
+    border:1px solid #fff;border-radius:24px;min-width:0;
+    background:linear-gradient(135deg,#fffffff2,#ffffff8b);
+    box-shadow:inset 0 1px #fff,0 16px 35px rgba(30,50,26,.04)}
+  .sb-wpd-feature span{color:#68943e;font-size:.86rem;line-height:1.7;font-weight:800}
+  .sb-wpd-feature p{margin:0;flex:1;color:#2a372a;line-height:1.67;font-size:1.03rem}
+  .sb-wpd-feature b{font-weight:800;color:#598e36}
+  .sb-wpd-fine{margin:31px 0 0;color:#657164;font-size:.84rem;line-height:1.7}
+  .sb-wpd-extra{display:flex;flex-direction:column;gap:0;padding:clamp(24px,2.7vw,36px);
+    border:1px solid #e0e7da;border-radius:24px;background:#fff;min-width:0}
+  .sb-wpd-extra-top{display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
+  .sb-wpd-extra h3{margin:0;font-family:var(--font-heading);font-size:clamp(1.14rem,1.5vw,1.5rem);
+    line-height:1.3;letter-spacing:-.035em}
+  .sb-wpd-extra strong{text-align:right;white-space:nowrap;font-size:1.06rem;font-weight:800}
+  .sb-wpd-extra>p{flex:1;margin:16px 0 0;color:#667364;line-height:1.67;font-size:.93rem}
+  .sb-wpd-extra>a{display:inline-flex;align-items:center;gap:10px;align-self:flex-start;margin-top:23px;
+    color:#447125;font-size:.88rem;font-weight:750;text-decoration:none}
+  .sb-wpd-extra>a:hover{text-decoration:underline}
+  .sb-wpd-terms-list{display:grid;gap:12px}
+  .sb-wpd-term{background:rgba(255,255,255,.83);border:1px solid #fff;border-radius:19px;overflow:hidden}
+  .sb-wpd-term summary{display:flex;justify-content:space-between;align-items:center;gap:20px;
+    list-style:none;cursor:pointer;padding:clamp(21px,2.3vw,32px) clamp(23px,3vw,40px);
+    font-family:var(--font-heading);font-size:clamp(1.02rem,1.3vw,1.35rem);font-weight:750}
+  .sb-wpd-term summary::-webkit-details-marker{display:none}
+  .sb-wpd-term summary::marker{content:''}
+  .sb-wpd-term summary:focus-visible{outline:3px solid #64973e;outline-offset:-4px}
+  .sb-wpd-term>div{padding:0 clamp(23px,3vw,40px) clamp(21px,2.5vw,35px)}
+  .sb-wpd-term p{max-width:1100px;margin:0;color:#5d6b58;line-height:1.75}
+  .sb-wpd-plus{position:relative;display:block;flex:none;width:29px;height:29px;
+    border-radius:50%;background:#e0efcf}
+  .sb-wpd-plus::before,.sb-wpd-plus::after{content:'';position:absolute;width:12px;height:2px;
+    top:50%;left:50%;transform:translate(-50%,-50%);background:#3b602c}
+  .sb-wpd-plus::after{transform:translate(-50%,-50%) rotate(90deg);transition:transform .22s}
+  .sb-wpd-term[open] .sb-wpd-plus::after{transform:translate(-50%,-50%)}
+  .sb-wpd-cta-area{padding:clamp(75px,9vw,135px) 0;background:#fafbf8}
+  .sb-wpd-cta{display:flex;justify-content:space-between;align-items:center;gap:40px;
+    padding:clamp(33px,5vw,74px);border:1px solid #ffffff26;
+    border-radius:clamp(24px,3vw,42px);color:#fff;
+    background:radial-gradient(circle at 97% 5%,rgba(152,198,114,.22),transparent 44%),#182219}
+  .sb-wpd-cta h2{max-width:770px;margin:0;font-family:var(--font-heading);
+    font-weight:750;font-size:clamp(2.12rem,3.65vw,4.05rem);line-height:1.08;letter-spacing:-.07em}
+  .sb-wpd-cta p{max-width:620px;margin:20px 0 0;color:#ffffffbd;line-height:1.75}
+  .sb-wpd-cta .sb-wpd-button{flex:none}
+  .sb-wpd-other{padding:clamp(55px,6vw,95px) 0 clamp(90px,10vw,150px);background:#fff}
+  .sb-wpd-other-head{display:flex;justify-content:space-between;gap:28px;align-items:baseline;margin-bottom:31px}
+  .sb-wpd-other-head h2{margin:0;font-family:var(--font-heading);
+    font-size:clamp(1.7rem,2.35vw,2.75rem);letter-spacing:-.055em;line-height:1.17}
+  .sb-wpd-other-head a{color:#4d732f;text-decoration:none;font-size:.9rem;font-weight:750}
+  .sb-wpd-other-head a:hover{text-decoration:underline}
+  .sb-wpd-other-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+  .sb-wpd-other-link{position:relative;display:flex;flex-direction:column;gap:15px;min-height:165px;
+    min-width:0;padding:28px 30px;border:1px solid #e3eadf;border-radius:24px;
+    background:#f0f4ec;color:#182518;text-decoration:none;transition:transform .24s,background .24s}
+  .sb-wpd-other-link:hover{transform:translateY(-3px);background:#e6efda}
+  .sb-wpd-other-link:focus-visible{outline:3px solid #608e3a;outline-offset:4px}
+  .sb-wpd-other-link h3{max-width:90%;margin:0;font-family:var(--font-heading);
+    font-size:clamp(1.15rem,1.5vw,1.5rem);line-height:1.22;letter-spacing:-.04em}
+  .sb-wpd-other-link strong{font-size:1.04rem}
+  .sb-wpd-other-link>span{position:absolute;bottom:19px;right:22px;color:#547d30;font-size:1.35rem}
+  @media(max-width:1020px){
+    .sb-wpd-hero-grid{grid-template-columns:1fr;min-height:0;gap:42px}
+    .sb-wpd-copy h1{font-size:clamp(3.5rem,9vw,6.9rem)}
+    .sb-wpd-showcase{max-width:700px;width:100%;margin:0 auto}
+    .sb-wpd-cta{flex-direction:column;align-items:flex-start}
   }
-  .sb-web-detail-inner{max-width:1290px;margin:0 auto}
-  .sb-web-detail-back{display:inline-flex;margin-bottom:clamp(65px,9vw,130px);font-size:.86rem;font-weight:750;color:#3d602b}
-  .sb-web-detail-back:hover{color:#111}
-  .sb-web-detail-grid{display:grid;grid-template-columns:1fr .85fr;gap:clamp(45px,7vw,125px);align-items:start}
-  .sb-web-detail-eyebrow{font-size:.7rem;font-weight:750;letter-spacing:.15em;color:#567438;margin:0 0 18px}
-  .sb-web-detail h1{font-size:clamp(3.7rem,7.8vw,8.5rem);line-height:.95;letter-spacing:-.085em;color:#111;margin:0 0 26px}
-  .sb-web-detail-summary{font-size:clamp(1.07rem,1.6vw,1.45rem);line-height:1.55;max-width:550px}
-  .sb-web-detail-price{
-    display:table;margin:42px 0 36px;font-size:clamp(1.7rem,2.6vw,2.6rem);
-    font-weight:850;letter-spacing:-.045em;color:#487525;
-    background:linear-gradient(105deg,#46731e,#7aa839 46%,#416b1e);
-    background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  @media(max-width:700px){
+    .sb-wpd-shell{width:calc(100% - 34px)}
+    .sb-wpd-back{margin-top:29px}
+    .sb-wpd-hero-grid{padding:65px 0 94px}
+    .sb-wpd-copy h1{font-size:clamp(2.9rem,12.4vw,5rem)}
+    .sb-wpd-lead{font-size:1.07rem}
+    .sb-wpd-showcase{aspect-ratio:1.16}
+    .sb-wpd-float{left:0;bottom:0;padding:10px 12px;font-size:.78rem}
+    .sb-wpd-section{padding:75px 0}
+    .sb-wpd-heading{display:block;margin-bottom:34px}
+    .sb-wpd-heading h2{font-size:clamp(2.3rem,9.2vw,3.5rem)}
+    .sb-wpd-heading p{margin-top:17px;max-width:600px}
+    .sb-wpd-features,.sb-wpd-extras-grid,.sb-wpd-other-grid{grid-template-columns:1fr}
+    .sb-wpd-extra-top{flex-direction:column;gap:7px}
+    .sb-wpd-extra-top strong{text-align:left}
+    .sb-wpd-cta-area{padding:72px 0}
+    .sb-wpd-cta{padding:33px 27px;gap:30px}
+    .sb-wpd-cta .sb-wpd-button{width:100%}
+    .sb-wpd-other-head{flex-direction:column;align-items:flex-start;gap:16px}
+    .sb-wpd-other-link{min-height:132px}
   }
-  .sb-web-detail-action{
-    display:inline-flex;align-items:center;justify-content:space-between;gap:45px;
-    padding:18px 25px;background:#111;color:#fff!important;border-radius:999px;font-weight:750;
-    transition:transform .2s ease;
+  @media(prefers-reduced-motion:reduce){
+    .sb-wpd-button,.sb-wpd-other-link,.sb-wpd-plus::after{transition:none}
+    .sb-wpd-button:hover,.sb-wpd-other-link:hover{transform:none}
   }
-  .sb-web-detail-action:hover{transform:translateY(-3px)}
-  .sb-web-detail-features{
-    padding:clamp(28px,4vw,52px);border:1px solid #fff;border-radius:28px;
-    background:rgba(255,255,255,.62);backdrop-filter:blur(20px);
-    box-shadow:0 18px 60px rgba(25,47,23,.08),inset 0 2px 0 #fff;
-  }
-  .sb-web-detail-features h2{margin:0 0 30px;font-size:clamp(1.4rem,2.2vw,2.2rem);letter-spacing:-.055em}
-  .sb-web-detail-features ul{list-style:none;padding:0;margin:0;display:grid;gap:18px}
-  .sb-web-detail-features li{position:relative;padding-left:26px;line-height:1.55;color:#242b24}
-  .sb-web-detail-features li::before{content:'✓';position:absolute;left:0;color:#588a31;font-weight:800}
-  .sb-web-detail-features>p{margin:40px 0 0;font-size:.84rem;line-height:1.55;color:#4e574d}
-  @media(max-width:850px){.sb-web-detail-grid{grid-template-columns:1fr}.sb-web-detail-back{margin-bottom:75px}}
-  @media(prefers-reduced-motion:reduce){.sb-web-detail-action{transition:none}}
 </style>

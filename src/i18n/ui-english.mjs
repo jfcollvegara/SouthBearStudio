@@ -200,6 +200,25 @@ export const uiEnglish = {
   'este paquete':'this package',
   'Descubre otros paquetes.':'Explore other packages.',
 
+  // New web package detail pages.
+  'Representación conceptual de una página web':'Conceptual website illustration',
+  'Diseño pensado para tu marca':'Designed with your brand in mind',
+  'Tu web desde':'Your website from',
+  'IVA incluido · Precio inicial según el alcance contratado':'VAT included · Starting price depending on the agreed scope',
+  'Todo lo que incluye tu web':'Everything included in your website',
+  'El alcance de tu paquete, claro desde el principio.':'The scope of your package, clear from the start.',
+  'Los límites de páginas, las integraciones y las revisiones son los indicados en este paquete. Las funciones no contempladas se valoran aparte.':'Page limits, integrations and revisions are as specified in this package. Features outside this scope are quoted separately.',
+  'Haz que encaje contigo':'Make it your own',
+  'Añade lo que necesites. Estos complementos son opcionales y se presupuestan por separado.':'Add what you need. These extras are optional and priced separately.',
+  'Añadir al presupuesto':'Add to your quote',
+  'Los dominios, servicios y funcionalidades adicionales están sujetos a disponibilidad y a su viabilidad técnica.':'Additional domains, services and features depend on availability and technical feasibility.',
+  'Condiciones, entregables y servicios no incluidos, explicados desde el principio.':'Terms, deliverables and exclusions explained from the outset.',
+  'Tu próxima gran idea empieza aquí':'Your next big idea starts here',
+  'Cuéntanos qué tienes en mente. Prepararemos un presupuesto adaptado a tu proyecto y al paquete que has elegido.':'Tell us what you have in mind. We’ll prepare a quote tailored to your project and chosen package.',
+  'Descubre otros paquetes':'Explore other packages',
+  'Ver todos los paquetes':'View all packages',
+  'SOUTHBEAR STUDIO. Descubre todo lo que incluye':'SOUTHBEAR STUDIO. Discover everything included in',
+
   // Dynamic summaries in service cards.
   'Una página con todo lo esencial para presentar tu negocio y convertir visitas en contactos.':'Everything you need on one page to introduce your business and turn visits into enquiries.',
   'Una web clara y profesional para mostrar tus servicios y hacer crecer tu presencia online.':'A polished website to showcase your services and grow your online presence.',

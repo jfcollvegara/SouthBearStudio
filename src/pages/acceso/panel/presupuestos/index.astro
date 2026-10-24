@@ -1,0 +1,201 @@
+---
+import Private from '../../../../layouts/Private.astro';
+import '../../../../styles/private-commerce.css';
+---
+<Private workspace title="Presupuestos" description="Presupuestos privados con líneas, precios e impuestos calculados en el servidor.">
+<section class="sb-ops" aria-labelledby="sb-quotes-title">
+  <div class="sb-ws-topline"><span class="sb-ws-breadcrumb"><a href="/acceso/panel/">SOUTHBEAR OS</a> <span>/</span> COMERCIAL <span>/</span> PRESUPUESTOS</span><span class="sb-ws-topline__session"><i aria-hidden="true"></i> DATOS PRIVADOS</span></div>
+  <header class="sb-ops__hero"><div><span class="sb-ops__label">SOUTHBEAR / PROPUESTAS</span><h1 id="sb-quotes-title">TUS <em>PRESUPUESTOS.</em></h1><p>Crea propuestas económicas asociadas a tus clientes, añade conceptos e IVA y controla en qué fase se encuentra cada presupuesto.</p></div><button class="sb-ops__primary" id="sb-quotes-new" type="button">+ Nuevo presupuesto <span aria-hidden="true">↗</span></button></header>
+  <div class="sb-ops__info"><b aria-hidden="true">✳</b><span>Los importes e impuestos se recalculan en el servidor. Son presupuestos comerciales, <strong>no facturas ni documentos fiscales</strong>. Los estados «enviado» y «aceptado» se marcan manualmente: no se envían correos ni se obtiene una firma del cliente automáticamente.</span></div>
+  <div class="sb-ops__controls">
+    <label>BUSCAR PRESUPUESTO<input id="sb-quotes-search" type="search" placeholder="Título, cliente o referencia" maxlength="120"/></label>
+    <label>ESTADO<select id="sb-quotes-state"><option value="">Todos</option><option value="borrador">Borrador</option><option value="enviado">Enviado</option><option value="aceptado">Aceptado</option><option value="rechazado">Rechazado</option><option value="caducado">Caducado</option></select></label>
+    <label>VISIBILIDAD<select id="sb-quotes-archived"><option value="0">Activos</option><option value="1">Archivados</option></select></label>
+    <button class="sb-ops__reload" id="sb-quotes-reload" title="Actualizar" type="button">↻</button>
+  </div>
+  <div class="sb-ops__meta"><span id="sb-quotes-counter">PRESUPUESTOS / —</span><span id="sb-quotes-loading" aria-live="polite">CARGANDO…</span></div>
+  <div class="sb-ops__records" id="sb-quotes-rows" aria-live="polite"><div class="sb-ops__empty">Consultando presupuestos…</div></div>
+  <button type="button" class="sb-ops__more" id="sb-quotes-more" hidden>Mostrar más ↓</button>
+  <p id="sb-quotes-message" class="sb-ops__feedback" role="status" aria-live="polite"></p>
+  <footer class="sb-ops__footer">SOUTHBEAR OS / DOCUMENTOS COMERCIALES · LAS PROPUESTAS ACEPTADAS CONSERVAN SU CONTENIDO</footer>
+</section>
+<dialog class="sb-ops-dialog" id="sb-quotes-dialog" aria-labelledby="sb-quotes-dialog-title">
+  <div class="sb-ops-dialog__head"><div><span>SOUTHBEAR / PROPOSAL SYSTEM</span><h2 id="sb-quotes-dialog-title">Nuevo presupuesto.</h2></div><button class="sb-ops-dialog__close" id="sb-quotes-close" type="button" aria-label="Cerrar">×</button></div>
+  <form id="sb-quotes-form">
+    <div class="sb-ops-form">
+      <label class="sb-ops-form__wide">Título de la propuesta <b>*</b><input name="title" maxlength="200" required placeholder="Ej. Diseño de identidad de marca" autocomplete="off"/></label>
+      <label>Cliente <b>*</b><select name="client_id" required><option value="">Cargando…</option></select></label>
+      <label>Fecha del presupuesto <b>*</b><input type="date" name="issue_date" required/></label>
+      <label>Validez hasta<input type="date" name="valid_until"/></label>
+      <label class="sb-ops-form__wide">Condiciones y observaciones<textarea name="notes" maxlength="4000" rows="3" placeholder="Plazos, alcance, forma de pago propuesta…"></textarea></label>
+      <section class="sb-ops__line-section" aria-labelledby="sb-quotes-line-title">
+        <div class="sb-ops__line-header"><h3 id="sb-quotes-line-title">Conceptos.</h3><button type="button" id="sb-quotes-add">+ Añadir concepto</button></div>
+        <div id="sb-quotes-lines"></div>
+        <p class="sb-ops-form__note">Precio por unidad sin IVA. El tipo impositivo se elige en cada concepto; confirma el tratamiento fiscal que corresponde a tu actividad.</p>
+      </section>
+      <div class="sb-ops__totals">
+        <span>Base imponible orientativa</span><strong id="sb-quotes-subtotal">—</strong>
+        <span>IVA orientativo</span><strong id="sb-quotes-tax">—</strong>
+        <span>TOTAL DE LA PROPUESTA</span><strong class="big" id="sb-quotes-total">—</strong>
+      </div>
+    </div>
+    <p id="sb-quotes-form-error" class="sb-ops-form__error" hidden role="alert"></p>
+    <div class="sb-ops-form__actions"><button type="button" id="sb-quotes-cancel">Cerrar</button><button class="sb-ops__primary" id="sb-quotes-save" type="submit">Guardar borrador ↗</button></div>
+  </form>
+</dialog>
+<script>
+  import {requestApi,getAll,fillOptions,el,field,message,todayLocal,formatEuro,formatDate,minorUnits} from '../../../../scripts/private-commerce.js';
+  const $=id=>document.getElementById(id),base='/presupuestos';
+  const dialog=$('sb-quotes-dialog'),form=$('sb-quotes-form'),rows=$('sb-quotes-rows'),feedback=$('sb-quotes-message'),lineHolder=$('sb-quotes-lines');
+  const statusLabels={borrador:'Borrador',enviado:'Enviado',aceptado:'Aceptado',rechazado:'Rechazado',caducado:'Caducado'};
+  let clients=[],items=[],selected=null,readOnly=false,hasMore=false,page=1,loadingId=0,busy=false,initialized=false;
+  function createLine(line={}){
+    const node=el('div',undefined,'sb-ops__line');node.dataset.quoteLine='1';
+    function formField(label,key,type,value,opts={}){
+      const lab=el('label',label);if(key==='concept')lab.className='sb-ops__line-concept';
+      if(key==='details')lab.className='sb-ops__line-details';
+      const input=el(type==='select'?'select':'input');
+      if(type!=='select')input.type=type;
+      if(type==='select')for(const [rate,title] of [[0,'0 %'],[400,'4 %'],[1000,'10 %'],[2100,'21 %']])input.add(new Option(title,String(rate)));
+      input.dataset.key=key;
+      if(opts.maxLength)input.maxLength=opts.maxLength;
+      if(opts.min!==undefined)input.min=String(opts.min);
+      if(opts.max!==undefined)input.max=String(opts.max);
+      if(opts.step!==undefined)input.step=String(opts.step);
+      input.value=String(value);input.disabled=readOnly;
+      lab.append(input);node.append(lab);return input;
+    }
+    formField('Concepto *','concept','text',line.concept??'',{maxLength:240}).required=true;
+    formField('Cantidad *','quantity','number',line.quantity_milli!==undefined?String(line.quantity_milli/1000):'1',{min:.001,max:100000,step:.001}).required=true;
+    formField('Precio sin IVA € *','price','number',line.unit_cents!==undefined?String(line.unit_cents/100):'0',{min:0,max:10000000,step:.01}).required=true;
+    formField('IVA','vat','select',line.vat_bps??2100);
+    const remove=el('button','×','sb-ops__line-remove');remove.type='button';remove.title='Quitar concepto';remove.disabled=readOnly;
+    remove.addEventListener('click',()=>{if(lineHolder.children.length>1){node.remove();preview();}});
+    node.append(remove);
+    formField('Descripción opcional','details','text',line.details??'',{maxLength:1000});
+    lineHolder.append(node);preview();
+  }
+  function readLines(){
+    return Array.from(lineHolder.children).map(row=>{
+      const val=key=>row.querySelector('[data-key="'+key+'"]').value.trim();
+      return {concept:val('concept'),details:val('details'),quantity_milli:minorUnits(val('quantity'),3,'cantidad'),unit_cents:minorUnits(val('price'),2,'precio'),vat_bps:Number(val('vat'))};
+    });
+  }
+  function preview(){
+    let net=0,tax=0;
+    try{
+      for(const line of readLines()){
+        const b=Math.round(line.quantity_milli*line.unit_cents/1000);
+        const t=Math.round(b*line.vat_bps/10000);
+        net+=b;tax+=t;
+      }
+      $('sb-quotes-subtotal').textContent=formatEuro(net);
+      $('sb-quotes-tax').textContent=formatEuro(tax);
+      $('sb-quotes-total').textContent=formatEuro(net+tax);
+    }catch{
+      $('sb-quotes-subtotal').textContent='—';$('sb-quotes-tax').textContent='—';$('sb-quotes-total').textContent='—';
+    }
+  }
+  lineHolder.addEventListener('input',preview);
+  lineHolder.addEventListener('change',preview);
+  $('sb-quotes-add').addEventListener('click',()=>{if(!readOnly&&lineHolder.children.length<25)createLine();});
+  function paint(){
+    rows.replaceChildren();
+    $('sb-quotes-counter').textContent='PRESUPUESTOS / '+items.length+(hasMore?'+':'');
+    $('sb-quotes-more').hidden=!hasMore;
+    if(!items.length){rows.append(el('div',$('sb-quotes-archived').value==='1'?'No hay presupuestos archivados.':'No hay presupuestos con estos filtros.','sb-ops__empty'));return;}
+    for(const item of items){
+      const card=el('article',undefined,'sb-ops__record sb-ops__record--quoted');
+      const main=el('div',undefined,'sb-ops__record-main');
+      main.append(el('div',item.code+' / '+item.client_name,'sb-ops__record-index'),el('h3',item.title),el('p','Fecha: '+formatDate(item.issue_date)+(item.valid_until?' · Válido hasta: '+formatDate(item.valid_until):'')));
+      const side=el('div',undefined,'sb-ops__record-side');
+      side.append(el('strong',formatEuro(item.total_cents),'sb-ops__record-money'),el('span',statusLabels[item.status]||item.status,'sb-ops__status sb-ops__status--'+item.status));
+      const acts=el('div',undefined,'sb-ops__actions');
+      function button(label,action){const b=el('button',label);b.type='button';b.dataset.id=item.id;b.dataset.action=action;acts.append(b);}
+      button(item.status==='borrador'&&!item.archived_at?'Editar':'Ver detalle','view');
+      if(!item.archived_at){
+        if(item.status==='borrador')button('Marcar enviado','enviado');
+        if(['borrador','enviado'].includes(item.status)){button('Marcar aceptado','aceptado');button('Rechazar','rechazado');}
+        if(item.status==='enviado')button('Caducado','caducado');
+        if(item.status==='aceptado'){const a=el('a','Crear proyecto ↗');a.href='/acceso/panel/proyectos/?presupuesto='+encodeURIComponent(item.id);acts.append(a);}
+        else button('Archivar','archive');
+      }else button('Restaurar','restore');
+      card.append(main,side,acts);rows.append(card);
+    }
+  }
+  async function load(reset=true){
+    const token=++loadingId;if(reset){page=1;items=[];}
+    $('sb-quotes-loading').textContent='CARGANDO…';
+    try{
+      const p=new URLSearchParams({q:$('sb-quotes-search').value.trim(),status:$('sb-quotes-state').value,archived:$('sb-quotes-archived').value,page:String(page)});
+      const result=await requestApi(base+'?'+p);
+      if(token!==loadingId)return;
+      items=reset?result.items:items.concat(result.items);hasMore=result.hasMore;paint();$('sb-quotes-loading').textContent='ACTUALIZADO';
+    }catch(e){if(token!==loadingId)return;$('sb-quotes-loading').textContent='ERROR';if(reset)rows.replaceChildren(el('div','No se pueden cargar los presupuestos.','sb-ops__empty'));message(feedback,e.message,true);}
+  }
+  async function open(id=null){
+    selected=null;form.reset();lineHolder.replaceChildren();readOnly=false;
+    $('sb-quotes-form-error').hidden=true;
+    let item=null;
+    try{
+      if(!initialized){clients=await getAll('/clientes');initialized=true;}
+      if(id)item=(await requestApi(base+'/'+id)).item;
+    }catch(e){message(feedback,e.message,true);return;}
+    selected=item;readOnly=!!item&&item.status!=='borrador';
+    $('sb-quotes-dialog-title').textContent=item?item.code+' · '+(readOnly?'Detalle':'Edición'):'Nuevo presupuesto.';
+    const clientSelect=field(form,'client_id');
+    fillOptions(clientSelect,clients,{empty:'Selecciona un cliente',selected:item?.client_id});
+    if(item&&!clients.some(c=>c.id===item.client_id)){clientSelect.add(new Option(item.client_name+' (archivado)',item.client_id));clientSelect.value=item.client_id;}
+    field(form,'title').value=item?.title??'';
+    field(form,'issue_date').value=item?.issue_date??todayLocal();
+    field(form,'valid_until').value=item?.valid_until??'';
+    field(form,'notes').value=item?.notes??'';
+    for(const line of item?.lines?.length?item.lines:[{}])createLine(line);
+    for(const input of form.querySelectorAll('input,textarea,select'))input.disabled=readOnly||!!(item&&input.name==='client_id');
+    $('sb-quotes-add').disabled=readOnly;
+    $('sb-quotes-save').hidden=readOnly;
+    dialog.showModal();
+    if(!readOnly)field(form,'title').focus();
+  }
+  $('sb-quotes-new').addEventListener('click',async()=>{
+    initialized=false;await open();
+    if(!clients.length&&dialog.open){dialog.close();message(feedback,'Da de alta primero un cliente desde el CRM.',true);}
+  });
+  $('sb-quotes-close').addEventListener('click',()=>dialog.close());
+  $('sb-quotes-cancel').addEventListener('click',()=>dialog.close());
+  dialog.addEventListener('click',e=>{if(e.target===dialog)dialog.close();});
+  form.addEventListener('submit',async e=>{
+    e.preventDefault();if(busy||readOnly)return;
+    busy=true;$('sb-quotes-save').disabled=true;$('sb-quotes-form-error').hidden=true;
+    try{
+      const payload={title:field(form,'title').value.trim(),client_id:selected?.client_id||field(form,'client_id').value,
+        issue_date:field(form,'issue_date').value,valid_until:field(form,'valid_until').value,
+        notes:field(form,'notes').value.trim(),lines:readLines()};
+      await requestApi(base+(selected?'/'+selected.id:''),{method:selected?'PATCH':'POST',payload});
+      dialog.close();message(feedback,selected?'Borrador actualizado.':'Presupuesto creado en borrador.');await load();
+    }catch(err){$('sb-quotes-form-error').textContent=err.message;$('sb-quotes-form-error').hidden=false;}
+    finally{busy=false;$('sb-quotes-save').disabled=false;}
+  });
+  rows.addEventListener('click',async e=>{
+    const b=e.target.closest('button[data-action]');if(!b||busy)return;
+    const item=items.find(x=>x.id===b.dataset.id);if(!item)return;
+    const action=b.dataset.action;
+    if(action==='view'){await open(item.id);return;}
+    const ask=action==='aceptado'?'¿Confirmas que el cliente ha aceptado realmente este presupuesto? El estado no representa una firma electrónica.':
+      action==='enviado'?'¿Confirmas que ya has enviado este presupuesto al cliente?':
+      action==='rechazado'?'¿Marcar el presupuesto como rechazado?':
+      action==='archive'?'¿Archivar este presupuesto?':action==='restore'?null:'¿Cambiar el estado a caducado?';
+    if(ask&&!confirm(ask))return;
+    busy=true;b.disabled=true;
+    try{
+      await requestApi(base+'/'+item.id,action==='archive'?{method:'DELETE'}:
+        {method:'PATCH',payload:action==='restore'?{archived:false}:{status:action}});
+      message(feedback,action==='archive'?'Presupuesto archivado.':action==='restore'?'Presupuesto restaurado.':'Estado actualizado.');await load();
+    }catch(err){message(feedback,err.message,true);}finally{busy=false;b.disabled=false;}
+  });
+  let debounce;for(const id of ['sb-quotes-search','sb-quotes-state','sb-quotes-archived'])$(id).addEventListener(id==='sb-quotes-search'?'input':'change',()=>{clearTimeout(debounce);debounce=setTimeout(()=>load(),230);});
+  $('sb-quotes-reload').addEventListener('click',()=>load());
+  $('sb-quotes-more').addEventListener('click',()=>{page++;load(false);});
+  load();
+</script>
+</Private>

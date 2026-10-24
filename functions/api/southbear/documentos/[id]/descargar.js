@@ -12,7 +12,7 @@ export async function onRequestGet({env,params,data}){
     const encoded=encodeURIComponent(item.original_name);
     const headers=new Headers({
       'Content-Type':'application/octet-stream',
-      'Content-Disposition':'attachment; filename="'+ascii+'"; filename*=UTF-8\\'\\''+encoded,
+      'Content-Disposition': "attachment; filename=\""+ascii+"\"; filename*=UTF-8''"+encoded,
       'Cache-Control':'private, no-store, max-age=0',
       'X-Content-Type-Options':'nosniff',
       'Content-Security-Policy':'sandbox',

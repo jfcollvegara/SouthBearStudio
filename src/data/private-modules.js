@@ -1,32 +1,18 @@
 // Mapa único del futuro ERP interno de SouthBear Studio.
 // No contiene datos personales, financieros ni credenciales.
 export const privateNavigation = [
-  { label:'VISIÓN GENERAL', items:[
-    {slug:'',title:'Dashboard',icon:'layout-dashboard'}
+  {label:'PANEL',items:[
+    {slug:'',title:'Inicio',icon:'layout-dashboard'}
   ]},
-  { label:'RELACIONES Y VENTAS', items:[
+  {label:'GESTIÓN DEL ESTUDIO',items:[
     {slug:'clientes',title:'Clientes',icon:'users'},
-    {slug:'oportunidades',title:'Oportunidades',icon:'target'},
-    {slug:'presupuestos',title:'Presupuestos',icon:'file-text'},
-    {slug:'proyectos',title:'Proyectos',icon:'layers'}
-  ]},
-  { label:'FINANZAS', items:[
     {slug:'facturas',title:'Facturación',icon:'receipt'},
-    {slug:'cobros',title:'Cobros',icon:'wallet'},
-    {slug:'gastos',title:'Gastos',icon:'credit-card'},
-    {slug:'proveedores',title:'Proveedores',icon:'truck'},
-    {slug:'contabilidad',title:'Contabilidad',icon:'book-open'},
-    {slug:'impuestos',title:'Impuestos',icon:'landmark'}
-  ]},
-  { label:'ESTUDIO', items:[
-    {slug:'catalogo',title:'Servicios y tarifas',icon:'briefcase'},
-    {slug:'documentos',title:'Documentos',icon:'folder'},
-    {slug:'informes',title:'Informes',icon:'chart'},
-    {slug:'configuracion',title:'Configuración',icon:'settings'},
-    {slug:'agenda',title:'Agenda y tareas · Google',icon:'calendar'}
+    {slug:'contabilidad',title:'Contabilidad',icon:'book-open'}
   ]}
 ];
 
+// Las rutas de herramientas anteriores permanecen conservadas y protegidas,
+// pero no aparecen en el menú simplificado. No se borra ningún dato.
 // Iconos lineales del sistema de gestión (mismo lenguaje audiovisual).
 export const privateIcons = {
   'layout-dashboard':['M3 3h7v7H3z','M14 3h7v7h-7z','M3 14h7v7H3z','M14 14h7v7h-7z'],

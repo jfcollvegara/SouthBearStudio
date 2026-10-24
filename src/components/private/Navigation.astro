@@ -1,0 +1,25 @@
+---
+import {privateSections,privateIcons} from '../../data/private-modules.js';
+const current=(Astro.url.pathname.replace(/\\/+$/,'')||'/');
+const active=(href)=>current===(href.replace(/\\/+$/,'')||'/');
+---
+<nav class="sb-ws-nav" aria-label="Navegación del área privada">
+  {privateSections.map(section=>(
+    <div class="sb-ws-nav__section">
+      <p class="sb-ws-nav__heading">{section.label}</p>
+      {section.items.map(item=>(
+        <a
+          class:list={['sb-ws-nav__item',{'is-active':active(item.href)}]}
+          href={item.href}
+          aria-current={active(item.href)?'page':undefined}
+        >
+          <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            {(privateIcons[item.icon]||[]).map(path=><path d={path}/>)}
+          </svg>
+          <span>{item.title}</span>
+          <span class="sb-ws-nav__arrow" aria-hidden="true">↗</span>
+        </a>
+      ))}
+    </div>
+  ))}
+</nav>

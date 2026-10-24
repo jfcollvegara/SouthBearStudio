@@ -179,7 +179,7 @@ for(const sourceFile of files){
   const rel=path.relative(dist,sourceFile).split(path.sep).join('/');
   const route=urlForPage(rel);
   // No generar copia /en/ ni enlaces hreflang de una entrada privada.
-  if (route === '/acceso/') continue;
+  if (route.startsWith('/acceso/')) continue;
   const original=await readFile(sourceFile,'utf8');
   const translated=insertSEO(englishHeroLetters(translateMarkup(original)),route)
     .replace('</body>','<script type="module" src="/southbear-translate-live.js"></script></body>');
@@ -258,7 +258,7 @@ for (const entry of await readdir(dist,{withFileTypes:true})) {
   const xml=await readFile(location,'utf8');
   if (!xml.includes('</urlset>')) continue;
   const extraUrls=files.filter(file=>
-    urlForPage(path.relative(dist,file).split(path.sep).join('/')) !== '/acceso/'
+    !urlForPage(path.relative(dist,file).split(path.sep).join('/')).startsWith('/acceso/')
   ).map(file=>{
     const pathname=urlForPage(path.relative(dist,file).split(path.sep).join('/'));
     return '<url><loc>https://southbearstudio.com/en'+pathname+'</loc></url>';

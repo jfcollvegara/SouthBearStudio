@@ -100,3 +100,111 @@
  .sb-ops__line-remove{grid-column:3;grid-row:2}
  .sb-ops__line-details{grid-column:1/-1}
 }
+
+
+/* Confirmación de presupuesto aceptado → creación opcional de proyecto. */
+.sb-ops-project-prompt{
+  width:min(540px,calc(100vw - 26px));
+  max-height:90dvh;
+  overflow-y:auto;
+  margin:auto;
+  padding:0;
+  border:1px solid rgba(221,255,154,.45);
+  border-radius:3px;
+  background:#151a14;
+  color:#f4f8f1;
+  box-shadow:0 30px 95px #000b;
+}
+.sb-ops-project-prompt::backdrop{
+  background:rgba(0,0,0,.78);
+  backdrop-filter:blur(7px);
+}
+.sb-ops-project-prompt__top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:15px;
+  padding:21px 27px;
+  border-bottom:1px solid rgba(255,255,255,.15);
+}
+.sb-ops-project-prompt__eyebrow{
+  display:inline-flex;align-items:center;gap:11px;
+  color:#ddff9a;
+  font-size:10px;font-weight:850;letter-spacing:.15em;
+}
+.sb-ops-project-prompt__signal{
+  width:8px;height:8px;flex:none;border-radius:50%;
+  background:#ff333d;box-shadow:0 0 10px #ff333d85;
+}
+.sb-ops-project-prompt__close{
+  width:36px;height:36px;flex:none;
+  border:1px solid rgba(255,255,255,.28);
+  background:transparent;color:white;
+  font-size:23px;cursor:pointer;
+}
+.sb-ops-project-prompt__body{padding:34px 30px 30px}
+.sb-ops-project-prompt__icon{
+  display:grid;place-items:center;
+  width:54px;height:54px;margin-bottom:24px;
+  border:1px solid rgba(221,255,154,.45);
+  color:#ddff9a;background:rgba(221,255,154,.07);
+  font-size:26px;font-weight:750;
+}
+.sb-ops-project-prompt h2{
+  margin:0 0 17px;
+  font-family:'Space Grotesk Variable',system-ui,sans-serif;
+  font-size:clamp(35px,5vw,50px);
+  line-height:1.06;letter-spacing:-.07em;
+}
+.sb-ops-project-prompt h2 em{font-style:normal;color:#ddff9a}
+.sb-ops-project-prompt__body>p{
+  font-size:14px;line-height:1.8;
+  margin:0;color:#c1d0b8;
+}
+.sb-ops-project-prompt__reference{
+  display:grid;gap:7px;
+  margin:23px 0;padding:17px 20px;
+  border-left:2px solid #ddff9a;
+  background:rgba(221,255,154,.065);
+}
+.sb-ops-project-prompt__reference>span{
+  color:#bedb9f;font-size:9px;font-weight:800;letter-spacing:.17em;
+}
+.sb-ops-project-prompt__reference>strong{
+  font-family:'Space Grotesk Variable',system-ui,sans-serif;
+  font-size:19px;letter-spacing:-.03em;overflow-wrap:anywhere;
+}
+.sb-ops-project-prompt__reference>small{
+  color:#bbc9b3;font-size:12px;overflow-wrap:anywhere;
+}
+.sb-ops-project-prompt__body>p.sb-ops-project-prompt__hint{
+  font-size:12px;line-height:1.65;color:#9faa96;
+}
+.sb-ops-project-prompt__actions{
+  display:flex;justify-content:flex-end;gap:11px;flex-wrap:wrap;
+  margin-top:28px;padding-top:22px;
+  border-top:1px solid rgba(255,255,255,.16);
+}
+.sb-ops-project-prompt__actions button,
+.sb-ops-project-prompt__actions a{
+  min-height:48px;
+  padding:13px 17px;
+  display:inline-flex;align-items:center;justify-content:center;gap:20px;
+  font-size:12px;font-weight:800;text-decoration:none;cursor:pointer;
+}
+.sb-ops-project-prompt__actions button{
+  background:transparent;border:1px solid #64715a;color:#e8f1e3;
+}
+.sb-ops-project-prompt__actions a{
+  background:#ddff9a;border:1px solid #ddff9a;
+  color:#15210e;
+}
+.sb-ops-project-prompt__actions a:hover{background:#edffc2}
+.sb-ops-project-prompt__actions button:hover{border-color:#ddff9a}
+@media(max-width:510px){
+  .sb-ops-project-prompt__top{padding:16px 19px}
+  .sb-ops-project-prompt__body{padding:26px 19px}
+  .sb-ops-project-prompt__actions{display:grid;grid-template-columns:1fr;gap:10px}
+  .sb-ops-project-prompt__actions a{grid-row:1;justify-content:space-between}
+  .sb-ops-project-prompt__actions button{grid-row:2}
+}

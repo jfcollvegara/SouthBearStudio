@@ -19,7 +19,17 @@ export async function onRequestPatch({params,request,env,data}){
     const keys=Object.keys(raw);
     if(keys.length===1&&keys[0]==='status'){
       if(typeof raw.status!=='string'||!states[old.status]?.includes(raw.status))return apiError('Transición de estado no permitida.',409);
-      await db.batch([db.prepare('UPDATE quotes SET status=?,updated_at=CURRENT_TIMESTAMP WHERE id=?').bind(raw.status,old.id),audit(db,'quote',old.id,'update',data.southbearUser,['status'])]);
+      const linked=raw.status==='aceptado'
+        ?await db.prepare("SELECT id,stage FROM sales_opportunities WHERE quote_id=? AND archived_at IS NULL").bind(old.id).first()
+        :null;
+      await db.batch([
+        db.prepare('UPDATE quotes SET status=?,updated_at=CURRENT_TIMESTAMP WHERE id=?').bind(raw.status,old.id),
+        ...(linked?[
+          db.prepare("UPDATE sales_opportunities SET stage='ganado',probability=100,next_contact_date='',loss_reason='',updated_at=CURRENT_TIMESTAMP WHERE id=?").bind(linked.id),
+          audit(db,'opportunity',linked.id,'update',data.southbearUser,['stage','probability'])
+        ]:[]),
+        audit(db,'quote',old.id,'update',data.southbearUser,['status'])
+      ]);
       return apiResponse({ok:true,item:await quoteDetail(db,old.id)});
     }
     if(old.status!=='borrador')return apiError('Solo se puede modificar el contenido de presupuestos en borrador.',409);

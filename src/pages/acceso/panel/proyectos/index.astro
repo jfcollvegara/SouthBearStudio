@@ -59,7 +59,10 @@ import '../../../../styles/private-commerce.css';
       side.append(el('span',statuses[item.status]||item.status,'sb-ops__status sb-ops__status--'+item.status));
       const actions=el('div',undefined,'sb-ops__actions');
       function act(label,action){const b=el('button',label);b.type='button';b.dataset.id=item.id;b.dataset.action=action;actions.append(b);}
-      if(!item.archived_at)act('Editar ↗','edit');
+      if(!item.archived_at){
+        act('Editar ↗','edit');
+        const billing=el('a','Preparar factura ↗');billing.href='/acceso/panel/facturas/?proyecto='+encodeURIComponent(item.id);billing.title='Crear un borrador interno, no una factura emitida';actions.append(billing);
+      }
       act(item.archived_at?'Restaurar':'Archivar',item.archived_at?'restore':'archive');
       card.append(main,side,actions);rows.append(card);
     }

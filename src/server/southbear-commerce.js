@@ -75,15 +75,22 @@ export function normalizeQuote(input){
     if(!line||typeof line!=='object'||Array.isArray(line))throw new InputError('Concepto no válido.');
     const concept=textValue(line.concept,'Concepto '+(position+1),240,{required:true});
     const details=textValue(line.details??'','Descripción '+(position+1),1000);
-    const quantity_milli=line.quantity_milli,unit_cents=line.unit_cents,vat_bps=line.vat_bps;
+    const quantity_milli=line.quantity_milli,unit_gross_cents=line.unit_gross_cents,vat_bps=line.vat_bps;
     if(!Number.isSafeInteger(quantity_milli)||quantity_milli<1||quantity_milli>100000000)throw new InputError('Cantidad no válida en el concepto '+(position+1)+'.');
-    if(!Number.isSafeInteger(unit_cents)||unit_cents<0||unit_cents>1000000000)throw new InputError('Precio no válido en el concepto '+(position+1)+'.');
+    if(!Number.isSafeInteger(unit_gross_cents)||unit_gross_cents<0||unit_gross_cents>1000000000)throw new InputError('Precio con IVA no válido en el concepto '+(position+1)+'.');
     if(!Number.isInteger(vat_bps)||!TAXES.has(vat_bps))throw new InputError('Tipo de IVA no válido en el concepto '+(position+1)+'.');
-    const base_cents=Math.round(quantity_milli*unit_cents/1000);
-    const vat_cents=Math.round(base_cents*vat_bps/10000);
-    if(!Number.isSafeInteger(base_cents)||!Number.isSafeInteger(vat_cents)||base_cents>100000000000)throw new InputError('El importe supera el límite admitido.');
+    // El precio introducido representa el TOTAL CON IVA por unidad.
+    // Redondeo comercial al céntimo del importe bruto de cada línea,
+    // extrayendo después la base imponible e IVA de ese total.
+    const total_cents=Math.round(quantity_milli*unit_gross_cents/1000);
+    const base_cents=Math.round(total_cents*10000/(10000+vat_bps));
+    const vat_cents=total_cents-base_cents;
+    // Se conserva la columna histórica unit_cents (precio sin IVA)
+    // para compatibilidad; el precio exacto elegido se almacena aparte.
+    const unit_cents=Math.round(unit_gross_cents*10000/(10000+vat_bps));
+    if(!Number.isSafeInteger(total_cents)||!Number.isSafeInteger(base_cents)||total_cents>100000000000)throw new InputError('El importe supera el límite admitido.');
     subtotal_cents+=base_cents;tax_cents+=vat_cents;
-    return {position,concept,details,quantity_milli,unit_cents,vat_bps,base_cents,vat_cents,total_cents:base_cents+vat_cents};
+    return {position,concept,details,quantity_milli,unit_cents,unit_gross_cents,vat_bps,base_cents,vat_cents,total_cents};
   });
   if(!Number.isSafeInteger(subtotal_cents+tax_cents)||subtotal_cents+tax_cents>100000000000)throw new InputError('El importe supera el límite admitido.');
   return {client_id:input.client_id,title,issue_date,valid_until,notes,lines,subtotal_cents,tax_cents,total_cents:subtotal_cents+tax_cents};
@@ -91,11 +98,11 @@ export function normalizeQuote(input){
 export async function quoteDetail(db,id){
   const item=await db.prepare('SELECT '+quoteColumns+' FROM quotes q JOIN clients c ON c.id=q.client_id WHERE q.id=?').bind(id).first();
   if(!item)return null;
-  const results=await db.prepare('SELECT id,position,concept,details,quantity_milli,unit_cents,vat_bps,base_cents,vat_cents,total_cents FROM quote_lines WHERE quote_id=? ORDER BY position').bind(id).all();
+  const results=await db.prepare('SELECT id,position,concept,details,quantity_milli,unit_cents,unit_gross_cents,vat_bps,base_cents,vat_cents,total_cents FROM quote_lines WHERE quote_id=? ORDER BY position').bind(id).all();
   item.lines=results.results||[];
   return item;
 }
 export function quoteInserts(db,quoteId,lines){
-  return lines.map(line=>db.prepare('INSERT INTO quote_lines(id,quote_id,position,concept,details,quantity_milli,unit_cents,vat_bps,base_cents,vat_cents,total_cents) VALUES (?,?,?,?,?,?,?,?,?,?,?)').bind(
-    crypto.randomUUID(),quoteId,line.position,line.concept,line.details,line.quantity_milli,line.unit_cents,line.vat_bps,line.base_cents,line.vat_cents,line.total_cents));
+  return lines.map(line=>db.prepare('INSERT INTO quote_lines(id,quote_id,position,concept,details,quantity_milli,unit_cents,unit_gross_cents,vat_bps,base_cents,vat_cents,total_cents) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)').bind(
+    crypto.randomUUID(),quoteId,line.position,line.concept,line.details,line.quantity_milli,line.unit_cents,line.unit_gross_cents,line.vat_bps,line.base_cents,line.vat_cents,line.total_cents));
 }

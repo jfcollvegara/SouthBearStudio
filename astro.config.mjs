@@ -6,5 +6,8 @@ export default defineConfig({
   base: '/',
   output: 'static',
   trailingSlash: 'always',
-  integrations: [sitemap()]
+  integrations: [sitemap({
+    // El acceso reservado nunca aparece entre las páginas públicas indexables.
+    filter: (page) => !/^\/(?:en\/)?acceso(?:\/|$)/.test(new URL(page).pathname)
+  })]
 });

@@ -30,6 +30,11 @@ import '../../../../styles/private-commerce.css';
       <label class="sb-ops-form__wide">Condiciones y observaciones<textarea name="notes" maxlength="4000" rows="3" placeholder="Plazos, alcance, forma de pago propuesta…"></textarea></label>
       <section class="sb-ops__line-section" aria-labelledby="sb-quotes-line-title">
         <div class="sb-ops__line-header"><h3 id="sb-quotes-line-title">Conceptos.</h3><button type="button" id="sb-quotes-add">+ Añadir concepto</button></div>
+        <div class="sb-quotes__catalog-picker" id="sb-quotes-catalog-picker">
+          <label for="sb-quotes-catalog-select">AÑADIR DESDE SERVICIOS Y TARIFAS</label>
+          <div><select id="sb-quotes-catalog-select"><option value="">Selecciona un servicio guardado…</option></select><button type="button" id="sb-quotes-catalog-add">+ Añadir servicio</button></div>
+          <small>Se copia el precio con IVA incluido; puedes personalizarlo sin cambiar la tarifa. <a href="/acceso/panel/catalogo/">Administrar catálogo ↗</a></small>
+        </div>
         <div id="sb-quotes-lines"></div>
         <p class="sb-ops-form__note">Introduce el precio final por unidad, IVA incluido. Según el tipo de IVA elegido, se extraen automáticamente la base imponible y el impuesto en el desglose inferior.</p>
       </section>
@@ -69,7 +74,7 @@ import '../../../../styles/private-commerce.css';
   const $=id=>document.getElementById(id),base='/presupuestos';
   const dialog=$('sb-quotes-dialog'),form=$('sb-quotes-form'),rows=$('sb-quotes-rows'),feedback=$('sb-quotes-message'),lineHolder=$('sb-quotes-lines');
   const statusLabels={borrador:'Borrador',enviado:'Enviado',aceptado:'Aceptado',rechazado:'Rechazado',caducado:'Caducado'};
-  let clients=[],items=[],selected=null,readOnly=false,hasMore=false,page=1,loadingId=0,busy=false,initialized=false;
+  let clients=[],items=[],catalog=[],selected=null,readOnly=false,hasMore=false,page=1,loadingId=0,busy=false,initialized=false;
   const projectPrompt=$('sb-quotes-project-prompt');
   function offerProject(quote){
     $('sb-quotes-project-prompt-reference').textContent=quote.code||'Presupuesto aceptado';
@@ -132,6 +137,25 @@ import '../../../../styles/private-commerce.css';
   lineHolder.addEventListener('input',preview);
   lineHolder.addEventListener('change',preview);
   $('sb-quotes-add').addEventListener('click',()=>{if(!readOnly&&lineHolder.children.length<25)createLine();});
+  function insertCatalogItem(item){
+    if(!item||readOnly)return;
+    const blank=lineHolder.children.length===1&&!lineHolder.querySelector('[data-key="concept"]')?.value.trim()&&!lineHolder.querySelector('[data-key="details"]')?.value.trim();
+    if(!blank&&lineHolder.children.length>=25)throw Error('Puedes incluir un máximo de 25 conceptos.');
+    if(blank)lineHolder.replaceChildren();
+    createLine({concept:item.name,details:item.description,quantity_milli:1000,unit_gross_cents:item.unit_gross_cents,vat_bps:item.vat_bps});
+    if(item.unit_gross_cents===0)message(feedback,'Este servicio tiene la tarifa pendiente de definir. Revisa su precio antes de guardar.',true);
+    else message(feedback,'Servicio añadido del catálogo. Puedes personalizar su precio en este presupuesto.');
+  }
+  function fillCatalog(){
+    const picker=$('sb-quotes-catalog-select');
+    picker.replaceChildren(new Option('Selecciona un servicio guardado…',''));
+    for(const item of catalog)picker.add(new Option(item.name+' · '+formatEuro(item.unit_gross_cents),item.id));
+  }
+  $('sb-quotes-catalog-add').addEventListener('click',()=>{
+    const item=catalog.find(x=>x.id===$('sb-quotes-catalog-select').value);
+    if(!item){message(feedback,'Selecciona un servicio del catálogo.',true);return;}
+    try{insertCatalogItem(item);}catch(e){message(feedback,e.message,true);}
+  });
   function paint(){
     rows.replaceChildren();
     $('sb-quotes-counter').textContent='PRESUPUESTOS / '+items.length+(hasMore?'+':'');
@@ -178,6 +202,10 @@ import '../../../../styles/private-commerce.css';
     try{
       if(!initialized){clients=await getAll('/clientes');initialized=true;}
       if(id)item=(await requestApi(base+'/'+id)).item;
+      if(!item||item.status==='borrador'){
+        try{catalog=await getAll('/catalogo');}
+        catch(e){catalog=[];message(feedback,'No se ha podido cargar Servicios y tarifas. Puedes introducir conceptos manualmente.',true);}
+      }
     }catch(e){message(feedback,e.message,true);return;}
     selected=item;readOnly=!!item&&item.status!=='borrador';
     $('sb-quotes-dialog-title').textContent=item?item.code+' · '+(readOnly?'Detalle':'Edición'):'Nuevo presupuesto.';
@@ -188,6 +216,7 @@ import '../../../../styles/private-commerce.css';
     field(form,'issue_date').value=item?.issue_date??todayLocal();
     field(form,'valid_until').value=item?.valid_until??'';
     field(form,'notes').value=item?.notes??'';
+    fillCatalog();
     for(const line of item?.lines?.length?item.lines:[{}])createLine(line);
     // Presupuestos históricos: respetar siempre los totales reales guardados,
     // incluso cuando el precio original se introducía SIN IVA.
@@ -198,6 +227,9 @@ import '../../../../styles/private-commerce.css';
     }
     for(const input of form.querySelectorAll('input,textarea,select'))input.disabled=readOnly||!!(item&&input.name==='client_id');
     $('sb-quotes-add').disabled=readOnly;
+    $('sb-quotes-catalog-add').disabled=readOnly;
+    $('sb-quotes-catalog-select').disabled=readOnly;
+    $('sb-quotes-catalog-picker').hidden=readOnly;
     $('sb-quotes-save').hidden=readOnly;
     dialog.showModal();
     if(!readOnly)field(form,'title').focus();
@@ -267,6 +299,15 @@ import '../../../../styles/private-commerce.css';
   let debounce;for(const id of ['sb-quotes-search','sb-quotes-state','sb-quotes-archived'])$(id).addEventListener(id==='sb-quotes-search'?'input':'change',()=>{clearTimeout(debounce);debounce=setTimeout(()=>load(),230);});
   $('sb-quotes-reload').addEventListener('click',()=>load());
   $('sb-quotes-more').addEventListener('click',()=>{page++;load(false);});
+  const serviceFromUrl=new URLSearchParams(location.search).get('servicio');
+  if(serviceFromUrl){
+    open().then(()=>{
+      if(!dialog.open)return;
+      const service=catalog.find(x=>x.id===serviceFromUrl);
+      if(service){try{insertCatalogItem(service);}catch(e){message(feedback,e.message,true);}}
+      else message(feedback,'Servicio activo no encontrado. Puedes introducirlo manualmente.',true);
+    });
+  }
   load();
 </script>
 </Private>

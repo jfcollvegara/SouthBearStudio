@@ -396,3 +396,13 @@
 @media(max-width:1200px){.sb-reports__period{grid-template-columns:minmax(240px,1fr) repeat(2,minmax(130px,170px))}.sb-reports__period>.sb-ops__primary{grid-column:1/-1;justify-self:start}.sb-reports__analysis{grid-template-columns:1fr}}
 @media(max-width:740px){.sb-reports__period{grid-template-columns:repeat(2,minmax(0,1fr));padding:18px}.sb-reports__period-intro{grid-column:1/-1}.sb-reports__period>.sb-ops__primary{grid-column:1/-1}.sb-reports__kpis{grid-template-columns:1fr}.sb-reports__kpis>div{min-height:114px;padding:20px}.sb-reports__projects-head{align-items:start;flex-direction:column}.sb-reports__filters{grid-template-columns:repeat(2,minmax(0,1fr))}.sb-reports__filters label:first-child{grid-column:1/-1}.sb-reports__project-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.sb-reports__project-metric:nth-child(3n){border-right:1px solid #ffffff16}.sb-reports__project-metric:nth-child(2n){border-right:0}.sb-reports__project-metric{padding:16px}}
 @media(max-width:500px){.sb-reports__period{grid-template-columns:1fr}.sb-reports__period-intro{grid-column:1}.sb-reports__period>.sb-ops__primary{grid-column:1}.sb-reports__filters{grid-template-columns:1fr}.sb-reports__filters label:first-child{grid-column:1}.sb-reports__panel{padding:18px}.sb-reports__month{grid-template-columns:54px minmax(0,1fr) 90px;gap:7px}.sb-reports__month-amounts{font-size:9px}.sb-reports__panel-head{flex-direction:column}.sb-reports__project-header{flex-direction:column;padding:19px}.sb-reports__project-note{padding:14px 17px}.sb-reports__project-metric{padding:15px 12px}.sb-reports__project-metric strong{font-size:16px}}
+
+
+.sb-reports__link-notice{padding:13px 16px;border:1px solid #ddff9a59;background:#ddff9a0c;display:flex;align-items:center;justify-content:space-between;gap:12px;color:#ddff9a;font-weight:770;font-size:10px;letter-spacing:.08em}
+.sb-reports__link-notice[hidden]{display:none}
+.sb-reports__link-notice a{color:#ddff9a!important;text-decoration:underline;text-underline-offset:4px}
+.sb-reports__ratio{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;padding:15px 25px;background:#ddff9a0c;border-bottom:1px solid #ffffff1a}
+.sb-reports__ratio span{font-size:10px;font-weight:760;letter-spacing:.075em;color:#b6c7a9}
+.sb-reports__ratio strong{color:#ddff9a;font-size:19px;font-variant-numeric:tabular-nums}
+.sb-reports__ratio--negative strong{color:#ffb29e}
+@media(max-width:550px){.sb-reports__ratio{padding:13px 16px}.sb-reports__link-notice{flex-direction:column;align-items:start}}

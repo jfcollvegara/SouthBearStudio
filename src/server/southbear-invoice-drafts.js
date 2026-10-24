@@ -7,7 +7,7 @@ export function draftError(error){
   if(error?.message && /^(El formato|La solicitud|Los datos|El JSON)/.test(error.message))return apiError(error.message,400);
   return dbError(error);
 }
-export const draftCols='d.id,d.reference,d.client_id,d.quote_id,d.project_id,d.title,d.planned_date,d.due_date,d.notes,d.subtotal_cents,d.tax_cents,d.total_cents,d.currency,d.created_at,d.updated_at,d.archived_at,c.display_name AS client_name,q.code AS quote_code,p.title AS project_name';
+export const draftCols='d.id,d.reference,d.client_id,d.quote_id,d.project_id,d.title,d.planned_date,d.due_date,d.notes,d.subtotal_cents,d.tax_cents,d.total_cents,d.withholding_bps,d.currency,d.created_at,d.updated_at,d.archived_at,c.display_name AS client_name,q.code AS quote_code,p.title AS project_name';
 const join=' FROM invoice_drafts d JOIN clients c ON c.id=d.client_id LEFT JOIN quotes q ON q.id=d.quote_id LEFT JOIN projects p ON p.id=d.project_id';
 export function listSQL(where){return 'SELECT '+draftCols+join+' WHERE '+where+' ORDER BY d.updated_at DESC LIMIT 51 OFFSET ?';}
 export async function draftDetail(db,id){
@@ -34,7 +34,10 @@ export function normalizeDraft(raw){
   const project_id=raw.project_id===null||raw.project_id===''||raw.project_id===undefined?null:raw.project_id;
   if(quote_id!==null&&!validId(quote_id))throw new InputError('Presupuesto de origen no válido.');
   if(project_id!==null&&!validId(project_id))throw new InputError('Proyecto de origen no válido.');
-  return {...quote,quote_id,project_id,planned_date,due_date};
+  const withholding_bps=raw.withholding_bps===null||raw.withholding_bps===undefined||raw.withholding_bps===''?null:raw.withholding_bps;
+  if(withholding_bps!==null&&(!Number.isInteger(withholding_bps)||withholding_bps<0||withholding_bps>10000))
+    throw new InputError('Indica manualmente una retención de IRPF entre 0 % y 100 %, o déjala sin configurar.');
+  return {...quote,quote_id,project_id,planned_date,due_date,withholding_bps};
 }
 export async function validateReferences(db,item){
   await ensureClient(db,item.client_id);

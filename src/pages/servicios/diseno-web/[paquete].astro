@@ -41,6 +41,7 @@ const otherPackages=webPackages.filter(item=>item.slug!==pkg.slug);
           aria-label="Vídeo original de presentación del paquete Web Premium"
         >
           <source src="/videos/audiovisual/web-premium-original.mp4" type="video/mp4"/>
+          <source src="/videos/audiovisual/web-premium-hero.mp4" type="video/mp4"/>
         </video>
       </div>
     )}
@@ -165,7 +166,7 @@ const otherPackages=webPackages.filter(item=>item.slug!==pkg.slug);
     isolation:isolate;
     width:100%;
     aspect-ratio:16/9;
-    margin-top:-24px;
+    margin-top:-48px;
     overflow:hidden;
     background:#eff0ed;
   }
@@ -173,7 +174,7 @@ const otherPackages=webPackages.filter(item=>item.slug!==pkg.slug);
     display:block;
     width:100%;
     height:100%;
-    object-fit:cover;
+    object-fit:contain;
     object-position:center;
   }
   .sb-wpd-premium-media::after{
@@ -200,7 +201,7 @@ const otherPackages=webPackages.filter(item=>item.slug!==pkg.slug);
   .sb-wpd--premium .sb-wpd-copy{max-width:1080px}
   .sb-wpd--premium .sb-wpd-showcase{display:none}
   @media(max-width:700px){
-    .sb-wpd-premium-media{aspect-ratio:4/3;margin-top:-12px}
+    .sb-wpd-premium-media{aspect-ratio:16/9;margin-top:-20px}
     .sb-wpd-premium-video{object-position:center center}
     .sb-wpd-premium-media::after{height:26%}
     .sb-wpd--premium .sb-wpd-hero-grid{padding:48px 0 85px}

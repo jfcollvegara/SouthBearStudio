@@ -10,7 +10,7 @@ import Private from '../../../../layouts/Private.astro';
 <label>Selecciona una plantilla<select id="template"><option value="contact_receipt">Confirmación de consulta</option><option value="promotion_welcome">Bienvenida a promociones</option></select></label>
 <label>Asunto<input name="subject" maxlength="180" required/></label>
 <label>Título principal<input name="headline" maxlength="180" required/></label>
-<label>Cuerpo del mensaje <small>Utiliza {nombre} para personalizar el saludo</small><textarea name="body" rows="12" maxlength="6000" required></textarea></label>
+<label>Cuerpo del mensaje <small>Utiliza la variable de nombre para personalizar el saludo</small><textarea name="body" rows="12" maxlength="6000" required></textarea></label>
 <label>Texto del botón<input name="button_label" maxlength="100"/></label>
 <label>Enlace del botón (solo southbearstudio.com)<input name="button_url" maxlength="400" type="url"/></label>
 <div class="actions"><button type="submit">Guardar plantilla</button><span id="status" role="status"></span></div>

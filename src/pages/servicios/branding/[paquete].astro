@@ -1,0 +1,47 @@
+---
+import Base from '../../../layouts/Base.astro';
+import {catalog} from '../../../data/catalog.js';
+const branding=catalog.find(item=>item.slug==='branding');
+const slugs=['logotipo-esencial','logotipo-profesional','identidad-visual','branding-integral'];
+export function getStaticPaths(){
+  const data=catalog.find(item=>item.slug==='branding');
+  return data.packages.map((pkg,index)=>({params:{paquete:['logotipo-esencial','logotipo-profesional','identidad-visual','branding-integral'][index]},props:{pkg}}));
+}
+const {pkg}=Astro.props;
+---
+<Base title={pkg.name} description={pkg.name+' de SouthBear Studio. Conoce qué incluye este paquete de identidad visual.'}>
+  <section class="sb-pkg-paper">
+    <div class="sb-pkg-paper__grain" aria-hidden="true"></div>
+    <div class="sb-pkg-paper__inner">
+      <a class="sb-pkg-paper__back" href="/servicios/branding/">← Logotipos e identidad visual</a>
+      <header class="sb-pkg-paper__head">
+        <h1>{pkg.name}</h1>
+        <p>{pkg.price.toLocaleString('es-ES')} €</p>
+      </header>
+      <div class="sb-pkg-paper__deboss">
+        <h2>Qué incluye</h2>
+        <ul>{pkg.features.map(feature=><li>{feature}</li>)}</ul>
+      </div>
+      <p class="sb-pkg-paper__note">Los precios incluyen IVA. La impresión y el registro de marca no están incluidos.</p>
+      <a class="sb-pkg-paper__contact" href={'/presupuesto/?servicio=branding&paquete='+encodeURIComponent(pkg.name)}>Hablemos de tu proyecto ↗</a>
+    </div>
+  </section>
+</Base>
+<style>
+.sb-pkg-paper{position:relative;isolation:isolate;min-height:100svh;background:radial-gradient(ellipse at 45% 30%,#f8f6f0,#f2f0e9 65%,#eeebe3);color:#34322d;padding:clamp(75px,9vw,145px) 22px 120px}
+.sb-pkg-paper__grain{position:absolute;inset:0;pointer-events:none;opacity:.1;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.7' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.2'/%3E%3C/svg%3E")}
+.sb-pkg-paper__inner{position:relative;width:min(880px,100%);margin:auto}
+.sb-pkg-paper__back{color:#777165;text-decoration:none;font-size:13px}
+.sb-pkg-paper__head{text-align:center;padding:clamp(65px,10vw,135px) 0}
+.sb-pkg-paper__head h1{font-family:'Space Grotesk Variable',Arial,sans-serif;font-size:clamp(44px,8vw,94px);line-height:1;letter-spacing:-.075em;margin:0;color:#ece8df;text-shadow:1px 1px 0 #fff,2px 2px 3px rgba(255,255,255,.65),-1px -1px 0 rgba(145,139,127,.6),-3px -3px 6px rgba(120,114,103,.2);animation:sb-pkg-reveal 2s ease-out both}
+.sb-pkg-paper__head p{font-size:clamp(26px,4vw,38px);letter-spacing:-.05em;font-weight:550;margin:32px 0 0}
+.sb-pkg-paper__deboss{background:#f1eee6;border:1px solid rgba(188,180,164,.2);box-shadow:inset 5px 5px 12px rgba(146,136,119,.24),inset -5px -5px 12px #fff;padding:clamp(30px,6vw,65px)}
+.sb-pkg-paper__deboss h2{font:650 clamp(27px,4vw,43px)/1.1 'Space Grotesk Variable',Arial,sans-serif;letter-spacing:-.06em;margin:0 0 34px}
+.sb-pkg-paper__deboss ul{list-style:none;padding:0;margin:0;display:grid;gap:20px}
+.sb-pkg-paper__deboss li{position:relative;padding-left:26px;font-size:clamp(14px,2vw,17px);line-height:1.6}
+.sb-pkg-paper__deboss li::before{content:'+';position:absolute;left:0;font-weight:700;color:#8d8678}
+.sb-pkg-paper__note{margin:24px 0 45px;font-size:12px;color:#766f64;line-height:1.6}
+.sb-pkg-paper__contact{display:inline-block;color:#302b24;border-bottom:1px solid #948879;padding-bottom:8px;text-decoration:none;font-weight:650}
+@keyframes sb-pkg-reveal{from{opacity:0;filter:blur(8px)}to{opacity:1;filter:blur(0)}}
+@media(prefers-reduced-motion:reduce){.sb-pkg-paper__head h1{animation:none}}
+</style>

@@ -12,10 +12,8 @@ import Base from '../layouts/Base.astro';
     </section>
 
     <section class="sb-studio__identity sb-studio__wrap">
-      <div class="sb-studio__identity-art" aria-hidden="true">
-        <span class="sb-studio__identity-letter">S</span>
-        <span class="sb-studio__identity-disc"></span>
-        <span class="sb-studio__identity-small">DISEÑO / DIGITAL / AUDIOVISUAL</span>
+      <div class="sb-studio__identity-art">
+        <img src="/estudio-identidad.jpg" alt="Paisaje de montaña y nubes en blanco y negro" loading="lazy" decoding="async" width="2048" height="2048"/>
       </div>
       <div class="sb-studio__identity-copy">
         <h2>Una idea.<br/>Infinitas posibilidades.</h2>
@@ -80,10 +78,11 @@ import Base from '../layouts/Base.astro';
 
 
 .sb-studio__identity{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(32px,6vw,110px);align-items:center;padding-block:clamp(110px,13vw,240px)}
-.sb-studio__identity-art{height:clamp(390px,49vw,750px);position:relative;background:linear-gradient(145deg,#e9e9e9,#c2c2c2);overflow:hidden}
-.sb-studio__identity-letter{position:absolute;font:700 clamp(440px,62vw,1020px)/.8 'Space Grotesk Variable',sans-serif;letter-spacing:-.13em;color:#272727;left:-9%;bottom:-14%}
-.sb-studio__identity-disc{position:absolute;width:44%;aspect-ratio:1;border-radius:50%;background:linear-gradient(140deg,#f1f1f1,#868686);right:-12%;top:-10%;mix-blend-mode:screen}
-.sb-studio__identity-small{position:absolute;left:6%;bottom:5%;font-size:clamp(10px,1vw,15px);letter-spacing:.14em;font-weight:600;color:#101411}
+.sb-studio__identity-art{height:clamp(390px,49vw,750px);position:relative;background:#e8e8e8;overflow:hidden}
+.sb-studio__identity-art img{display:block;width:100%;height:100%;object-fit:cover;object-position:center}
+
+
+
 .sb-studio__identity-copy h2,.sb-studio__principles h2,.sb-studio__founder h2{font-size:clamp(42px,5.2vw,86px);margin-bottom:clamp(24px,3vw,45px)}
 .sb-studio__identity-copy p+p{margin-top:19px}
 .sb-studio__identity-copy .sb-studio__emphasis{color:#101411;font-weight:600;margin-top:30px}
@@ -111,7 +110,7 @@ import Base from '../layouts/Base.astro';
 .sb-studio__contact a{display:inline-flex;gap:28px;align-items:center;color:#ffffff;text-decoration:none;font-size:clamp(18px,1.6vw,26px);font-weight:600;border-bottom:1px solid rgba(255,255,255,.65);padding-bottom:12px}
 .sb-studio__contact a:hover{border-bottom-color:#ffffff}
 @media(max-width:950px){.sb-studio__identity{gap:30px}.sb-studio__founder-layout{grid-template-columns:1fr}.sb-studio__photos{height:clamp(480px,75vw,800px)}.sb-studio__founder-copy{max-width:740px}}
-@media(max-width:650px){.sb-studio__wrap{width:calc(100% - 32px)}.sb-studio__hero{padding-top:38px}.sb-studio__hero h1{font-size:clamp(42px,11vw,68px)}.sb-studio__hero-intro{margin:22px 0 85px}.sb-studio__hero-art{aspect-ratio:auto;height:clamp(270px,65vw,380px)}.sb-studio__hero-art img{height:100%;object-fit:cover}.sb-studio__identity{grid-template-columns:1fr;padding-block:95px}.sb-studio__identity-art{height:390px}.sb-studio__identity-letter{font-size:510px}.sb-studio__identity-copy h2,.sb-studio__principles h2,.sb-studio__founder h2{font-size:clamp(38px,10vw,60px)}.sb-studio__principle{grid-template-columns:1fr;gap:16px;padding:28px 0}.sb-studio__principle h3{font-size:50px}.sb-studio__principles{padding-bottom:100px}.sb-studio__photos{height:550px;gap:8px}.sb-studio__founder-layout{gap:34px}.sb-studio__founder{padding-bottom:105px}.sb-studio__contact{padding:95px 0}.sb-studio__contact h2{font-size:clamp(38px,9.5vw,64px)}}
+@media(max-width:650px){.sb-studio__wrap{width:calc(100% - 32px)}.sb-studio__hero{padding-top:38px}.sb-studio__hero h1{font-size:clamp(42px,11vw,68px)}.sb-studio__hero-intro{margin:22px 0 85px}.sb-studio__hero-art{aspect-ratio:auto;height:clamp(270px,65vw,380px)}.sb-studio__hero-art img{height:100%;object-fit:cover}.sb-studio__identity{grid-template-columns:1fr;padding-block:95px}.sb-studio__identity-art{height:390px}.sb-studio__identity-copy h2,.sb-studio__principles h2,.sb-studio__founder h2{font-size:clamp(38px,10vw,60px)}.sb-studio__principle{grid-template-columns:1fr;gap:16px;padding:28px 0}.sb-studio__principle h3{font-size:50px}.sb-studio__principles{padding-bottom:100px}.sb-studio__photos{height:550px;gap:8px}.sb-studio__founder-layout{gap:34px}.sb-studio__founder{padding-bottom:105px}.sb-studio__contact{padding:95px 0}.sb-studio__contact h2{font-size:clamp(38px,9.5vw,64px)}}
 @media(prefers-reduced-motion:reduce){.sb-studio *{scroll-behavior:auto}.sb-studio__hero-art img,.sb-studio__photo img{transform:none;will-change:auto}}
 </style>
 <script>

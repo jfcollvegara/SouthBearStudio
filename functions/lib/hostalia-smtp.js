@@ -65,16 +65,16 @@ export function smtpConfigured(env){return configured(env);}
  * Entrega el mensaje al SMTP autenticado de Hostalia. Solo envía a la
  * dirección fija de SouthBear Studio y solo después de establecer STARTTLS.
  */
-export async function sendContactSmtp(env,{to,replyTo,subject,text}){
+export async function sendContactSmtp(env,{to,replyTo,subject,text,html}){
   if(!configured(env))throw Error('SMTP_NOT_CONFIGURED');
   if(env.SMTP_HOST!=='smtp.servidor-correo.net'||Number(env.SMTP_PORT)!==587){
     throw Error('SMTP_HOST_NOT_ALLOWED');
   }
   if(env.SMTP_USER!=='info@southbearstudio.com'||env.SMTP_FROM!==env.SMTP_USER||
-     to!=='info@southbearstudio.com'){
+     !/^[a-zA-Z0-9.!#$%&'*+/=?^_\x60{|}~-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(to)||to.length>180){
     throw Error('SMTP_SENDER_NOT_ALLOWED');
   }
-  if(!/^[a-zA-Z0-9.!#$%&'*+/=?^_\x60{|}~-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(replyTo)){
+  if(!/^[a-zA-Z0-9.!#$%&'*+/=?^_\x60{|}~-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(replyTo)||/[\r\n]/.test(subject)||subject.length>180){
     throw Error('SMTP_REPLY_TO_INVALID');
   }
   const initial=connect({hostname:env.SMTP_HOST,port:587},{secureTransport:'starttls'});
@@ -112,6 +112,7 @@ export async function sendContactSmtp(env,{to,replyTo,subject,text}){
     await io.command('DATA',[354]);
     // MIME Base64 permite caracteres españoles sin SMTPUTF8 ni dot-stuffing.
     const id=crypto.randomUUID();
+    const boundary='sb-'+id;
     const message=[
       'From: SouthBear Studio <'+env.SMTP_FROM+'>',
       'To: <'+to+'>',
@@ -120,10 +121,7 @@ export async function sendContactSmtp(env,{to,replyTo,subject,text}){
       'Date: '+new Date().toUTCString(),
       'Message-ID: <'+id+'@southbearstudio.com>',
       'MIME-Version: 1.0',
-      'Content-Type: text/plain; charset=UTF-8',
-      'Content-Transfer-Encoding: base64',
-      '',
-      base64Utf8(text).match(/.{1,76}/g).join('\r\n')
+      ...(html?['Content-Type: multipart/alternative; boundary="'+boundary+'"','','--'+boundary,'Content-Type: text/plain; charset=UTF-8','Content-Transfer-Encoding: base64','',base64Utf8(text).match(/.{1,76}/g).join('\r\n'),'--'+boundary,'Content-Type: text/html; charset=UTF-8','Content-Transfer-Encoding: base64','',base64Utf8(html).match(/.{1,76}/g).join('\r\n'),'--'+boundary+'--']:['Content-Type: text/plain; charset=UTF-8','Content-Transfer-Encoding: base64','',base64Utf8(text).match(/.{1,76}/g).join('\r\n')])
     ].join('\r\n');
     await io.write(message+'\r\n.');
     const accepted=await io.reply();

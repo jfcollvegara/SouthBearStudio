@@ -1,0 +1,58 @@
+---
+import Private from '../../../../layouts/Private.astro';
+---
+<Private workspace title="Correos promociones" description="Contactos que han aceptado recibir comunicaciones comerciales de SouthBear Studio.">
+  <section class="promos">
+    <p class="crumb"><a href="/acceso/panel/">SOUTHBEAR OS</a> / CORREOS PROMOCIONES</p>
+    <header><div><p class="eyebrow">MARKETING / CONTACTOS AUTORIZADOS</p><h1>CORREOS <span>PROMOCIONES.</span></h1><p>Solo personas que han marcado expresamente la casilla para recibir publicidad y ofertas.</p></div><strong id="total">— contactos</strong></header>
+    <div class="bar"><label>Buscar nombre, correo, teléfono o empresa<input id="search" type="search" placeholder="Buscar contacto..." maxlength="120"/></label><button type="button" id="refresh">Actualizar ↻</button></div>
+    <p id="status" role="status">Cargando contactos…</p>
+    <div class="tablewrap"><table><thead><tr><th>Correo electrónico</th><th>Nombre</th><th>Teléfono</th><th>Empresa / marca</th><th>Consentimiento</th><th></th></tr></thead><tbody id="rows"></tbody></table></div>
+    <button id="more" type="button" hidden>Cargar más contactos</button>
+    <p class="note">No se almacenan los mensajes ni los servicios solicitados. Para atender una baja o solicitud de supresión, elimina el contacto de este listado. No se deben importar direcciones sin consentimiento.</p>
+  </section>
+</Private>
+<style>
+.promos{max-width:1450px;margin:auto;color:#fff;padding:20px 0 70px}.crumb,.eyebrow{font-size:11px;letter-spacing:.13em;color:#b8c2c0}.crumb a{color:inherit}.promos header{display:flex;justify-content:space-between;align-items:flex-end;gap:25px;margin:44px 0}.promos h1{font-family:'Space Grotesk Variable',sans-serif;font-size:clamp(38px,5vw,70px);letter-spacing:-.07em;margin:10px 0}.promos h1 span{color:#b6c2be}.promos header p{color:#c1c8c6}.promos header strong{font-size:16px;white-space:nowrap}.bar{display:flex;align-items:flex-end;gap:16px;margin-bottom:20px}.bar label{display:grid;gap:9px;flex:1;color:#d1d7d5;font-size:12px}.bar input{padding:15px;background:#202727;border:1px solid #4c5955;border-radius:12px;color:white;width:100%}.bar button,#more{padding:15px 20px;border:1px solid #75847f;border-radius:12px;color:white;background:#26322e;cursor:pointer}.tablewrap{width:100%;overflow-x:auto;border:1px solid #45534f;border-radius:18px;background:#151d1b}table{border-collapse:collapse;width:100%;min-width:790px}th,td{text-align:left;padding:18px 15px;border-bottom:1px solid #394541;font-size:12px}th{font-size:10px;letter-spacing:.1em;color:#b7c5bf}td{color:#e5eeea}td:first-child{font-weight:700}td button{padding:9px 12px;border:1px solid #8c6060;border-radius:9px;color:#fff;background:#4a2626;cursor:pointer}#status,.note{color:#c7d0cc;font-size:12px;line-height:1.7}.note{margin-top:25px}#more{margin-top:20px}@media(max-width:650px){.promos header,.bar{flex-direction:column;align-items:stretch}}
+</style>
+<script>
+ const endpoint='/api/southbear/correos-promociones/';
+ const search=document.getElementById('search'),rows=document.getElementById('rows'),status=document.getElementById('status'),total=document.getElementById('total'),more=document.getElementById('more');
+ let items=[],page=1,hasMore=false,seq=0,timer;
+ const cell=(row,value)=>{const td=document.createElement('td');td.textContent=value||'—';row.append(td);return td};
+ function render(){
+  rows.replaceChildren();
+  total.textContent=items.length+(hasMore?'+':'')+' contactos';
+  more.hidden=!hasMore;
+  if(!items.length){const tr=document.createElement('tr');const td=cell(tr,'Todavía no hay contactos con consentimiento promocional.');td.colSpan=6;rows.append(tr);return;}
+  for(const item of items){
+   const tr=document.createElement('tr');
+   cell(tr,item.email);cell(tr,item.name);cell(tr,item.phone);cell(tr,item.company);
+   cell(tr,new Date(item.consent_at).toLocaleString('es-ES'));
+   const td=document.createElement('td'),btn=document.createElement('button');
+   btn.textContent='Eliminar';btn.type='button';btn.addEventListener('click',()=>remove(item.email));td.append(btn);tr.append(td);rows.append(tr);
+  }
+ }
+ async function load(reset=true){
+  if(reset){page=1;items=[]}const id=++seq;status.textContent='Cargando…';
+  try{
+   const u=new URL(endpoint,location.origin);u.searchParams.set('q',search.value.trim());u.searchParams.set('page',String(page));
+   const r=await fetch(u,{credentials:'same-origin',cache:'no-store'});
+   const data=await r.json();if(!r.ok||!data.ok)throw Error(data.error||'No se pudo cargar el listado');
+   if(id!==seq)return;
+   items=reset?data.items:items.concat(data.items);hasMore=data.hasMore;render();status.textContent=items.length+' contactos mostrados.';
+  }catch(e){status.textContent=e.message||'Error al cargar contactos';}
+ }
+ async function remove(email){
+  if(!confirm('¿Eliminar '+email+' de la lista promocional? Ya no se le podrán enviar promociones.'))return;
+  try{
+   const r=await fetch(endpoint,{method:'DELETE',credentials:'same-origin',headers:{'Content-Type':'application/json','X-SouthBear-Request':'1'},body:JSON.stringify({email})});
+   const data=await r.json();if(!r.ok||!data.ok)throw Error(data.error||'No se pudo eliminar');
+   await load();status.textContent='Contacto eliminado.';
+  }catch(e){status.textContent=e.message||'Error al eliminar';}
+ }
+ search.addEventListener('input',()=>{clearTimeout(timer);timer=setTimeout(()=>load(),300)});
+ document.getElementById('refresh').addEventListener('click',()=>load());
+ more.addEventListener('click',()=>{page++;load(false)});
+ load();
+</script>

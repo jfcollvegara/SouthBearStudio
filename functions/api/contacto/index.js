@@ -1,4 +1,5 @@
 import {sendContactSmtp,smtpConfigured} from '../../lib/hostalia-smtp.js';
+import {loadTemplate,renderEmail} from '../../lib/email-templates.js';
 
 // Formulario de SouthBear Studio: Cloudflare Pages + Turnstile + SMTP de Hostalia.
 // La contraseña SMTP permanece cifrada en Cloudflare y el destinatario es fijo.
@@ -119,14 +120,34 @@ export const onRequestPost=async({request,env})=>{
   }
   // Solo conservar datos para comunicaciones comerciales con consentimiento expreso.
   // El envío de la consulta sigue siendo válido aunque falle la inscripción.
+  let freshSubscriber=false;
   if(promotions){
     try{
+      const existing=await env.SOUTHBEAR_DB.prepare('SELECT 1 AS found FROM sb_promotion_contacts WHERE email=?').bind(email).first();
+      freshSubscriber=!existing;
       const now=new Date().toISOString();
       await env.SOUTHBEAR_DB.prepare(
         'INSERT INTO sb_promotion_contacts(email,name,phone,company,consent_at,updated_at) VALUES(?,?,?,?,?,?) '+
         'ON CONFLICT(email) DO UPDATE SET name=excluded.name,phone=excluded.phone,company=excluded.company,updated_at=excluded.updated_at'
       ).bind(email,name,phone,company,now,now).run();
-    }catch{console.error('SouthBear: error al guardar consentimiento promocional');}
+    }catch{freshSubscriber=false;console.error('SouthBear: error al guardar consentimiento promocional');}
+  }
+  // Envíos de cortesía: si fallan, no invalidan una consulta ya aceptada por Hostalia.
+  try{
+    const template=await loadTemplate(env.SOUTHBEAR_DB,'contact_receipt');
+    if(template){
+      const emailContent=renderEmail(template,name);
+      await sendContactSmtp(env,{to:email,replyTo:RECIPIENT,...emailContent});
+    }
+  }catch{console.error('SouthBear: no se pudo enviar la confirmación al cliente');}
+  if(freshSubscriber){
+    try{
+      const template=await loadTemplate(env.SOUTHBEAR_DB,'promotion_welcome');
+      if(template){
+        const emailContent=renderEmail(template,name);
+        await sendContactSmtp(env,{to:email,replyTo:RECIPIENT,...emailContent});
+      }
+    }catch{console.error('SouthBear: no se pudo enviar la bienvenida promocional');}
   }
   return json({ok:true,message:'Consulta enviada correctamente.'});
 };

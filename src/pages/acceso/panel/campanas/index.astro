@@ -8,7 +8,7 @@ import Private from '../../../../layouts/Private.astro';
 <div class="cols"><form id="compose">
 <label>Asunto<input name="subject" required maxlength="180" placeholder="Novedades de SouthBear Studio"/></label>
 <label>Título del correo<input name="headline" required maxlength="180" placeholder="Una novedad para ti"/></label>
-<label>Mensaje <small>Usa {nombre} para personalizar el saludo.</small><textarea name="body" maxlength="6000" rows="9" required placeholder="Hola, {nombre}:&#10;&#10;Te presentamos…"></textarea></label>
+<label>Mensaje <small>Utiliza la variable de nombre para personalizar el saludo.</small><textarea name="body" maxlength="6000" rows="9" required placeholder="Hola, {nombre}:&#10;&#10;Te presentamos…"></textarea></label>
 <label>Texto del botón (opcional)<input name="button_label" maxlength="100" placeholder="Visitar SouthBear"/></label>
 <label>URL del botón (opcional)<input name="button_url" type="url" maxlength="400" placeholder="https://southbearstudio.com/"/></label>
 <div class="preview"><h2>Vista previa</h2><div class="email"><div class="brand"><img src="/southbear-logo.svg" alt="SouthBear Studio"/></div><div class="inner"><h2 id="preview-title"></h2><p id="preview-body"></p><a id="preview-button" href="https://southbearstudio.com/" target="_blank" rel="noopener" hidden></a></div><footer>SouthBear Studio · info@southbearstudio.com<br/>Para darte de baja, escribe a info@southbearstudio.com.</footer></div></div>

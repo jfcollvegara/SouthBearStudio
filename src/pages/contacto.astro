@@ -123,7 +123,7 @@ const services=[
               <div class="sb-contact__form-grid">
                 <label class="sb-contact__field">
                   <span>Nombre <b>*</b></span>
-                  <input name="name" type="text" autocomplete="name" maxlength="120" placeholder="Tu nombre" required/>
+                  <input name="name" type="text" autocomplete="name" minlength="2" maxlength="120" placeholder="Tu nombre" required/>
                 </label>
                 <label class="sb-contact__field">
                   <span>Correo electrónico <b>*</b></span>
@@ -146,7 +146,7 @@ const services=[
                 </label>
                 <label class="sb-contact__field sb-contact__field--wide">
                   <span>Cuéntanos qué necesitas <b>*</b></span>
-                  <textarea name="message" rows="6" maxlength="2400" placeholder="Háblanos de tu proyecto, qué tienes en mente, plazos o cualquier detalle que quieras compartir…" required></textarea>
+                  <textarea name="message" rows="6" minlength="10" maxlength="2400" placeholder="Háblanos de tu proyecto, qué tienes en mente, plazos o cualquier detalle que quieras compartir…" required></textarea>
                 </label>
               </div>
 

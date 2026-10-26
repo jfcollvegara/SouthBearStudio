@@ -8,6 +8,9 @@ export function getStaticPaths(){
   return data.packages.map((pkg,index)=>({params:{paquete:['logotipo-esencial','logotipo-profesional','identidad-visual','branding-integral'][index]},props:{pkg}}));
 }
 const {pkg}=Astro.props;
+const identityApplications=branding.extraSections[0].items;
+const isIdentity=pkg.name==='Identidad Visual';
+const isIntegral=pkg.name==='Branding Integral';
 ---
 <Base title={pkg.name} description={pkg.name+' de SouthBear Studio. Conoce qué incluye este paquete de identidad visual.'}>
   <section class="sb-pkg-paper">
@@ -22,7 +25,35 @@ const {pkg}=Astro.props;
         <h2>Qué incluye</h2>
         <ul>{pkg.features.map(feature=><li>{feature}</li>)}</ul>
       </div>
-      <p class="sb-pkg-paper__note">Los precios incluyen IVA. La impresión y el registro de marca no están incluidos.</p>
+      {(isIdentity || isIntegral) && (
+        <section class="sb-pkg-paper__deboss sb-pkg-paper__section" aria-labelledby="sb-pkg-apps-title">
+          <h2 id="sb-pkg-apps-title">Aplicaciones incluidas</h2>
+          {isIdentity && (
+            <>
+              <p class="sb-pkg-paper__section-intro">Elige 3 aplicaciones corporativas sencillas de entre las siguientes opciones:</p>
+              <p class="sb-pkg-paper__detail">{identityApplications[0].detail}</p>
+            </>
+          )}
+          {isIntegral && (
+            <>
+              <p class="sb-pkg-paper__section-intro">Incluye 6 aplicaciones corporativas en total, no 3 + 6. Opciones contempladas:</p>
+              <p class="sb-pkg-paper__detail">{identityApplications[1].detail}</p>
+              <h3>5 plantillas editables para redes sociales</h3>
+              <p class="sb-pkg-paper__detail">{identityApplications[2].detail}</p>
+              <p class="sb-pkg-paper__detail">También incluye papelería: tarjeta de visita, hoja membretada y sobre.</p>
+            </>
+          )}
+        </section>
+      )}
+      <section class="sb-pkg-paper__deboss sb-pkg-paper__section" aria-labelledby="sb-pkg-terms-title">
+        <h2 id="sb-pkg-terms-title">Condiciones generales</h2>
+        <ul>{branding.common.map(condition=><li>{condition}</li>)}</ul>
+      </section>
+      <section class="sb-pkg-paper__deboss sb-pkg-paper__section" aria-labelledby="sb-pkg-exclusions-title">
+        <h2 id="sb-pkg-exclusions-title">Exclusiones y limitaciones</h2>
+        <p class="sb-pkg-paper__detail">{branding.notIncluded}</p>
+      </section>
+      <p class="sb-pkg-paper__note">Precios con IVA incluido.</p>
       <a class="sb-pkg-paper__contact" href={'/presupuesto/?servicio=branding&paquete='+encodeURIComponent(pkg.name)}>Hablemos de tu proyecto ↗</a>
     </div>
   </section>
@@ -40,6 +71,11 @@ const {pkg}=Astro.props;
 .sb-pkg-paper__deboss ul{list-style:none;padding:0;margin:0;display:grid;gap:20px}
 .sb-pkg-paper__deboss li{position:relative;padding-left:26px;font-size:clamp(14px,2vw,17px);line-height:1.6}
 .sb-pkg-paper__deboss li::before{content:'+';position:absolute;left:0;font-weight:700;color:#8d8678}
+.sb-pkg-paper__section{margin-top:26px}
+.sb-pkg-paper__section-intro,.sb-pkg-paper__detail{font-size:clamp(14px,2vw,16px);line-height:1.75;color:#5f5b54}
+.sb-pkg-paper__section-intro{margin:0 0 14px;font-weight:600}
+.sb-pkg-paper__detail{margin:0 0 16px}
+.sb-pkg-paper__section h3{font:620 clamp(18px,2.5vw,23px)/1.3 'Space Grotesk Variable',Arial,sans-serif;letter-spacing:-.03em;margin:26px 0 8px}
 .sb-pkg-paper__note{margin:24px 0 45px;font-size:12px;color:#766f64;line-height:1.6}
 .sb-pkg-paper__contact{display:inline-block;color:#302b24;border-bottom:1px solid #948879;padding-bottom:8px;text-decoration:none;font-weight:650}
 @keyframes sb-pkg-reveal{from{opacity:0;filter:blur(8px)}to{opacity:1;filter:blur(0)}}

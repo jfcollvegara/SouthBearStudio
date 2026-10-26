@@ -60,7 +60,7 @@ const isCurrentCategory = (url) => {
     <title>{fullTitle}</title>
     <link rel="canonical" href={canonicalUrl}/>
     <link rel="sitemap" type="application/xml" href="/sitemap-index.xml"/>
-    <meta property="og:locale" content="es_ES"/>
+    <meta property="og:locale" content={lang==='en'?'en_GB':'es_ES'}/>
     <meta property="og:type" content="website"/>
     <meta property="og:site_name" content={site.name}/>
     <meta property="og:title" content={fullTitle}/>
@@ -75,7 +75,7 @@ const isCurrentCategory = (url) => {
     {!landing && (
       <header class="site-header southbear-nav">
         <div class="container nav sb-interior-nav">
-          <a class="sb-nav-brand" href={route('/')} aria-label="SOUTHBEAR STUDIO — inicio">
+          <a class="sb-nav-brand" href={route('/')} aria-label={lang==='en'?'SOUTHBEAR STUDIO — home':'SOUTHBEAR STUDIO — inicio'}>
             <img src={root + '/southbear-logo.svg'} alt="SOUTHBEAR STUDIO" width="218" height="40"/>
           </a>
           <nav class="sb-nav-desktop" aria-label={lang==='en'?'Main navigation':'Navegación principal'}>
@@ -98,7 +98,7 @@ const isCurrentCategory = (url) => {
             <summary class="menu-toggle" aria-label={lang==='en'?'Open navigation':'Abrir menú de navegación'}>
               <span class="menu-toggle-lines" aria-hidden="true"><span></span><span></span></span>
             </summary>
-            <nav class="menu-panel" aria-label="Menú de categorías">
+            <nav class="menu-panel" aria-label={lang==='en'?'Navigation menu':'Menú de categorías'}>
               {nav.map(([url,label])=>url === '/servicios'
                 ? <details class="sb-services-mobile-group">
                     <summary>{lang==='en'?'Services':'Servicios'} <span aria-hidden="true" class="sb-services-chevron">⌄</span></summary>
@@ -111,14 +111,14 @@ const isCurrentCategory = (url) => {
                 : <a href={route(url)} aria-current={isCurrentCategory(url) ? 'page' : undefined}>{label}</a>
               )}
               <div class="sb-lang-selector sb-lang-mobile" role="group" aria-label="Idioma / Language">
-              <a data-sb-lang="es" lang="es" href={Astro.url.pathname} aria-label="Español">ES</a>
+              <a data-sb-lang="es" lang="es" href={spanishPage} aria-label="Español">ES</a>
               <span aria-hidden="true">/</span>
-              <a data-sb-lang="en" lang="en" href={'/en'+Astro.url.pathname} aria-label="English">EN</a>
+              <a data-sb-lang="en" lang="en" href={englishPage} aria-label="English">EN</a>
             </div>
             </nav>
           </details>
         </div>
-        <nav class="sb-services-dropdown" id="sb-services-dropdown" aria-label="Categorías de servicios" hidden>
+        <nav class="sb-services-dropdown" id="sb-services-dropdown" aria-label={lang==='en'?'Service categories':'Categorías de servicios'} hidden>
           {catalog.map(service=>
             <a href={route('/servicios/'+service.slug)}>{service.title}</a>
           )}
@@ -126,15 +126,15 @@ const isCurrentCategory = (url) => {
       </header>
     )}
     <main><slot/></main>
-    <footer class="sb-site-footer" aria-label="Pie de página">
+    <footer class="sb-site-footer" aria-label={lang==='en'?'Footer':'Pie de página'}>
       <div class="container sb-footer-main">
         <div class="sb-footer-brand">
-          <a href={route('/')} aria-label="SOUTHBEAR STUDIO — ir al inicio">
+          <a href={route('/')} aria-label={lang==='en'?'SOUTHBEAR STUDIO — go home':'SOUTHBEAR STUDIO — ir al inicio'}>
             <img src={root + "/southbear-logo.svg"} alt="SOUTHBEAR STUDIO" width="340" height="64" loading="lazy"/>
           </a>
-          <p>Diseño web, identidad visual y soluciones digitales.</p>
+          <p>{lang==='en'?'Web design, visual identity and digital solutions.':'Diseño web, identidad visual y soluciones digitales.'}</p>
         </div>
-        <nav class="sb-footer-nav" aria-label="Navegación del pie de página">
+        <nav class="sb-footer-nav" aria-label={lang==='en'?'Footer navigation':'Navegación del pie de página'}>
           <h3>{lang==='en'?'Explore':'Explora'}</h3>
           <a href={route('/')+'#servicios'}>{lang==='en'?'Services':'Servicios'}</a>
           <a href={route('/proyectos')}>{lang==='en'?'Projects':'Proyectos'}</a>
@@ -142,15 +142,15 @@ const isCurrentCategory = (url) => {
           <a href={route('/contacto')}>{lang==='en'?'Contact':'Contacto'}</a>
         </nav>
         <div class="sb-footer-location">
-          <h3>Estamos cerca</h3>
+          <h3>{lang==='en'?'Close to you':'Estamos cerca'}</h3>
           <p>Beniel, Murcia.</p>
           <p>Murcia · Alicante · Almería</p>
-          <p>Trabajamos online con toda España.</p>
+          <p>{lang==='en'?'We work remotely with clients throughout Spain.':'Trabajamos online con toda España.'}</p>
         </div>
       </div>
-      <div class="container sb-footer-tools" aria-label="Herramientas con las que trabajamos">
-        <span class="sb-footer-tools-label">HERRAMIENTAS CON LAS QUE TRABAJAMOS</span>
-        <ul class="sb-footer-tools-list" aria-label="Supabase, Cloudflare, GitHub, DaVinci Resolve, Affinity y Hostalia">
+      <div class="container sb-footer-tools" aria-label={lang==='en'?'Tools we use':'Herramientas con las que trabajamos'}>
+        <span class="sb-footer-tools-label">{lang==='en'?'TOOLS WE WORK WITH':'HERRAMIENTAS CON LAS QUE TRABAJAMOS'}</span>
+        <ul class="sb-footer-tools-list" aria-label="Supabase, Cloudflare, GitHub, DaVinci Resolve, Affinity and Hostalia">
           <li class="sb-footer-tool"><span class="sb-footer-tool-logo sb-footer-tool-logo--supabase" role="img" aria-label="Supabase"></span></li>
           <li class="sb-footer-tool"><span class="sb-footer-tool-logo sb-footer-tool-logo--cloudflare" role="img" aria-label="Cloudflare"></span></li>
           <li class="sb-footer-tool"><span class="sb-footer-tool-logo sb-footer-tool-logo--github" role="img" aria-label="GitHub"></span></li>
@@ -160,8 +160,8 @@ const isCurrentCategory = (url) => {
         </ul>
       </div>
       <div class="container sb-footer-bottom">
-        <span>© {new Date().getFullYear()} SOUTHBEAR STUDIO. Todos los derechos reservados.</span>
-        <a href={route('/')} aria-label="Volver al inicio">Ideas que dejan huella. <span aria-hidden="true">↗</span></a>
+        <span>© {new Date().getFullYear()} SOUTHBEAR STUDIO. {lang==='en'?'All rights reserved.':'Todos los derechos reservados.'}</span>
+        <a href={route('/')} aria-label="Volver al inicio">{lang==='en'?'Ideas that leave a mark.':'Ideas que dejan huella.'} <span aria-hidden="true">↗</span></a>
       </div>
     </footer>
     {!landing && (

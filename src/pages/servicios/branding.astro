@@ -35,40 +35,32 @@ import Base from '../../layouts/Base.astro';
     font-size:clamp(38px,6.9vw,110px);font-weight:680;line-height:1.04;letter-spacing:-.075em;
   }
   .sb-paper-hero__line{
-    display:block;position:relative;white-space:nowrap;
-    color:#141414;
-    animation:sb-ink-fade 3.6s ease-in-out both;
+    display:block;position:relative;white-space:nowrap;color:transparent;
   }
   .sb-paper-hero__line::after{
     content:attr(data-text);position:absolute;inset:0;white-space:nowrap;
-    color:#f1efe8;
+    color:#ece8df;opacity:0;filter:blur(8px);
     text-shadow:
-      -1px -1px 1px rgba(255,255,255,.95),
-      -2px -2px 3px rgba(255,255,255,.85),
-       1px 1px 1px rgba(154,149,138,.65),
-       2px 2px 2px rgba(172,166,153,.58),
-       4px 4px 6px rgba(184,178,164,.32);
-    filter:drop-shadow(-1px -1px 0 rgba(135,128,113,.26));
-    opacity:0;animation:sb-paper-imprint 3.6s ease-in-out both;
+      1px 1px 0 rgba(255,255,255,.92),
+      2px 2px 3px rgba(255,255,255,.62),
+      -1px -1px 0 rgba(163,157,145,.62),
+      -2px -2px 3px rgba(145,139,127,.42),
+      -4px -4px 8px rgba(120,114,103,.18);
+    animation:sb-paper-deboss 2.8s ease-out forwards;
   }
-  @keyframes sb-ink-fade{
-    0%{color:transparent;filter:blur(9px)}
-    25%{color:#141414;filter:blur(0)}
-    48%{color:#141414;filter:blur(0)}
-    78%,100%{color:transparent;filter:blur(0)}
-  }
-  @keyframes sb-paper-imprint{
-    0%,47%{opacity:0}
-    78%,100%{opacity:1}
+  @keyframes sb-paper-deboss{
+    0%{opacity:0;filter:blur(10px);transform:translateY(0)}
+    55%{opacity:.55;filter:blur(2px);transform:translateY(.5px)}
+    100%{opacity:1;filter:blur(0);transform:translateY(1px)}
   }
   @media(max-width:700px){
     .sb-paper-hero__title{font-size:clamp(28px,7vw,53px);padding-inline:12px;letter-spacing:-.075em}
     .sb-paper-hero__line::after{
-      text-shadow:-1px -1px 1px rgba(255,255,255,.98),-2px -2px 2px rgba(255,255,255,.8),1px 1px 1px rgba(154,149,138,.68),2px 2px 3px rgba(172,166,153,.47);
+      text-shadow:1px 1px 0 rgba(255,255,255,.94),2px 2px 2px rgba(255,255,255,.56),-1px -1px 0 rgba(163,157,145,.62),-2px -2px 2px rgba(145,139,127,.38);
     }
   }
   @media(prefers-reduced-motion:reduce){
-    .sb-paper-hero__line{animation:none;color:transparent;filter:none}
-    .sb-paper-hero__line::after{animation:none;opacity:1}
+    .sb-paper-hero__line{color:transparent}
+    .sb-paper-hero__line::after{animation:none;opacity:1;filter:none;transform:translateY(1px)}
   }
 </style>

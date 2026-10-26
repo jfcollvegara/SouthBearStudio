@@ -118,7 +118,7 @@ const services=[
               </div>
               <span class="sb-contact__form-mark" aria-hidden="true">↗</span>
             </div>
-            <p class="sb-contact__form-description">Rellena estos datos y prepara tu mensaje para contactar con el estudio.</p>
+            <p class="sb-contact__form-description">Rellena estos datos y envía tu consulta directamente a SouthBear Studio. Te responderemos en el correo que indiques.</p>
             <form id="sb-contact-form" autocomplete="on">
               <div class="sb-contact__form-grid">
                 <label class="sb-contact__field">
@@ -150,15 +150,21 @@ const services=[
                 </label>
               </div>
 
+              <label class="sb-contact__honeypot" aria-hidden="true">
+                <span>No completar este campo</span><input name="website" type="text" tabindex="-1" autocomplete="off" />
+              </label>
+              <div class="sb-contact__turnstile">
+                <div class="cf-turnstile" data-sitekey="0x4AAAAAAFmX61EyBU-OotNU" data-theme="dark" data-action="southbear_contact" data-appearance="interaction-only"></div>
+              </div>
               <label class="sb-contact__consent">
                 <input type="checkbox" name="understood" required/>
-                <span>Entiendo que se abrirá mi aplicación de correo y que debo pulsar «Enviar» desde ella. <strong>No se envía automáticamente desde esta página.</strong></span>
+                <span>Autorizo que SouthBear Studio utilice mis datos para responder esta consulta. <strong>Se enviarán de forma segura mediante un servicio de correo, sin almacenarse en la base de datos de esta web.</strong></span>
               </label>
               <div class="sb-contact__send-group">
-                <button class="sb-contact__submit" type="submit">Preparar y abrir correo <span aria-hidden="true">↗</span></button>
+                <button class="sb-contact__submit" type="submit" disabled>Comprobando disponibilidad… <span aria-hidden="true">↗</span></button>
                 <button class="sb-contact__copy" id="sb-contact-copy" type="button">Copiar mensaje</button>
               </div>
-              <p class="sb-contact__microcopy">Tus datos solo se incorporan al correo que prepares y decidas enviar. Este formulario no almacena información en la web.</p>
+              <p class="sb-contact__microcopy">Los datos del formulario se remiten a info@southbearstudio.com mediante un proveedor de envío. Puedes ejercer tus derechos sobre ellos escribiendo a ese correo. Esta web no guarda una copia en su base de datos.</p>
               <p id="sb-contact-status" class="sb-contact__status" role="status" aria-live="polite"></p>
             </form>
           </div>
@@ -256,6 +262,10 @@ const services=[
   .sb-contact__field select option{background:#1b2020;color:#fff}
   .sb-contact__field textarea{resize:vertical;min-height:154px}
   .sb-contact__field input:focus-visible,.sb-contact__field select:focus-visible,.sb-contact__field textarea:focus-visible{border-color:rgba(220,255,156,.8);box-shadow:0 0 0 3px rgba(220,255,156,.11)}
+  .sb-contact__honeypot{position:absolute!important;left:-9999px!important;width:1px!important;height:1px!important;overflow:hidden!important}
+  .sb-contact__turnstile{margin-top:22px;min-height:24px}
+  .sb-contact__submit:disabled{cursor:not-allowed;opacity:.62;transform:none}
+  .sb-contact__submit:disabled:hover{background:#f5f5f7;transform:none}
   .sb-contact__consent{display:flex;align-items:start;gap:10px;margin-top:22px;cursor:pointer}
   .sb-contact__consent input{margin-top:3px;width:17px;height:17px;accent-color:#dfff9d;flex-shrink:0}
   .sb-contact__consent>span{font-size:11px;line-height:1.65;color:#bdc2c7}
@@ -275,49 +285,107 @@ const services=[
   @supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){.sb-contact__glass{background:#272d2d}}
 </style>
 
+<script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+
 <script define:vars={{contactEmail:mail}}>
-  // Este formulario NO realiza envíos en segundo plano ni almacena datos.
-  // Se utiliza mailto: para que la persona revise y envíe desde su propio correo.
+  // Envío desde el servidor: no se abre Gmail, Outlook ni otra app del cliente.
   const form=document.getElementById('sb-contact-form');
   const copy=document.getElementById('sb-contact-copy');
+  const submit=form.querySelector('.sb-contact__submit');
   const status=document.getElementById('sb-contact-status');
+  let ready=false;
+  const actionLabel='Enviar consulta';
+  const unavailable='Envío directo pendiente de activación';
+  const show=value=>{status.textContent=value;};
   function getMessage(){
     const f=form.elements;
-    const selected=f.namedItem('service');
-    const service=selected.options[selected.selectedIndex]?.text||'Sin especificar';
+    const select=f.namedItem('service');
+    const service=select.options[select.selectedIndex]?.text||'Sin especificar';
     return [
       'SOLICITUD DE CONTACTO · SOUTHBEAR STUDIO',
       '',
       'Nombre: '+f.namedItem('name').value.trim(),
       'Email: '+f.namedItem('email').value.trim(),
       'Teléfono: '+(f.namedItem('phone').value.trim()||'No indicado'),
-      'Empresa o marca: '+(f.namedItem('company').value.trim()||'No indicada'),
+      'Empresa/marca: '+(f.namedItem('company').value.trim()||'No indicada'),
       'Servicio: '+service,
       '',
       'MENSAJE:',
       f.namedItem('message').value.trim()
     ].join('\n');
   }
-  function validate(){
-    status.textContent='';
-    return form.reportValidity();
+  function resetTurnstile(){
+    if(window.turnstile?.reset)try{window.turnstile.reset();}catch{}
   }
-  form.addEventListener('submit',event=>{
-    event.preventDefault();
-    if(!validate())return;
-    const subject='Consulta SouthBear Studio · '+form.elements.namedItem('service').value;
-    const mailto='mailto:'+contactEmail+'?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(getMessage());
-    status.textContent='Tu aplicación de correo debería abrirse con el mensaje preparado. Revísalo y pulsa Enviar. Si no se abre, usa «Copiar mensaje».';
-    window.location.href=mailto;
-  });
-  copy.addEventListener('click',async()=>{
-    if(!validate())return;
-    const content=getMessage();
+  function updateButton(){
+    submit.disabled=!ready;
+    submit.innerHTML=(ready?actionLabel:unavailable)+' <span aria-hidden="true">↗</span>';
+  }
+  async function checkStatus(){
     try{
-      await navigator.clipboard.writeText(content);
-      status.textContent='Mensaje copiado. Puedes pegarlo en un correo para '+contactEmail+'.';
-    }catch{
-      status.textContent='No se pudo copiar automáticamente. Abre tu correo y escribe a '+contactEmail+'.';
+      const response=await fetch('/api/contacto/',{headers:{Accept:'application/json'},cache:'no-store'});
+      const payload=await response.json();
+      ready=Boolean(response.ok&&payload.ready);
+    }catch{ready=false;}
+    updateButton();
+    if(!ready)show('El envío directo está pendiente de activación. Mientras tanto, puedes escribirnos por WhatsApp o a '+contactEmail+'.');
+  }
+  form.addEventListener('submit',async event=>{
+    event.preventDefault();
+    if(!ready||!form.reportValidity())return;
+    const f=form.elements;
+    const token=new FormData(form).get('cf-turnstile-response');
+    if(!token){
+      show('Completa la comprobación de seguridad e inténtalo de nuevo.');
+      return;
+    }
+    const payload={
+      name:f.namedItem('name').value.trim(),
+      email:f.namedItem('email').value.trim(),
+      phone:f.namedItem('phone').value.trim(),
+      company:f.namedItem('company').value.trim(),
+      service:f.namedItem('service').value,
+      message:f.namedItem('message').value.trim(),
+      consent:f.namedItem('understood').checked,
+      website:f.namedItem('website').value,
+      token:String(token)
+    };
+    submit.disabled=true;
+    submit.textContent='Enviando consulta…';
+    show('Estamos enviando tu consulta de forma segura.');
+    try{
+      const response=await fetch('/api/contacto/',{
+        method:'POST',
+        headers:{'Content-Type':'application/json',Accept:'application/json'},
+        body:JSON.stringify(payload)
+      });
+      const result=await response.json().catch(()=>({}));
+      if(!response.ok||!result.ok){
+        if(response.status===429)throw Error('Has enviado varias consultas seguidas. Inténtalo de nuevo dentro de una hora.');
+        if(response.status===503){
+          ready=false;
+          throw Error('El envío directo no está disponible temporalmente. Contacta por WhatsApp o teléfono.');
+        }
+        throw Error(result.error||'No se pudo enviar tu consulta. Inténtalo de nuevo.');
+      }
+      form.reset();
+      resetTurnstile();
+      show('¡Consulta enviada correctamente! Te responderemos lo antes posible.');
+    }catch(error){
+      resetTurnstile();
+      show(error.message||'Se produjo un error de conexión. Inténtalo de nuevo.');
+    }finally{
+      updateButton();
     }
   });
+  copy.addEventListener('click',async()=>{
+    if(!form.reportValidity())return;
+    try{
+      await navigator.clipboard.writeText(getMessage());
+      show('Mensaje copiado. Puedes pegarlo en un correo para '+contactEmail+'.');
+    }catch{
+      show('No se pudo copiar automáticamente. Puedes escribir directamente a '+contactEmail+'.');
+    }
+  });
+  checkStatus();
 </script>

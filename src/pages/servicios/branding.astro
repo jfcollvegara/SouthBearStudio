@@ -94,7 +94,7 @@ const branding=catalog.find(service=>service.slug==='branding');
   .sb-paper-packages__inner{position:relative;max-width:1240px;margin:auto;padding:100px 0 0}
   .sb-paper-packages__rail{position:absolute;z-index:0;pointer-events:none;top:0;bottom:0;left:50%;width:7px;transform:translateX(-50%) scaleY(var(--rail-progress,0));transform-origin:top;background:#ebe7dd;box-shadow:inset 2px 0 2px rgba(135,127,112,.37),inset -2px 0 2px #fff,-1px 0 2px rgba(161,152,133,.23),1px 0 2px #fff;transition:none}
   .sb-paper-packages__grid{position:relative;z-index:1;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);--branch-gap:clamp(64px,10vw,150px);column-gap:var(--branch-gap);row-gap:56px}
-  .sb-paper-package{position:relative;min-width:0;min-height:210px;aspect-ratio:1.65;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:26px;background:#f1eee6;border:1px solid rgba(188,180,164,.2);border-radius:0;box-shadow:inset 4px 4px 8px rgba(146,136,119,.22),inset -4px -4px 8px #fff,inset 1px 1px 2px rgba(104,96,80,.22),1px 1px 1px #fff;text-decoration:none;color:inherit;opacity:var(--reveal,0);filter:blur(calc((1 - var(--reveal,0)) * 6px));transform:translateY(calc((1 - var(--reveal,0)) * 30px));transition:box-shadow .25s}
+  .sb-paper-package{position:relative;min-width:0;min-height:210px;aspect-ratio:1.65;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:26px;background:#f1eee6;border:1px solid rgba(188,180,164,.2);border-radius:0;box-shadow:inset 4px 4px 8px rgba(146,136,119,.22),inset -4px -4px 8px #fff,inset 1px 1px 2px rgba(104,96,80,.22),1px 1px 1px #fff;text-decoration:none;color:inherit;opacity:var(--reveal,0);filter:blur(calc((1 - var(--reveal,0)) * 10px));transform:translateY(calc((1 - var(--reveal,0)) * 24px));transition:box-shadow .25s}
   .sb-paper-package:hover,.sb-paper-package:focus-visible{box-shadow:inset 6px 6px 12px rgba(119,109,94,.32),inset -5px -5px 10px #fff;outline-offset:4px}
   .sb-paper-package::before{content:'';position:absolute;top:50%;height:6px;width:calc(var(--branch-gap) / 2 + 5px);background:#ebe7dd;box-shadow:inset 1px 1px 2px rgba(119,110,91,.42),inset -1px -1px 2px #fff;pointer-events:none}
   .sb-paper-package--left{grid-column:1}.sb-paper-package--right{grid-column:2}
@@ -103,7 +103,7 @@ const branding=catalog.find(service=>service.slug==='branding');
   .sb-paper-package__hint{font-size:12px;letter-spacing:.015em;color:#82786b;margin-top:20px;font-weight:550}
   .sb-paper-package__hint span{display:inline-block;margin-left:3px}
   .sb-paper-package__price{font-family:'Space Grotesk Variable',Arial,sans-serif;font-size:clamp(23px,2.5vw,32px);font-weight:550;letter-spacing:-.06em;margin:0;color:#666056}
-  .sb-paper-extras{position:relative;z-index:2;width:min(100%,980px);margin:105px auto 0;padding:clamp(26px,5vw,60px);background:#f1eee6;border:1px solid rgba(188,180,164,.2);border-radius:0;box-shadow:inset 5px 5px 11px rgba(146,136,119,.24),inset -5px -5px 11px #fff;opacity:var(--reveal,0);filter:blur(calc((1 - var(--reveal,0)) * 6px));transform:translateY(calc((1 - var(--reveal,0)) * 30px));transition:none}
+  .sb-paper-extras{position:relative;z-index:2;width:min(100%,980px);margin:105px auto 0;padding:clamp(26px,5vw,60px);background:#f1eee6;border:1px solid rgba(188,180,164,.2);border-radius:0;box-shadow:inset 5px 5px 11px rgba(146,136,119,.24),inset -5px -5px 11px #fff;opacity:var(--reveal,0);filter:blur(calc((1 - var(--reveal,0)) * 10px));transform:translateY(calc((1 - var(--reveal,0)) * 24px));transition:none}
   .sb-paper-extras h2{font:650 clamp(36px,6vw,72px)/1 'Space Grotesk Variable',Arial,sans-serif;letter-spacing:-.075em;text-align:center;margin:0 0 40px}
   .sb-paper-extras__list{display:grid;gap:0}
   .sb-paper-extra{border-bottom:1px solid rgba(116,107,89,.2)}
@@ -142,8 +142,8 @@ const branding=catalog.find(service=>service.slug==='branding');
         const cardRect=card.getBoundingClientRect();
         const middle=cardRect.top+cardRect.height*.5;
         // The recessed line reaches each card before it fully appears.
-        const progress=clamp((trigger-middle+65)/130);
-        card.style.setProperty('--reveal',String(progress));
+        const progress=clamp((trigger-middle+120)/330);
+        card.style.setProperty('--reveal',String(progress*progress*(3-2*progress)));
       }
     }
     function schedule(){if(!scheduled){scheduled=true;requestAnimationFrame(render)}}

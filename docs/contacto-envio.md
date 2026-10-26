@@ -1,19 +1,48 @@
-# Envío directo del formulario de contacto de SouthBear Studio
+# Envío directo del formulario de SouthBear Studio
 
-La página **Contacto** usa **Cloudflare Pages Functions** y **Turnstile** para comprobar solicitudes, controlar abuso y enviar correos a `info@southbearstudio.com` mediante Resend.
+## Arquitectura
 
-## Pasos que faltan para activar el envío
+El formulario `/contacto/` publica una función `POST /api/contacto/` en Cloudflare Pages. Tras validar campos, origen, Cloudflare Turnstile y límites de frecuencia, la función se conecta mediante **SMTP autenticado y STARTTLS** al correo contratado en **Hostalia**. El correo siempre se dirige a `info@southbearstudio.com`. No se emplean Resend, Supabase ni otras cuentas.
 
-1. Crea una cuenta en https://resend.com/ (puedes empezar con el plan gratuito).
-2. En Resend, verifica **solo** el subdominio `notificaciones.southbearstudio.com`. Copia los registros DNS que indique Resend en la zona de Cloudflare. **No sustituyas ni elimines los registros MX existentes de `southbearstudio.com`**: el buzón sigue en Hostalia.
-3. En Resend crea una API key con permisos de envío y, si lo permite, con el dominio verificado restringido.
-4. En Cloudflare, entra en Workers & Pages → `southbearstudio` → Settings → Variables and Secrets → **Add**. Crea `RESEND_API_KEY` como variable **cifrada (Secret)**. No añadas la clave al repositorio ni la pegues en un chat.
-5. Lanza una nueva implementación de Pages tras guardar el secreto y prueba el envío real desde `https://southbearstudio.com/contacto/`. Comprueba también la carpeta de spam de Hostalia.
+- Servidor: `smtp.servidor-correo.net`.
+- Puerto: `587`.
+- Seguridad: **STARTTLS obligatorio**. No se aceptan contraseñas antes del cifrado.
+- Usuario: `info@southbearstudio.com`.
+- Remitente: `info@southbearstudio.com`.
+- Destinatario: `info@southbearstudio.com`.
+- **Reply-To**: dirección válida indicada por el cliente para contestarle desde Hostalia.
+- Formato: SMTP AUTH PLAIN o LOGIN, cuerpo MIME codificado en UTF-8/Base64.
+- La respuesta exitosa se muestra **solo si el servidor SMTP acepta el mensaje** (respuesta 250 tras DATA). Esto no garantiza entrega instantánea en la bandeja de entrada.
 
-El remitente técnico configurado en el servidor es `formularios@notificaciones.southbearstudio.com`, y los mensajes se reciben exclusivamente en `info@southbearstudio.com`. El correo del visitante se utiliza en la cabecera **Reply-To**, para permitir responderle fácilmente desde Hostalia. El servidor no accede al buzón de Hostalia ni conoce su contraseña.
+## Variables de Cloudflare
 
-**Configurado ya:** widget Turnstile `0x4AAAAAAFmX61EyBU-OotNU`, secret `TURNSTILE_SECRET` en producción, tabla D1 de límites por hora. El endpoint `GET /api/contacto/` indica si existe la clave; si no está configurado, el botón de envío permanece desactivado para evitar falsas confirmaciones. El endpoint `POST /api/contacto/` nunca informa de éxito sin una respuesta correcta del proveedor de correo.
+Proyecto: `southbearstudio` → **Settings → Variables and secrets → Production**.
 
-**Protección:** validación en cliente y servidor, comprobación de origen, verificación Turnstile por API, campo trampa (honeypot), datos limitados por tamaño y 5 mensajes máximos por IP y hora (solo hash, nunca IP ni mensajes en la base de datos).
+| Nombre | Tipo | Valor |
+| --- | --- | --- |
+| `SMTP_HOST` | Text | `smtp.servidor-correo.net` |
+| `SMTP_PORT` | Text | `587` |
+| `SMTP_USER` | Text | `info@southbearstudio.com` |
+| `SMTP_FROM` | Text | `info@southbearstudio.com` |
+| `SMTP_PASSWORD` | **Secret** | Contraseña del buzón introducida directamente en Cloudflare |
+| `TURNSTILE_SECRET` | **Secret** | Clave privada existente de Turnstile |
+| `SOUTHBEAR_DB` | D1 Binding | Base de datos ya vinculada al proyecto |
 
-**Pendiente de revisión legal:** completar y publicar aviso legal y política de privacidad con los datos reales del titular, plazos de conservación, información al interesado y proveedores antes de considerar el formulario plenamente preparado para producción RGPD.
+La contraseña SMTP **no debe introducirse en GitHub, código fuente ni chat**. Para cambios de secretos, vuelve a desplegar la versión de producción si la configuración no se aplica de inmediato. Nunca se hacen conexiones en claro por el puerto 25.
+
+## Verificación
+
+1. Comprobar que `GET /api/contacto/` devuelve `{"ready":true}`.
+2. En `https://southbearstudio.com/contacto/`, rellenar el formulario con un correo de prueba y marcar el consentimiento.
+3. Completar Turnstile y pulsar «Enviar consulta» una sola vez.
+4. El sitio debe confirmar el éxito solo tras el OK SMTP. Verificar recepción en el webmail de Hostalia, incluyendo spam.
+5. Probar un campo obligatorio vacío y un token Turnstile ausente: no deben enviarse mensajes. Si Hostalia rechaza la autenticación, el navegador mostrará un error genérico y **no** una falsa confirmación.
+
+## Seguridad y mantenimiento
+
+- Destinatario SMTP fijo y servidor SMTP limitado a Hostalia (no puede convertirse en relay abierto).
+- Validación del correo de respuesta para evitar la inyección de cabeceras, validación de tamaños de campo.
+- Verificación Turnstile en servidor, comprobación de origen y honeypot.
+- D1 guarda solo un hash seudónimo de IP y contador horario, nunca los mensajes ni la contraseña.
+- Protección básica: máximo 5 intentos de consulta por IP y hora.
+- Queda pendiente revisar y publicar el **aviso legal y política de privacidad** con los datos reales del titular, finalidad, base jurídica, información a interesados, destinatarios, derechos y retención conforme al RGPD. No inventar datos legales.

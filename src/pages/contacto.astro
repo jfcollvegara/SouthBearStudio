@@ -1,6 +1,297 @@
 ---
 import Base from '../layouts/Base.astro';
 import {site} from '../data/site.js';
-const root=import.meta.env.BASE_URL.replace(/\/$/,'');
+
+const mail=site.email;
+const services=[
+  {value:'Diseño gráfico',label:'Diseño gráfico'},
+  {value:'Identidad visual y branding',label:'Identidad visual y branding'},
+  {value:'Diseño y desarrollo web',label:'Diseño y desarrollo web'},
+  {value:'Producción audiovisual',label:'Producción audiovisual'},
+  {value:'Soluciones QR/NFC',label:'Soluciones QR/NFC'},
+  {value:'Otro servicio',label:'Otro servicio'}
+];
 ---
-<Base title="Contacto" description="Contacta con SOUTHBEAR STUDIO para hablar de diseño web, branding y producción audiovisual. Estudio en Beniel, atención en Murcia, Alicante, Almería y online."><section class="container page-head"><div class="eyebrow">Contacto</div><h1>Cuéntanos tu idea.</h1><p class="lead">Prepara una solicitud seleccionando el servicio y la modalidad que necesitas.</p></section><section class="container section"><div class="empty"><h2>Tu próximo proyecto empieza aquí.</h2><p>Utiliza nuestro configurador de presupuestos para organizar los detalles de tu encargo.</p><a class="button" href={root+'/presupuesto/'}>Preparar presupuesto ↗</a>{site.email?<p>Contacto: <a href={'mailto:'+site.email}>{site.email}</a></p>:<p class="muted">Todavía no se ha habilitado un correo comercial, por lo que el formulario permite preparar y copiar la solicitud, pero no enviarla automáticamente.</p>}</div></section></Base>
+<Base
+  title="Contacto"
+  description="Contacta con SOUTHBEAR STUDIO para proyectos de diseño gráfico, branding, desarrollo web y audiovisual. Atención presencial en Murcia, Almería y Alicante, y online en toda España."
+>
+  <div class="sb-contact">
+    <div class="sb-contact__glow sb-contact__glow--one" aria-hidden="true"></div>
+    <div class="sb-contact__glow sb-contact__glow--two" aria-hidden="true"></div>
+    <div class="sb-contact__inner">
+      <header class="sb-contact__hero">
+        <div class="sb-contact__eyebrow"><span class="sb-contact__signal" aria-hidden="true"></span> SOUTHBEAR STUDIO <span class="sb-contact__slash">/</span> CONTACTO</div>
+        <h1>Hablemos de<br/><span>tu proyecto.</span></h1>
+        <div class="sb-contact__hero-bottom">
+          <p>Una buena idea merece una conversación. Cuéntanos qué tienes en mente y buscaremos la mejor forma de darle vida.</p>
+          <span class="sb-contact__edition">DISEÑO <span>·</span> WEB <span>·</span> AUDIOVISUAL</span>
+        </div>
+      </header>
+
+      <div class="sb-contact__layout">
+        <section class="sb-contact__information" aria-labelledby="sb-contact-details-heading">
+          <div class="sb-contact__section-title">
+            <span>01 / INFORMACIÓN</span>
+            <h2 id="sb-contact-details-heading">Estamos cerca.<br/><em>Estés donde estés.</em></h2>
+          </div>
+
+          <div class="sb-contact__info-grid">
+            <article class="sb-contact__glass sb-contact__info-card">
+              <div class="sb-contact__info-top">
+                <span>CORREO ELECTRÓNICO</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="m4 7 8 6 8-6"/></svg>
+              </div>
+              <div class="sb-contact__info-body">
+                <a class="sb-contact__value sb-contact__value--email" href={'mailto:'+mail}>{mail}</a>
+                <span>Escríbenos cuando quieras <span aria-hidden="true">↗</span></span>
+              </div>
+            </article>
+            <article class="sb-contact__glass sb-contact__info-card">
+              <div class="sb-contact__info-top">
+                <span>TELÉFONO</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.8v2.9a2 2 0 0 1-2.2 2A19 19 0 0 1 2.3 4.2 2 2 0 0 1 4.3 2h2.9a2 2 0 0 1 2 1.7l.5 3.1a2 2 0 0 1-.6 1.9L7.5 10a15 15 0 0 0 6.5 6.5l1.3-1.6a2 2 0 0 1 1.9-.6l3.1.5a2 2 0 0 1 1.7 2z"/></svg>
+              </div>
+              <div class="sb-contact__info-body">
+                <strong class="sb-contact__value">Próximamente</strong>
+                <span>De momento, contacta por email</span>
+              </div>
+            </article>
+            <article class="sb-contact__glass sb-contact__info-card">
+              <div class="sb-contact__info-top">
+                <span>HORARIO DE ATENCIÓN</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+              </div>
+              <div class="sb-contact__info-body">
+                <strong class="sb-contact__value">Con cita previa</strong>
+                <span>Confirma la disponibilidad por email</span>
+              </div>
+            </article>
+            <article class="sb-contact__glass sb-contact__info-card sb-contact__info-card--areas">
+              <div class="sb-contact__info-top">
+                <span>ÁREA DE TRABAJO</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0z"/><circle cx="12" cy="10" r="2.5"/></svg>
+              </div>
+              <div class="sb-contact__info-body">
+                <div class="sb-contact__areas"><span>PRESENCIAL</span><strong>Murcia · Almería · Alicante</strong></div>
+                <div class="sb-contact__areas"><span>ONLINE</span><strong>Toda España</strong></div>
+              </div>
+            </article>
+          </div>
+
+          <div class="sb-contact__side-note">
+            <span class="sb-contact__note-number">SB / 01</span>
+            <p>Sin ideas demasiado pequeñas ni proyectos demasiado grandes. Lo importante es empezar a hablar.</p>
+          </div>
+        </section>
+
+        <section class="sb-contact__form-col" aria-labelledby="sb-contact-form-title">
+          <div class="sb-contact__glass sb-contact__form-shell">
+            <div class="sb-contact__form-head">
+              <div>
+                <span class="sb-contact__step">02 / TU CONSULTA</span>
+                <h2 id="sb-contact-form-title">Cuéntanos<br/><em>tu idea.</em></h2>
+              </div>
+              <span class="sb-contact__form-mark" aria-hidden="true">↗</span>
+            </div>
+            <p class="sb-contact__form-description">Rellena estos datos y prepara tu mensaje para contactar con el estudio.</p>
+            <form id="sb-contact-form" autocomplete="on">
+              <div class="sb-contact__form-grid">
+                <label class="sb-contact__field">
+                  <span>Nombre <b>*</b></span>
+                  <input name="name" type="text" autocomplete="name" maxlength="120" placeholder="Tu nombre" required/>
+                </label>
+                <label class="sb-contact__field">
+                  <span>Correo electrónico <b>*</b></span>
+                  <input name="email" type="email" autocomplete="email" maxlength="180" placeholder="tu@correo.es" required/>
+                </label>
+                <label class="sb-contact__field">
+                  <span>Teléfono <small>(opcional)</small></span>
+                  <input name="phone" type="tel" autocomplete="tel" maxlength="40" placeholder="Tu teléfono"/>
+                </label>
+                <label class="sb-contact__field">
+                  <span>Empresa / marca <small>(opcional)</small></span>
+                  <input name="company" type="text" autocomplete="organization" maxlength="160" placeholder="Nombre de la empresa"/>
+                </label>
+                <label class="sb-contact__field sb-contact__field--wide">
+                  <span>¿Qué servicio te interesa? <b>*</b></span>
+                  <select name="service" required>
+                    <option value="">Selecciona un servicio</option>
+                    {services.map(s=><option value={s.value}>{s.label}</option>)}
+                  </select>
+                </label>
+                <label class="sb-contact__field sb-contact__field--wide">
+                  <span>Cuéntanos qué necesitas <b>*</b></span>
+                  <textarea name="message" rows="6" maxlength="2400" placeholder="Háblanos de tu proyecto, qué tienes en mente, plazos o cualquier detalle que quieras compartir…" required></textarea>
+                </label>
+              </div>
+
+              <label class="sb-contact__consent">
+                <input type="checkbox" name="understood" required/>
+                <span>Entiendo que se abrirá mi aplicación de correo y que debo pulsar «Enviar» desde ella. <strong>No se envía automáticamente desde esta página.</strong></span>
+              </label>
+              <div class="sb-contact__send-group">
+                <button class="sb-contact__submit" type="submit">Preparar y abrir correo <span aria-hidden="true">↗</span></button>
+                <button class="sb-contact__copy" id="sb-contact-copy" type="button">Copiar mensaje</button>
+              </div>
+              <p class="sb-contact__microcopy">Tus datos solo se incorporan al correo que prepares y decidas enviar. Este formulario no almacena información en la web.</p>
+              <p id="sb-contact-status" class="sb-contact__status" role="status" aria-live="polite"></p>
+            </form>
+          </div>
+        </section>
+      </div>
+
+      <footer class="sb-contact__bottom">
+        <span>SOUTHBEAR STUDIO <span class="sb-contact__slash">/</span> IDEAS QUE DEJAN HUELLA.</span>
+        <a href="/presupuesto/">¿Prefieres solicitar presupuesto? <span aria-hidden="true">↗</span></a>
+      </footer>
+    </div>
+  </div>
+</Base>
+
+<style>
+  .sb-contact{
+    --sb-c-text:#f8f9fc;
+    --sb-c-muted:#b1b4bd;
+    --sb-c-glass:linear-gradient(138deg,rgba(255,255,255,.20) 0%,rgba(255,255,255,.105) 31%,rgba(255,255,255,.055) 70%,rgba(255,255,255,.08) 100%);
+    position:relative;isolation:isolate;overflow:hidden;color:var(--sb-c-text);
+    background:#080a0a;min-height:100vh;
+    padding:clamp(70px,8vw,140px) 0 65px;
+  }
+  .sb-contact__inner{width:min(1460px,calc(100% - clamp(36px,8vw,140px)));margin-inline:auto;position:relative;z-index:1}
+  .sb-contact__glow{position:absolute;pointer-events:none;z-index:0;filter:blur(70px);opacity:.5;border-radius:50%}
+  .sb-contact__glow--one{width:690px;height:690px;right:-290px;top:180px;background:radial-gradient(circle,rgba(202,217,214,.21),rgba(108,136,136,.1) 46%,transparent 70%)}
+  .sb-contact__glow--two{width:620px;height:620px;left:-290px;bottom:40px;background:radial-gradient(circle,rgba(183,203,191,.19),rgba(124,153,138,.05) 55%,transparent 72%)}
+  .sb-contact__eyebrow,.sb-contact__section-title>span,.sb-contact__step,.sb-contact__edition,.sb-contact__info-top>span,.sb-contact__areas>span,.sb-contact__bottom{font-size:11px;letter-spacing:.16em;font-weight:720}
+  .sb-contact__eyebrow{display:flex;align-items:center;gap:10px;color:#d4d5d9}
+  .sb-contact__signal{width:8px;height:8px;display:block;border-radius:50%;background:#dcff9c;box-shadow:0 0 18px rgba(220,255,156,.55)}
+  .sb-contact__slash{color:#82858b}
+  .sb-contact__hero h1{font-size:clamp(66px,9.2vw,154px);line-height:.93;letter-spacing:-.095em;font-weight:650;margin:26px 0 26px;color:#fff}
+  .sb-contact__hero h1 span{color:#c5c8cb}
+  .sb-contact__hero-bottom{display:flex;justify-content:space-between;align-items:end;gap:26px;max-width:1280px}
+  .sb-contact__hero-bottom p{max-width:640px;margin:0;color:#c2c4c9;font-size:clamp(15px,1.55vw,19px);line-height:1.75;letter-spacing:-.018em}
+  .sb-contact__edition{white-space:nowrap;color:#7e8586;margin-bottom:8px}.sb-contact__edition span{color:#d6d8da}
+  .sb-contact__layout{display:grid;grid-template-columns:minmax(0,.91fr) minmax(0,1.09fr);gap:clamp(22px,3vw,48px);margin-top:clamp(70px,8vw,126px);align-items:start}
+  .sb-contact__section-title{margin-bottom:30px}
+  .sb-contact__section-title>span,.sb-contact__step{color:#b9bec6}
+  .sb-contact__section-title h2,.sb-contact__form-head h2{font-weight:630;letter-spacing:-.065em;line-height:1.04}
+  .sb-contact__section-title h2{font-size:clamp(30px,3.3vw,47px);margin:14px 0 0}
+  .sb-contact__section-title em,.sb-contact__form-head em{font-style:normal;color:#afb4bc}
+  .sb-contact__info-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}
+  .sb-contact__glass{
+    position:relative;overflow:hidden;
+    border:1px solid rgba(255,255,255,.28);
+    background:var(--sb-c-glass);
+    -webkit-backdrop-filter:blur(32px) saturate(150%);
+    backdrop-filter:blur(32px) saturate(150%);
+    border-radius:27px;
+    box-shadow:0 22px 55px rgba(0,0,0,.2),inset 0 1px 0 rgba(255,255,255,.24),inset 0 -1px 0 rgba(255,255,255,.04);
+  }
+  .sb-contact__glass::before{content:"";position:absolute;pointer-events:none;inset:0;border-radius:inherit;background:linear-gradient(124deg,rgba(255,255,255,.14),transparent 34%,transparent 70%,rgba(255,255,255,.035));opacity:.7}
+  .sb-contact__glass>*{position:relative;z-index:1}
+  .sb-contact__info-card{min-height:184px;padding:clamp(20px,2vw,30px);display:flex;flex-direction:column;justify-content:space-between;gap:28px}
+  .sb-contact__info-top{display:flex;align-items:start;justify-content:space-between;gap:12px;color:#e7e8ee}
+  .sb-contact__info-top>span{font-size:10px;color:#c9ccd2;line-height:1.5}
+  .sb-contact__info-top svg{width:22px;height:22px;flex-shrink:0;opacity:.92}
+  .sb-contact__info-body{display:grid;gap:9px}
+  .sb-contact__value{display:block;font-size:clamp(20px,2vw,27px);font-family:'Space Grotesk Variable',system-ui,sans-serif;font-weight:620;letter-spacing:-.055em;line-height:1.2;color:#fff;overflow-wrap:anywhere}
+  .sb-contact__value--email{font-size:clamp(15px,1.65vw,23px);text-decoration:none}
+  .sb-contact__value--email:hover{color:#e1ffad}
+  .sb-contact__info-body>span{color:#b6bdc2;font-size:11px;line-height:1.6}
+  .sb-contact__info-card--areas{min-height:184px}
+  .sb-contact__info-card--areas .sb-contact__info-body{gap:14px}
+  .sb-contact__areas{display:grid;gap:3px}
+  .sb-contact__areas>span{font-size:9px;color:#aeb4bd}
+  .sb-contact__areas strong{font-weight:560;font-size:clamp(14px,1.5vw,18px);letter-spacing:-.035em;line-height:1.35}
+  .sb-contact__side-note{display:flex;gap:24px;align-items:start;border-top:1px solid rgba(255,255,255,.24);padding-top:27px;margin-top:31px}
+  .sb-contact__note-number{white-space:nowrap;letter-spacing:.13em;color:#bcc2c4;font-size:11px;font-weight:700}
+  .sb-contact__side-note p{color:#afb3bb;line-height:1.75;font-size:13px;margin:0;max-width:420px}
+  .sb-contact__form-col{padding-top:0}
+  .sb-contact__form-shell{padding:clamp(25px,3.5vw,54px);border-radius:32px;background:linear-gradient(138deg,rgba(255,255,255,.235),rgba(255,255,255,.105) 40%,rgba(255,255,255,.055))}
+  .sb-contact__form-head{display:flex;align-items:start;justify-content:space-between;gap:12px}
+  .sb-contact__form-head h2{font-size:clamp(42px,4.8vw,69px);margin:15px 0 0}
+  .sb-contact__form-mark{display:grid;place-items:center;width:56px;height:56px;border:1px solid rgba(255,255,255,.25);border-radius:18px;font-size:26px;color:#fff;background:rgba(255,255,255,.08)}
+  .sb-contact__form-description{color:#c3c7ca;font-size:13px;line-height:1.7;margin:24px 0 25px}
+  .sb-contact__form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:19px 15px}
+  .sb-contact__field{display:grid;gap:10px;min-width:0}
+  .sb-contact__field--wide{grid-column:1/-1}
+  .sb-contact__field>span{font-size:11px;font-weight:640;color:#edf0f2;letter-spacing:.02em}
+  .sb-contact__field b{color:#dfffad}.sb-contact__field small{font-weight:400;color:#bbc2c6}
+  .sb-contact__field input,.sb-contact__field select,.sb-contact__field textarea{
+    display:block;width:100%;min-width:0;border:1px solid rgba(255,255,255,.26);outline:none;border-radius:12px;
+    background:rgba(12,14,15,.28);color:#fff;font-family:'Inter Variable',system-ui,sans-serif;
+    font-size:13px;line-height:1.55;padding:15px 16px;transition:border-color .2s,box-shadow .2s;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.045);
+  }
+  .sb-contact__field input::placeholder,.sb-contact__field textarea::placeholder{color:#bec3c9;opacity:.8}
+  .sb-contact__field select{appearance:none;cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='1.8'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-size:18px;background-position:right 15px center;padding-right:43px}
+  .sb-contact__field select option{background:#1b2020;color:#fff}
+  .sb-contact__field textarea{resize:vertical;min-height:154px}
+  .sb-contact__field input:focus-visible,.sb-contact__field select:focus-visible,.sb-contact__field textarea:focus-visible{border-color:rgba(220,255,156,.8);box-shadow:0 0 0 3px rgba(220,255,156,.11)}
+  .sb-contact__consent{display:flex;align-items:start;gap:10px;margin-top:22px;cursor:pointer}
+  .sb-contact__consent input{margin-top:3px;width:17px;height:17px;accent-color:#dfff9d;flex-shrink:0}
+  .sb-contact__consent>span{font-size:11px;line-height:1.65;color:#bdc2c7}
+  .sb-contact__consent strong{font-weight:680;color:#f2f2f5}
+  .sb-contact__send-group{display:flex;flex-wrap:wrap;gap:10px;margin-top:25px}
+  .sb-contact__submit{flex:1;min-width:210px;display:flex;justify-content:space-between;align-items:center;gap:12px;border-radius:13px;padding:17px 19px;border:1px solid #fff;background:#f5f5f7;color:#101414;font-size:13px;font-weight:750;transition:background .18s,transform .18s}
+  .sb-contact__submit:hover{background:#dfffaa;color:#101414;transform:translateY(-1px)}
+  .sb-contact__submit:focus-visible,.sb-contact__copy:focus-visible{outline:3px solid #dfffaa;outline-offset:3px}
+  .sb-contact__copy{padding:16px;border-radius:13px;background:rgba(255,255,255,.06);color:#f4f4f6;border:1px solid rgba(255,255,255,.27);font-size:12px;font-weight:650}
+  .sb-contact__copy:hover{background:rgba(255,255,255,.17);color:#fff}
+  .sb-contact__microcopy{font-size:10px;color:#abb3b9;line-height:1.6;margin:17px 0 0}
+  .sb-contact__status{min-height:1em;color:#e3ffaf;font-size:12px;line-height:1.6;margin:12px 0 0}
+  .sb-contact__bottom{display:flex;justify-content:space-between;align-items:center;gap:22px;border-top:1px solid rgba(255,255,255,.21);margin-top:clamp(80px,10vw,150px);padding-top:25px;color:#aeb5ba;font-size:10px}
+  .sb-contact__bottom a{color:#f8fafb;letter-spacing:.04em}.sb-contact__bottom a:hover{color:#deff9a}
+  @media(max-width:1150px){.sb-contact__layout{grid-template-columns:1fr}.sb-contact__form-col{max-width:850px}.sb-contact__info-card{min-height:175px}.sb-contact__edition{display:none}}
+  @media(max-width:710px){.sb-contact{padding:72px 0 40px}.sb-contact__hero h1{font-size:clamp(57px,13vw,90px)}.sb-contact__info-grid{grid-template-columns:1fr 1fr}.sb-contact__info-card{padding:20px;min-height:175px}.sb-contact__form-shell{padding:26px}.sb-contact__bottom{align-items:start;flex-direction:column;line-height:1.8}}
+  @media(max-width:520px){.sb-contact__inner{width:calc(100% - 32px)}.sb-contact__hero h1{font-size:clamp(52px,14vw,80px)}.sb-contact__info-grid{grid-template-columns:1fr}.sb-contact__info-card{min-height:155px}.sb-contact__form-grid{grid-template-columns:1fr}.sb-contact__form-head h2{font-size:49px}.sb-contact__form-mark{width:44px;height:44px}.sb-contact__glass{border-radius:22px}.sb-contact__form-shell{padding:22px}.sb-contact__hero-bottom p{font-size:15px}}
+  @media(prefers-reduced-motion:reduce){.sb-contact__field input,.sb-contact__submit{transition:none}}
+  @supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){.sb-contact__glass{background:#272d2d}}
+</style>
+
+<script define:vars={{contactEmail:mail}}>
+  // Este formulario NO realiza envíos en segundo plano ni almacena datos.
+  // Se utiliza mailto: para que la persona revise y envíe desde su propio correo.
+  const form=document.getElementById('sb-contact-form');
+  const copy=document.getElementById('sb-contact-copy');
+  const status=document.getElementById('sb-contact-status');
+  function getMessage(){
+    const f=form.elements;
+    const selected=f.namedItem('service');
+    const service=selected.options[selected.selectedIndex]?.text||'Sin especificar';
+    return [
+      'SOLICITUD DE CONTACTO · SOUTHBEAR STUDIO',
+      '',
+      'Nombre: '+f.namedItem('name').value.trim(),
+      'Email: '+f.namedItem('email').value.trim(),
+      'Teléfono: '+(f.namedItem('phone').value.trim()||'No indicado'),
+      'Empresa o marca: '+(f.namedItem('company').value.trim()||'No indicada'),
+      'Servicio: '+service,
+      '',
+      'MENSAJE:',
+      f.namedItem('message').value.trim()
+    ].join('\n');
+  }
+  function validate(){
+    status.textContent='';
+    return form.reportValidity();
+  }
+  form.addEventListener('submit',event=>{
+    event.preventDefault();
+    if(!validate())return;
+    const subject='Consulta SouthBear Studio · '+form.elements.namedItem('service').value;
+    const mailto='mailto:'+contactEmail+'?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(getMessage());
+    status.textContent='Tu aplicación de correo debería abrirse con el mensaje preparado. Revísalo y pulsa Enviar. Si no se abre, usa «Copiar mensaje».';
+    window.location.href=mailto;
+  });
+  copy.addEventListener('click',async()=>{
+    if(!validate())return;
+    const content=getMessage();
+    try{
+      await navigator.clipboard.writeText(content);
+      status.textContent='Mensaje copiado. Puedes pegarlo en un correo para '+contactEmail+'.';
+    }catch{
+      status.textContent='No se pudo copiar automáticamente. Abre tu correo y escribe a '+contactEmail+'.';
+    }
+  });
+</script>

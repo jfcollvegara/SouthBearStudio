@@ -47,6 +47,7 @@ export const onRequestPost=async({request,env})=>{
   const company=trim(body.company,160);
   const service=trim(body.service,100);
   const message=trim(body.message,2400);
+  const promotions=body.promotions===true;
   const token=trim(body.token,2048);
   if(body.website)return json({ok:false,error:'Solicitud no aceptada.'},400);
   if(!safe(name,120)||name.length<2||!emailValid(email)||!safe(phone,40)||!safe(company,160)||
@@ -115,6 +116,17 @@ export const onRequestPost=async({request,env})=>{
     // No incluir nunca la respuesta del SMTP ni la contraseña en registros públicos.
     console.error('SouthBear: no se pudo completar el envío SMTP',error?.message||'SMTP_ERROR');
     return json({ok:false,error:'No hemos podido enviar tu consulta. Vuelve a intentarlo o contacta por WhatsApp.'},502);
+  }
+  // Solo conservar datos para comunicaciones comerciales con consentimiento expreso.
+  // El envío de la consulta sigue siendo válido aunque falle la inscripción.
+  if(promotions){
+    try{
+      const now=new Date().toISOString();
+      await env.SOUTHBEAR_DB.prepare(
+        'INSERT INTO sb_promotion_contacts(email,name,phone,company,consent_at,updated_at) VALUES(?,?,?,?,?,?) '+
+        'ON CONFLICT(email) DO UPDATE SET name=excluded.name,phone=excluded.phone,company=excluded.company,updated_at=excluded.updated_at'
+      ).bind(email,name,phone,company,now,now).run();
+    }catch{console.error('SouthBear: error al guardar consentimiento promocional');}
   }
   return json({ok:true,message:'Consulta enviada correctamente.'});
 };

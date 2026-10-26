@@ -6,11 +6,8 @@ import Base from '../layouts/Base.astro';
     <section class="sb-studio__hero sb-studio__wrap">
       <h1>No creamos por crear.<br/><span>Creamos con propósito.</span></h1>
       <p>Un estudio creativo independiente donde el diseño, la tecnología y la producción audiovisual se unen para transformar ideas en proyectos con personalidad.</p>
-      <div class="sb-studio__hero-art" aria-hidden="true">
-        <div class="sb-studio__shape sb-studio__shape--one"></div>
-        <div class="sb-studio__shape sb-studio__shape--two"></div>
-        <div class="sb-studio__shape sb-studio__shape--three"></div>
-        <span>SOUTHBEAR<span>®</span></span>
+      <div class="sb-studio__hero-art">
+        <img src="/estudio-portada.jpg" alt="Paisaje montañoso en blanco y negro" loading="eager" fetchpriority="high" decoding="async"/>
       </div>
     </section>
 
@@ -71,13 +68,14 @@ import Base from '../layouts/Base.astro';
 .sb-studio__hero h1{font-size:clamp(49px,7.3vw,116px);max-width:1490px}
 .sb-studio__hero h1 span{color:#688C42}
 .sb-studio__hero>p{max-width:790px;margin:clamp(24px,3vw,46px) 0 clamp(42px,5vw,78px);font-size:clamp(18px,1.6vw,25px)}
-.sb-studio__hero-art{height:clamp(300px,46vw,700px);position:relative;background:#F5F4ED;overflow:hidden;isolation:isolate}
-.sb-studio__hero-art>span{position:absolute;left:5%;bottom:6%;z-index:2;font:600 clamp(64px,13vw,210px)/.9 'Space Grotesk Variable',sans-serif;letter-spacing:-.09em;color:#F3F4EE;white-space:nowrap}
-.sb-studio__hero-art>span span{font-size:.18em;vertical-align:top;letter-spacing:0}
-.sb-studio__shape{position:absolute;filter:blur(.2px)}
-.sb-studio__shape--one{background:#DDFF9A;width:60%;height:130%;border-radius:50%;left:-16%;top:-55%;transform:rotate(-25deg)}
-.sb-studio__shape--two{background:#101411;width:70%;height:105%;right:-22%;top:13%;border-radius:48%;transform:rotate(30deg)}
-.sb-studio__shape--three{width:36%;aspect-ratio:1;border-radius:50%;background:#F4F5A4;left:42%;top:5%;mix-blend-mode:multiply}
+.sb-studio__hero-art{width:100vw;width:100dvw;margin-left:calc(50% - 50vw);margin-left:calc(50% - 50dvw);height:clamp(260px,35vw,600px);overflow:hidden;background:#f2f2f2}
+.sb-studio__hero-art img{display:block;width:100%;height:100%;object-fit:cover;object-position:center center}
+
+
+
+
+
+
 .sb-studio__identity{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(32px,6vw,110px);align-items:center;padding-block:clamp(110px,13vw,240px)}
 .sb-studio__identity-art{height:clamp(390px,49vw,750px);position:relative;background:#F5F4ED;overflow:hidden}
 .sb-studio__identity-letter{position:absolute;font:700 clamp(440px,62vw,1020px)/.8 'Space Grotesk Variable',sans-serif;letter-spacing:-.13em;color:#DDFF9A;left:-9%;bottom:-14%}
@@ -110,6 +108,6 @@ import Base from '../layouts/Base.astro';
 .sb-studio__contact a{display:inline-flex;gap:28px;align-items:center;color:#101411;text-decoration:none;font-size:clamp(18px,1.6vw,26px);font-weight:600;border-bottom:1px solid rgba(16,20,17,.65);padding-bottom:12px}
 .sb-studio__contact a:hover{border-bottom-color:#101411}
 @media(max-width:950px){.sb-studio__identity{gap:30px}.sb-studio__founder-layout{grid-template-columns:1fr}.sb-studio__photos{height:clamp(480px,75vw,800px)}.sb-studio__founder-copy{max-width:740px}}
-@media(max-width:650px){.sb-studio__wrap{width:calc(100% - 32px)}.sb-studio__hero{padding-top:76px}.sb-studio__hero h1{font-size:clamp(42px,11vw,68px)}.sb-studio__hero>p{margin-bottom:35px}.sb-studio__hero-art{height:320px}.sb-studio__hero-art>span{font-size:72px}.sb-studio__identity{grid-template-columns:1fr;padding-block:95px}.sb-studio__identity-art{height:390px}.sb-studio__identity-letter{font-size:510px}.sb-studio__identity-copy h2,.sb-studio__principles h2,.sb-studio__founder h2{font-size:clamp(38px,10vw,60px)}.sb-studio__principle{grid-template-columns:1fr;gap:16px;padding:28px 0}.sb-studio__principle h3{font-size:50px}.sb-studio__principles{padding-bottom:100px}.sb-studio__photos{height:550px;gap:8px}.sb-studio__founder-layout{gap:34px}.sb-studio__founder{padding-bottom:105px}.sb-studio__contact{padding:95px 0}.sb-studio__contact h2{font-size:clamp(38px,9.5vw,64px)}}
+@media(max-width:650px){.sb-studio__wrap{width:calc(100% - 32px)}.sb-studio__hero{padding-top:76px}.sb-studio__hero h1{font-size:clamp(42px,11vw,68px)}.sb-studio__hero>p{margin-bottom:35px}.sb-studio__hero-art{height:320px}.sb-studio__identity{grid-template-columns:1fr;padding-block:95px}.sb-studio__identity-art{height:390px}.sb-studio__identity-letter{font-size:510px}.sb-studio__identity-copy h2,.sb-studio__principles h2,.sb-studio__founder h2{font-size:clamp(38px,10vw,60px)}.sb-studio__principle{grid-template-columns:1fr;gap:16px;padding:28px 0}.sb-studio__principle h3{font-size:50px}.sb-studio__principles{padding-bottom:100px}.sb-studio__photos{height:550px;gap:8px}.sb-studio__founder-layout{gap:34px}.sb-studio__founder{padding-bottom:105px}.sb-studio__contact{padding:95px 0}.sb-studio__contact h2{font-size:clamp(38px,9.5vw,64px)}}
 @media(prefers-reduced-motion:reduce){.sb-studio *{scroll-behavior:auto}}
 </style>

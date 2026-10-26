@@ -185,7 +185,14 @@ for(const sourceFile of files){
     .replace('</body>','<script type="module" src="/southbear-translate-live.js"></script></body>');
   const destination=path.join(dist,'en',rel);
   await mkdir(path.dirname(destination),{recursive:true});
-  await writeFile(destination,translated);
+  // Astro may have already prerendered a native, fully translated English page.
+  // Never overwrite it with a machine/dictionary-derived copy of Spanish.
+  let nativeEnglishExists=false;
+  try { await readFile(destination,'utf8'); nativeEnglishExists=true; }
+  catch (error) { if (error.code!=='ENOENT') throw error; }
+  if (!nativeEnglishExists) {
+    await writeFile(destination,translated);
+  }
   await writeFile(sourceFile,insertSpanishSEO(original,route));
   enCount++;
 }

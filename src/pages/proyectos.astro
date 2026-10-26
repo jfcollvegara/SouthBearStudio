@@ -24,15 +24,15 @@ const placeholders=Array.from({length:12},(_,i)=>({number:i+1,title:'Proyecto '+
 .sb-portfolio:before,.sb-portfolio:after{content:"";position:absolute;z-index:-1;pointer-events:none;border-radius:50%;filter:blur(95px)}
 .sb-portfolio:before{width:850px;height:850px;top:8%;right:-350px;background:radial-gradient(circle,rgba(115,159,134,.13),transparent 67%)}
 .sb-portfolio:after{width:750px;height:750px;bottom:12%;left:-360px;background:radial-gradient(circle,rgba(152,183,173,.12),transparent 67%)}
-.sb-portfolio__inner{width:min(1600px,calc(100% - clamp(32px,6vw,120px)));margin:0 auto}
-.sb-portfolio h1{font-family:'Space Grotesk Variable',system-ui,sans-serif;font-size:clamp(42px,6.5vw,96px);font-weight:600;letter-spacing:-.085em;line-height:1;text-align:left;margin:0 0 clamp(50px,6vw,95px)}
-.sb-portfolio__grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));column-gap:clamp(16px,2vw,34px);row-gap:clamp(38px,4vw,66px);align-items:start}
+.sb-portfolio__inner{width:min(1820px,calc(100% - clamp(20px,3vw,56px)));margin:0 auto}
+.sb-portfolio h1{font-family:'Space Grotesk Variable',system-ui,sans-serif;font-size:clamp(42px,6.5vw,96px);font-weight:600;letter-spacing:-.085em;line-height:1;text-align:left;margin:0 0 clamp(34px,4vw,60px)}
+.sb-portfolio__grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));column-gap:clamp(12px,1.4vw,24px);row-gap:clamp(28px,3vw,44px);align-items:start}
 .sb-portfolio__item{min-width:0;margin:0}
 .sb-portfolio__glass{position:relative;width:100%;aspect-ratio:1;overflow:hidden;border:1px solid rgba(45,78,61,.28);border-radius:0;background:linear-gradient(135deg,rgba(255,255,255,.22),rgba(255,255,255,.08) 39%,rgba(255,255,255,.11) 75%,rgba(255,255,255,.19)),radial-gradient(circle at 22% 17%,rgba(181,226,201,.22),transparent 52%),rgba(148,178,160,.24);-webkit-backdrop-filter:blur(30px) saturate(165%);backdrop-filter:blur(30px) saturate(165%);box-shadow:none;transition:border-color .24s,background-color .24s,transform .3s,box-shadow .3s}
 .sb-portfolio__glass:hover{transform:translateY(-4px);border-color:rgba(45,78,61,.50);box-shadow:none}
 .sb-portfolio__shine{position:absolute;inset:0;pointer-events:none;border-radius:0;background:linear-gradient(145deg,rgba(255,255,255,.17) 0,transparent 29%,transparent 75%,rgba(255,255,255,.055) 100%)}
 .sb-portfolio__item h2{font-family:'Space Grotesk Variable',system-ui,sans-serif;font-weight:550;font-size:clamp(17px,1.8vw,27px);letter-spacing:-.045em;line-height:1.35;margin:18px 3px 0;color:#1d2922}
 @media(max-width:850px){.sb-portfolio__grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media(max-width:530px){.sb-portfolio{padding:72px 0 75px}.sb-portfolio__inner{width:calc(100% - 32px)}.sb-portfolio h1{font-size:clamp(55px,13vw,80px);margin-bottom:45px}.sb-portfolio__grid{grid-template-columns:1fr;row-gap:34px}.sb-portfolio__item h2{font-size:21px;margin-top:13px}}
+@media(max-width:530px){.sb-portfolio{padding:72px 0 75px}.sb-portfolio__inner{width:calc(100% - 20px)}.sb-portfolio h1{font-size:clamp(55px,13vw,80px);margin-bottom:34px}.sb-portfolio__grid{grid-template-columns:1fr;row-gap:28px}.sb-portfolio__item h2{font-size:21px;margin-top:13px}}
 @media(prefers-reduced-motion:reduce){.sb-portfolio__glass{transition:none}}
 </style>

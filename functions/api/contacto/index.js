@@ -51,10 +51,14 @@ export const onRequestPost=async({request,env})=>{
   const promotions=body.promotions===true;
   const token=trim(body.token,2048);
   if(body.website)return json({ok:false,error:'Solicitud no aceptada.'},400);
-  if(!safe(name,120)||name.length<2||!emailValid(email)||!safe(phone,40)||!safe(company,160)||
-     !SERVICES.has(service)||!safe(message,2400)||message.length<10||body.consent!==true){
-    return json({ok:false,error:'Revisa los campos obligatorios y el consentimiento.'},400);
-  }
+  // Mensajes específicos: un formulario válido no debe mostrar un error genérico.
+  // Los campos opcionales pueden estar vacíos; las comprobaciones se hacen en servidor.
+  if(!safe(name,120)||name.length<2)return json({ok:false,error:'Escribe tu nombre (al menos 2 caracteres).'},400);
+  if(!emailValid(email))return json({ok:false,error:'Introduce un correo electrónico válido.'},400);
+  if(!safe(phone,40)||!safe(company,160))return json({ok:false,error:'El teléfono o la empresa tienen demasiados caracteres.'},400);
+  if(!SERVICES.has(service))return json({ok:false,error:'Selecciona un servicio válido en el desplegable.'},400);
+  if(!safe(message,2400)||message.length<10)return json({ok:false,error:'Describe tu consulta con al menos 10 caracteres.'},400);
+  if(body.consent!==true)return json({ok:false,error:'Marca la casilla obligatoria para responder a tu consulta.'},400);
   if(!token||token.length>2048)return json({ok:false,error:'Completa la verificación de seguridad.'},400);
   const remoteIp=request.headers.get('CF-Connecting-IP')||'unknown';
   let verification;

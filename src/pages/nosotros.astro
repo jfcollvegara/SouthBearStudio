@@ -34,9 +34,9 @@ import Base from '../layouts/Base.astro';
       <h2>Detrás de cada idea hay<br/>una forma de ver el mundo.</h2>
       <div class="sb-studio__founder-layout">
         <div class="sb-studio__photos">
-          <figure class="sb-studio__photo sb-studio__photo--landscape"><img src="/fundador-cascada.jpg" alt="Jose Francisco en un paisaje natural en blanco y negro" loading="lazy"/></figure>
-          <figure class="sb-studio__photo sb-studio__photo--portrait"><img src="/fundador-retrato.jpg" alt="Retrato de Jose Francisco ante una cascada" loading="lazy"/></figure>
-          <figure class="sb-studio__photo sb-studio__photo--waterfall"><img src="/fundador-paisaje.jpg" alt="Jose Francisco ante una gran cascada en blanco y negro" loading="lazy"/></figure>
+          <figure class="sb-studio__photo sb-studio__photo--landscape" data-founder-parallax><img src="/fundador-cascada.jpg" alt="Jose Francisco en un paisaje natural en blanco y negro" loading="lazy"/></figure>
+          <figure class="sb-studio__photo sb-studio__photo--portrait" data-founder-parallax><img src="/fundador-retrato.jpg" alt="Retrato de Jose Francisco ante una cascada" loading="lazy"/></figure>
+          <figure class="sb-studio__photo sb-studio__photo--waterfall" data-founder-parallax><img src="/fundador-paisaje.jpg" alt="Jose Francisco ante una gran cascada en blanco y negro" loading="lazy"/></figure>
         </div>
         <div class="sb-studio__founder-copy">
           <h3>Jose Francisco<br/>Coll Vegara.</h3>
@@ -97,7 +97,7 @@ import Base from '../layouts/Base.astro';
 .sb-studio__photos{display:grid;grid-template-columns:1.15fr .85fr;grid-template-rows:repeat(2,minmax(0,1fr));gap:clamp(10px,1.25vw,20px);height:clamp(480px,56vw,880px)}
 .sb-studio__photo{padding:0;margin:0;background:#e8e8e8;overflow:hidden;position:relative}
 .sb-studio__photo--landscape{grid-row:span 2}
-.sb-studio__photo img{display:block;width:100%;height:100%;object-fit:cover;filter:grayscale(1)}
+.sb-studio__photo img{display:block;width:100%;height:100%;object-fit:cover;filter:grayscale(1);transform:translate3d(0,var(--sb-founder-y,0px),0) scale(1.45);will-change:transform}
 .sb-studio__photo--landscape img{object-position:56% center}
 .sb-studio__photo--portrait img{object-position:center 45%}
 .sb-studio__photo--waterfall img{object-position:center 70%}
@@ -110,8 +110,8 @@ import Base from '../layouts/Base.astro';
 .sb-studio__contact a{display:inline-flex;gap:28px;align-items:center;color:#ffffff;text-decoration:none;font-size:clamp(18px,1.6vw,26px);font-weight:600;border-bottom:1px solid rgba(255,255,255,.65);padding-bottom:12px}
 .sb-studio__contact a:hover{border-bottom-color:#ffffff}
 @media(max-width:950px){.sb-studio__identity{gap:30px}.sb-studio__founder-layout{grid-template-columns:1fr}.sb-studio__photos{height:clamp(480px,75vw,800px)}.sb-studio__founder-copy{max-width:740px}}
-@media(max-width:650px){.sb-studio__wrap{width:calc(100% - 32px)}.sb-studio__hero{padding-top:38px}.sb-studio__hero h1{font-size:clamp(42px,11vw,68px)}.sb-studio__hero-intro{margin:22px 0 85px}.sb-studio__hero-art{aspect-ratio:auto;height:clamp(270px,65vw,380px)}.sb-studio__hero-art img{height:100%;object-fit:cover}.sb-studio__identity{grid-template-columns:1fr;padding-block:95px}.sb-studio__identity-art{height:390px}.sb-studio__identity-copy h2,.sb-studio__principles h2,.sb-studio__founder h2{font-size:clamp(38px,10vw,60px)}.sb-studio__principle{grid-template-columns:1fr;gap:16px;padding:28px 0}.sb-studio__principle h3{font-size:50px}.sb-studio__principles{padding-bottom:100px}.sb-studio__photos{height:550px;gap:8px}.sb-studio__founder-layout{gap:34px}.sb-studio__founder{padding-bottom:105px}.sb-studio__contact{padding:95px 0}.sb-studio__contact h2{font-size:clamp(38px,9.5vw,64px)}}
-@media(prefers-reduced-motion:reduce){.sb-studio *{scroll-behavior:auto}.sb-studio__hero-art img{transform:none;will-change:auto}}
+@media(max-width:650px){.sb-studio__wrap{width:calc(100% - 32px)}.sb-studio__hero{padding-top:38px}.sb-studio__hero h1{font-size:clamp(42px,11vw,68px)}.sb-studio__hero-intro{margin:22px 0 85px}.sb-studio__hero-art{aspect-ratio:auto;height:clamp(270px,65vw,380px)}.sb-studio__hero-art img{height:100%;object-fit:cover}.sb-studio__identity{grid-template-columns:1fr;padding-block:95px}.sb-studio__identity-art{height:390px}.sb-studio__identity-copy h2,.sb-studio__principles h2,.sb-studio__founder h2{font-size:clamp(38px,10vw,60px)}.sb-studio__principle{grid-template-columns:1fr;gap:16px;padding:28px 0}.sb-studio__principle h3{font-size:50px}.sb-studio__principles{padding-bottom:100px}.sb-studio__photos{height:auto;aspect-ratio:1.05;gap:8px;grid-template-columns:1.15fr .85fr;grid-template-rows:repeat(2,minmax(0,1fr))}.sb-studio__founder-layout{gap:34px}.sb-studio__founder{padding-bottom:105px}.sb-studio__contact{padding:95px 0}.sb-studio__contact h2{font-size:clamp(38px,9.5vw,64px)}}
+@media(prefers-reduced-motion:reduce){.sb-studio *{scroll-behavior:auto}.sb-studio__hero-art img,.sb-studio__photo img{transform:none;will-change:auto}}
 </style>
 <script>
   const hero = document.querySelector('[data-studio-parallax]');
@@ -133,4 +133,27 @@ import Base from '../layouts/Base.astro';
   }
 
 
+
+  const founderPhotos = [...document.querySelectorAll('[data-founder-parallax]')];
+  if (founderPhotos.length && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    let queued = false;
+    const updateFounder = () => {
+      queued = false;
+      const viewport = window.innerHeight;
+      founderPhotos.forEach((photo, index) => {
+        const rect = photo.getBoundingClientRect();
+        if (rect.bottom < 0 || rect.top > viewport) return;
+        const progress = (viewport / 2 - (rect.top + rect.height / 2)) / ((viewport + rect.height) / 2);
+        const amplitude = window.innerWidth <= 650 ? [34,-26,30][index] : [105,-80,90][index];
+        const offset = Math.max(-1, Math.min(1, progress)) * amplitude;
+        photo.style.setProperty('--sb-founder-y', offset.toFixed(2) + 'px');
+      });
+    };
+    const scheduleFounder = () => {
+      if (!queued) { queued = true; requestAnimationFrame(updateFounder); }
+    };
+    window.addEventListener('scroll', scheduleFounder, { passive: true });
+    window.addEventListener('resize', scheduleFounder, { passive: true });
+    updateFounder();
+  }
 </script>

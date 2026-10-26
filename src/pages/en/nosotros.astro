@@ -1,0 +1,115 @@
+---
+import Base from '../../layouts/Base.astro';
+---
+<Base title="Studio" description="Discover SouthBear Studio, an independent creative studio for graphic design, web development and audiovisual production." lang="en">
+  <div class="sb-studio">
+    <section class="sb-studio__hero sb-studio__wrap">
+      <h1>We don’t create just to create.<br/><span>We create with purpose.</span></h1>
+      <p class="sb-studio__hero-intro">An independent creative studio bringing together design, technology and audiovisual production to turn ideas into projects with a distinctive identity.</p>
+      <div class="sb-studio__hero-art">
+        <img src="/estudio-portada-original.jpeg" alt="Black-and-white mountain landscape" loading="eager" fetchpriority="high" decoding="async"/>
+      </div>
+    </section>
+
+    <section class="sb-studio__identity sb-studio__wrap">
+      <div class="sb-studio__identity-art">
+        <img src="/estudio-identidad.jpeg" alt="Black-and-white mountains and clouds" loading="lazy" decoding="async" width="2048" height="2048"/>
+      </div>
+      <div class="sb-studio__identity-copy">
+        <h2>One idea.<br/>Endless possibilities.</h2>
+        <p>SouthBear Studio is a creative space where ideas become visual identities, digital experiences and audiovisual productions.</p>
+        <p>We approach every project as something unique. We combine creativity, strategy and technology to build solutions for real needs, with equal attention to functionality and visual expression.</p>
+        <p class="sb-studio__emphasis">Our goal isn’t to create more. It’s to create better.</p>
+      </div>
+    </section>
+
+    <section class="sb-studio__principles sb-studio__wrap">
+      <h2>The difference lies<br/>in how we work.</h2>
+      <div class="sb-studio__principle"><h3>Clarity.</h3><p>We believe great ideas don’t need to be complicated. We look for clear, functional and thoughtful solutions.</p></div>
+      <div class="sb-studio__principle"><h3>Character.</h3><p>Every brand has a story. Our job is to discover its essence and turn it into an identity people recognize and remember.</p></div>
+      <div class="sb-studio__principle"><h3>Detail.</h3><p>Small details shape big results. We care about every creative decision, from the first concept to the final delivery.</p></div>
+    </section>
+
+    <section class="sb-studio__founder sb-studio__wrap">
+      <h2>Behind every idea is<br/>a way of seeing the world.</h2>
+      <div class="sb-studio__founder-layout">
+        <div class="sb-studio__photos">
+          <figure class="sb-studio__photo sb-studio__photo--landscape"><img src="/fundador-cascada.jpg" alt="Jose Francisco in a black-and-white natural landscape" loading="lazy"/></figure>
+          <figure class="sb-studio__photo sb-studio__photo--portrait"><img src="/fundador-retrato.jpg" alt="Portrait of Jose Francisco by a waterfall" loading="lazy"/></figure>
+          <figure class="sb-studio__photo sb-studio__photo--waterfall"><img src="/fundador-paisaje.jpg" alt="Jose Francisco by a large waterfall in black and white" loading="lazy"/></figure>
+        </div>
+        <div class="sb-studio__founder-copy">
+          <h3>Jose Francisco<br/>Coll Vegara.</h3>
+          <p class="sb-studio__role">Founder of SouthBear Studio</p>
+          <p>SouthBear grew out of how I understand creativity: a blend of curiosity, design and technology.</p>
+          <p>I’ve always been fascinated by how an idea can become something visual, functional and capable of connecting with people. That curiosity is where this studio began.</p>
+          <p>My goal is to build projects with their own identity, work closely with every client and pay attention to every detail of the creative process.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="sb-studio__contact">
+      <div class="sb-studio__wrap">
+        <h2>Great ideas begin<br/>with a conversation.</h2>
+        <p>Have an idea in mind? We’d love to hear it. Let’s bring it to life.</p>
+        <a href="/en/contacto/">Let’s talk about your project <span aria-hidden="true">↗</span></a>
+      </div>
+    </section>
+  </div>
+</Base>
+<style>
+.sb-studio{background:#fff;color:#17201b;overflow:hidden;font-family:'Inter Variable',system-ui,sans-serif}
+.sb-studio__wrap{width:min(1720px,calc(100% - clamp(32px,7vw,140px)));margin-inline:auto}
+.sb-studio h1,.sb-studio h2,.sb-studio h3{font-family:'Space Grotesk Variable',system-ui,sans-serif;font-weight:600;letter-spacing:-.066em;line-height:1.03;margin:0}
+.sb-studio p{line-height:1.7;font-size:clamp(16px,1.3vw,20px);margin:0;color:#526158}
+.sb-studio__hero{padding-top:clamp(38px,4vw,72px)}
+.sb-studio__hero h1{font-size:clamp(49px,7.3vw,116px);max-width:1490px;margin-bottom:0}
+.sb-studio__hero h1 span{background:linear-gradient(115deg,#101010 5%,#777 95%);-webkit-background-clip:text;background-clip:text;color:transparent}
+
+.sb-studio__hero-intro{max-width:790px;margin:clamp(20px,2.5vw,34px) 0 clamp(115px,10vw,175px);font-size:clamp(18px,1.6vw,25px)!important}
+.sb-studio__hero-art{width:100vw;width:100dvw;margin-left:calc(50% - 50vw);margin-left:calc(50% - 50dvw);aspect-ratio:2048 / 732;height:auto;overflow:hidden;background:#f2f2f2;position:relative}
+.sb-studio__hero-art img{display:block;width:100%;height:100%;object-fit:cover;object-position:center;}
+
+
+
+
+
+
+
+
+.sb-studio__identity{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(32px,6vw,110px);align-items:center;padding-block:clamp(110px,13vw,240px)}
+.sb-studio__identity-art{height:clamp(390px,49vw,750px);position:relative;background:#e8e8e8;overflow:hidden}
+.sb-studio__identity-art img{display:block;width:100%;height:100%;object-fit:cover;object-position:center}
+
+
+
+.sb-studio__identity-copy h2,.sb-studio__principles h2,.sb-studio__founder h2{font-size:clamp(42px,5.2vw,86px);margin-bottom:clamp(24px,3vw,45px)}
+.sb-studio__identity-copy p+p{margin-top:19px}
+.sb-studio__identity-copy .sb-studio__emphasis{color:#101411;font-weight:600;margin-top:30px}
+.sb-studio__principles{padding-bottom:clamp(100px,12vw,210px)}
+.sb-studio__principles h2{margin-bottom:clamp(55px,7vw,110px)}
+.sb-studio__principle{display:grid;grid-template-columns:1fr 1fr;gap:35px;align-items:baseline;padding:clamp(30px,4vw,64px) 0;border-top:1px solid #cfd7d0}
+.sb-studio__principle h3{font-size:clamp(43px,5.4vw,90px)}
+.sb-studio__principle p{max-width:610px}
+.sb-studio__founder{padding-bottom:clamp(120px,14vw,240px)}
+.sb-studio__founder h2{max-width:1400px;margin-bottom:clamp(45px,6vw,95px)}
+.sb-studio__founder-layout{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(310px,.8fr);gap:clamp(32px,6vw,115px);align-items:center}
+.sb-studio__photos{display:grid;grid-template-columns:1.15fr .85fr;grid-template-rows:repeat(2,minmax(0,1fr));gap:clamp(10px,1.25vw,20px);height:clamp(480px,56vw,880px)}
+.sb-studio__photo{padding:0;margin:0;background:#e8e8e8;overflow:hidden;position:relative}
+.sb-studio__photo--landscape{grid-row:span 2}
+.sb-studio__photo img{display:block;width:100%;height:100%;object-fit:cover;filter:grayscale(1);}
+.sb-studio__photo--landscape img{object-position:56% center}
+.sb-studio__photo--portrait img{object-position:center 45%}
+.sb-studio__photo--waterfall img{object-position:center 70%}
+.sb-studio__founder-copy h3{font-size:clamp(37px,4vw,68px);margin-bottom:16px}
+.sb-studio__founder-copy .sb-studio__role{font-size:clamp(14px,1.1vw,17px);color:#444444;font-weight:600;margin-bottom:35px}
+.sb-studio__founder-copy p+p{margin-top:19px}
+.sb-studio__contact{background:linear-gradient(115deg,#0c0c0c 0%,#242424 55%,#555555 100%);padding:clamp(80px,10vw,170px) 0;color:#ffffff}
+.sb-studio__contact h2{font-size:clamp(43px,6.8vw,112px);max-width:1500px;color:#ffffff}
+.sb-studio__contact p{max-width:760px;color:#e1e1e1;margin:clamp(26px,3vw,50px) 0}
+.sb-studio__contact a{display:inline-flex;gap:28px;align-items:center;color:#ffffff;text-decoration:none;font-size:clamp(18px,1.6vw,26px);font-weight:600;border-bottom:1px solid rgba(255,255,255,.65);padding-bottom:12px}
+.sb-studio__contact a:hover{border-bottom-color:#ffffff}
+@media(max-width:950px){.sb-studio__identity{gap:30px}.sb-studio__founder-layout{grid-template-columns:1fr}.sb-studio__photos{height:clamp(480px,75vw,800px)}.sb-studio__founder-copy{max-width:740px}}
+@media(max-width:650px){.sb-studio__wrap{width:calc(100% - 32px)}.sb-studio__hero{padding-top:38px}.sb-studio__hero h1{font-size:clamp(42px,11vw,68px)}.sb-studio__hero-intro{margin:34px 0 98px}.sb-studio__hero-art{aspect-ratio:auto;height:clamp(270px,65vw,380px)}.sb-studio__hero-art img{height:100%;object-fit:cover}.sb-studio__identity{grid-template-columns:1fr;padding-block:95px;row-gap:40px}.sb-studio__identity-copy{grid-row:1}.sb-studio__identity-art{grid-row:2}.sb-studio__identity-art{height:390px}.sb-studio__identity-copy h2,.sb-studio__principles h2,.sb-studio__founder h2{font-size:clamp(38px,10vw,60px)}.sb-studio__principle{grid-template-columns:1fr;gap:16px;padding:28px 0}.sb-studio__principle h3{font-size:50px}.sb-studio__principles{padding-bottom:100px}.sb-studio__photos{height:auto;aspect-ratio:1.05;gap:8px;grid-template-columns:1.15fr .85fr;grid-template-rows:repeat(2,minmax(0,1fr))}.sb-studio__founder-layout{gap:34px}.sb-studio__founder{padding-bottom:105px}.sb-studio__contact{padding:95px 0}.sb-studio__contact h2{font-size:clamp(38px,9.5vw,64px)}}
+@media(prefers-reduced-motion:reduce){.sb-studio *{scroll-behavior:auto}}
+</style>

@@ -158,13 +158,17 @@ const services=[
               </div>
               <label class="sb-contact__consent">
                 <input type="checkbox" name="understood" required/>
-                <span>Autorizo que SouthBear Studio utilice mis datos para responder esta consulta. <strong>Se enviarán de forma segura mediante un servicio de correo, sin almacenarse en la base de datos de esta web.</strong></span>
+                <span>Autorizo que SouthBear Studio utilice mis datos para responder esta consulta. <strong>El mensaje se enviará por correo y no se guardará en la base de datos de esta web.</strong></span>
+              </label>
+              <label class="sb-contact__consent">
+                <input type="checkbox" name="promotions"/>
+                <span>Quiero recibir por correo electrónico <strong>novedades, promociones, publicidad y ofertas de SouthBear Studio</strong>. Es opcional, puedo retirar el consentimiento en cualquier momento escribiendo a info@southbearstudio.com y no afecta al envío de mi consulta.</span>
               </label>
               <div class="sb-contact__send-group">
                 <button class="sb-contact__submit" type="submit" disabled>Comprobando disponibilidad… <span aria-hidden="true">↗</span></button>
                 <button class="sb-contact__copy" id="sb-contact-copy" type="button">Copiar mensaje</button>
               </div>
-              <p class="sb-contact__microcopy">Los datos del formulario se remiten a info@southbearstudio.com mediante un proveedor de envío. Puedes ejercer tus derechos sobre ellos escribiendo a ese correo. Esta web no guarda una copia en su base de datos.</p>
+              <p class="sb-contact__microcopy">Los datos del formulario se remiten a info@southbearstudio.com mediante un proveedor de envío. Puedes ejercer tus derechos sobre ellos escribiendo a ese correo. Si aceptas comunicaciones comerciales, guardaremos únicamente tu nombre, correo, teléfono y empresa o marca para esa finalidad, hasta que retires el consentimiento. Nunca guardaremos el mensaje ni el servicio solicitado.</p>
               <p id="sb-contact-status" class="sb-contact__status" role="status" aria-live="polite"></p>
             </form>
           </div>
@@ -347,6 +351,7 @@ const services=[
       service:f.namedItem('service').value,
       message:f.namedItem('message').value.trim(),
       consent:f.namedItem('understood').checked,
+      promotions:f.namedItem('promotions').checked,
       website:f.namedItem('website').value,
       token:String(token)
     };

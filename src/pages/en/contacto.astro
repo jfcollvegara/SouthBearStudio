@@ -154,7 +154,7 @@ const services=[
                 <span>Leave this field blank</span><input name="website" type="text" tabindex="-1" autocomplete="off" />
               </label>
               <div class="sb-contact__turnstile">
-                <div class="cf-turnstile" data-sitekey="0x4AAAAAAFmX61EyBU-OotNU" data-theme="dark" data-action="southbear_contact" data-appearance="interaction-only"></div>
+                <div class="cf-turnstile" data-sitekey="0x4AAAAAAFmX61EyBU-OotNU" data-theme="dark" data-language="en" data-action="southbear_contact" data-appearance="interaction-only"></div>
               </div>
               <label class="sb-contact__consent">
                 <input type="checkbox" name="understood" required/>
@@ -298,23 +298,23 @@ const services=[
   const submit=form.querySelector('.sb-contact__submit');
   const status=document.getElementById('sb-contact-status');
   let ready=false;
-  const actionLabel='Enviar consulta';
-  const unavailable='Envío directo pendiente de activación';
+  const actionLabel='Send enquiry';
+  const unavailable='Direct sending is not yet available';
   const show=value=>{status.textContent=value;};
   function getMessage(){
     const f=form.elements;
     const select=f.namedItem('service');
-    const service=select.options[select.selectedIndex]?.text||'Sin especificar';
+    const service=select.options[select.selectedIndex]?.text||'Not specified';
     return [
-      'SOLICITUD DE CONTACTO · SOUTHBEAR STUDIO',
+      'CONTACT ENQUIRY · SOUTHBEAR STUDIO',
       '',
-      'Nombre: '+f.namedItem('name').value.trim(),
+      'Name: '+f.namedItem('name').value.trim(),
       'Email: '+f.namedItem('email').value.trim(),
-      'Teléfono: '+(f.namedItem('phone').value.trim()||'No indicado'),
-      'Empresa/marca: '+(f.namedItem('company').value.trim()||'No indicada'),
-      'Servicio: '+service,
+      'Phone: '+(f.namedItem('phone').value.trim()||'Not provided'),
+      'Company/brand: '+(f.namedItem('company').value.trim()||'Not provided'),
+      'Service: '+service,
       '',
-      'MENSAJE:',
+      'MESSAGE:',
       f.namedItem('message').value.trim()
     ].join('\n');
   }
@@ -332,7 +332,7 @@ const services=[
       ready=Boolean(response.ok&&payload.ready);
     }catch{ready=false;}
     updateButton();
-    if(!ready)show('El envío directo está pendiente de activación. Mientras tanto, puedes escribirnos por WhatsApp o a '+contactEmail+'.');
+    if(!ready)show('Direct sending is not yet available. Meanwhile, contact us on WhatsApp or at '+contactEmail+'.');
   }
   form.addEventListener('submit',async event=>{
     event.preventDefault();
@@ -340,7 +340,7 @@ const services=[
     const f=form.elements;
     const token=new FormData(form).get('cf-turnstile-response');
     if(!token){
-      show('Completa la comprobación de seguridad e inténtalo de nuevo.');
+      show('Complete the security check and try again.');
       return;
     }
     const payload={
@@ -356,8 +356,8 @@ const services=[
       token:String(token)
     };
     submit.disabled=true;
-    submit.textContent='Enviando consulta…';
-    show('Estamos enviando tu consulta de forma segura.');
+    submit.textContent='Sending enquiry…';
+    show('We are sending your enquiry securely.');
     try{
       const response=await fetch('/api/contacto/',{
         method:'POST',
@@ -366,19 +366,19 @@ const services=[
       });
       const result=await response.json().catch(()=>({}));
       if(!response.ok||!result.ok){
-        if(response.status===429)throw Error('Has enviado varias consultas seguidas. Inténtalo de nuevo dentro de una hora.');
+        if(response.status===429)throw Error('You have sent too many enquiries. Please try again in an hour.');
         if(response.status===503){
           ready=false;
-          throw Error('El envío directo no está disponible temporalmente. Contacta por WhatsApp o teléfono.');
+          throw Error('Direct sending is temporarily unavailable. Please contact us on WhatsApp or by phone.');
         }
-        throw Error(result.error||'No se pudo enviar tu consulta. Inténtalo de nuevo.');
+        throw Error(result.error||'Your enquiry could not be sent. Please try again.');
       }
       form.reset();
       resetTurnstile();
-      show('¡Consulta enviada correctamente! Te responderemos lo antes posible.');
+      show('Enquiry sent successfully! We will reply as soon as possible.');
     }catch(error){
       resetTurnstile();
-      show(error.message||'Se produjo un error de conexión. Inténtalo de nuevo.');
+      show(error.message||'A connection error occurred. Please try again.');
     }finally{
       updateButton();
     }
@@ -387,9 +387,9 @@ const services=[
     if(!form.reportValidity())return;
     try{
       await navigator.clipboard.writeText(getMessage());
-      show('Mensaje copiado. Puedes pegarlo en un correo para '+contactEmail+'.');
+      show('Message copied. You can paste it into an email to '+contactEmail+'.');
     }catch{
-      show('No se pudo copiar automáticamente. Puedes escribir directamente a '+contactEmail+'.');
+      show('Could not copy automatically. You can email '+contactEmail+'.');
     }
   });
   checkStatus();

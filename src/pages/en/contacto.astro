@@ -1,0 +1,396 @@
+---
+import Base from '../../layouts/Base.astro';
+import {site} from '../../data/site.js';
+
+const mail=site.email;
+// Enlace público de la agenda de citas de SouthBear Studio en Google Calendar.
+const googleAppointmentsUrl='https://calendar.app.google/ftcqjqGyF9UTNkJd9';
+const services=[
+  {value:'Diseño gráfico',label:'Graphic design'},
+  {value:'Identidad visual y branding',label:'Visual identity and branding'},
+  {value:'Diseño y desarrollo web',label:'Web design and development'},
+  {value:'Producción audiovisual',label:'Audiovisual production'},
+  {value:'Soluciones QR/NFC',label:'QR/NFC solutions'},
+  {value:'Otro servicio',label:'Other service'}
+];
+---
+<Base
+  title="Contact"
+  description="Contact SouthBear Studio for graphic design, branding, web development and audiovisual projects. Based in Spain and available online." lang="en"
+>
+  <div class="sb-contact">
+    <div class="sb-contact__glow sb-contact__glow--one" aria-hidden="true"></div>
+    <div class="sb-contact__glow sb-contact__glow--two" aria-hidden="true"></div>
+    <div class="sb-contact__inner">
+      <header class="sb-contact__hero">
+        <h1>Let's talk about<br/><span>your project.</span></h1>
+        <div class="sb-contact__hero-bottom">
+          <p>A great idea deserves a conversation. Tell us what you have in mind, and we'll find the best way to bring it to life.</p>
+        </div>
+      </header>
+
+      <div class="sb-contact__layout">
+        <section class="sb-contact__information" aria-labelledby="sb-contact-details-heading">
+          <div class="sb-contact__section-title">
+            <h2 id="sb-contact-details-heading">We're here.<br/><em>Wherever you are.</em></h2>
+          </div>
+
+          <div class="sb-contact__info-grid">
+            <article class="sb-contact__glass sb-contact__info-card">
+              <div class="sb-contact__info-top">
+                <span>EMAIL</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="m4 7 8 6 8-6"/></svg>
+              </div>
+              <div class="sb-contact__info-body">
+                <a class="sb-contact__value sb-contact__value--email" href={'mailto:'+mail}>{mail}</a>
+                <span>Email us anytime <span aria-hidden="true">↗</span></span>
+              </div>
+            </article>
+            <article class="sb-contact__glass sb-contact__info-card">
+              <div class="sb-contact__info-top">
+                <span>PHONE</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.8v2.9a2 2 0 0 1-2.2 2A19 19 0 0 1 2.3 4.2 2 2 0 0 1 4.3 2h2.9a2 2 0 0 1 2 1.7l.5 3.1a2 2 0 0 1-.6 1.9L7.5 10a15 15 0 0 0 6.5 6.5l1.3-1.6a2 2 0 0 1 1.9-.6l3.1.5a2 2 0 0 1 1.7 2z"/></svg>
+              </div>
+              <div class="sb-contact__info-body">
+                <a class="sb-contact__value" href="tel:+34623804003" aria-label="Call SouthBear Studio at 623 804 003">623 804 003</a>
+                <span>You can also reach us on WhatsApp</span>
+              </div>
+            </article>
+            <article class="sb-contact__glass sb-contact__info-card">
+              <div class="sb-contact__info-top">
+                <span>BUSINESS HOURS</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+              </div>
+              <div class="sb-contact__info-body">
+                <strong class="sb-contact__value">9:00 – 19:00</strong>
+                <span>Monday to Friday</span>
+              </div>
+            </article>
+            <article class="sb-contact__glass sb-contact__info-card sb-contact__info-card--areas">
+              <div class="sb-contact__info-top">
+                <span>WHERE WE WORK</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0z"/><circle cx="12" cy="10" r="2.5"/></svg>
+              </div>
+              <div class="sb-contact__info-body">
+                <div class="sb-contact__areas"><span>IN PERSON</span><strong>Murcia · Almería · Alicante</strong></div>
+                <div class="sb-contact__areas"><span>ONLINE</span><strong>Across Spain</strong></div>
+              </div>
+            </article>
+          </div>
+          <a class="sb-contact__whatsapp" href="https://wa.me/34623804003?text=Hola%2C%20me%20gustar%C3%ADa%20hablar%20sobre%20un%20proyecto%20para%20SouthBear%20Studio." target="_blank" rel="noopener noreferrer" aria-label="Message SouthBear Studio on WhatsApp">
+            <span class="sb-contact__whatsapp-icon" aria-hidden="true">
+              <svg viewBox="0 0 32 32" fill="currentColor"><path d="M16 .8A15.18 15.18 0 0 0 3.05 23.9L.8 31.2l7.48-2.18A15.2 15.2 0 1 0 16 .8Zm0 27.7a12.4 12.4 0 0 1-6.34-1.74l-.45-.27-4.44 1.3 1.33-4.3-.3-.46A12.45 12.45 0 1 1 16 28.5Zm6.83-9.32c-.37-.19-2.2-1.09-2.54-1.21-.34-.13-.58-.19-.83.19-.24.37-.96 1.21-1.18 1.46-.22.25-.44.28-.81.1-.37-.19-1.57-.58-2.98-1.84-1.1-.98-1.84-2.19-2.05-2.56-.22-.37-.02-.57.16-.76.16-.16.37-.43.55-.64.19-.22.25-.37.37-.62.12-.25.06-.46-.03-.65-.09-.18-.83-2-1.14-2.73-.3-.71-.6-.61-.83-.62h-.7c-.25 0-.65.09-.99.46-.34.37-1.3 1.27-1.3 3.08s1.33 3.57 1.51 3.82c.19.25 2.61 3.98 6.31 5.57.88.38 1.56.6 2.09.77.88.28 1.68.24 2.31.15.7-.1 2.2-.9 2.51-1.77.31-.87.31-1.61.22-1.77-.09-.16-.34-.25-.71-.44Z"/></svg>
+            </span>
+            <span class="sb-contact__whatsapp-text">
+              <strong>Message us on WhatsApp</strong>
+              <small>Start a direct conversation with our studio</small>
+            </span>
+            <span class="sb-contact__whatsapp-arrow" aria-hidden="true">↗</span>
+          </a>
+          <a
+            class="sb-contact__whatsapp sb-contact__booking"
+            href={googleAppointmentsUrl || undefined}
+            target={googleAppointmentsUrl ? '_blank' : undefined}
+            rel={googleAppointmentsUrl ? 'noopener noreferrer' : undefined}
+            aria-disabled={!googleAppointmentsUrl ? 'true' : undefined}
+            aria-label={googleAppointmentsUrl ? 'Book an appointment con SouthBear Studio en Google Calendar' : 'Book an appointment: disponible próximamente'}
+          >
+            <span class="sb-contact__whatsapp-icon sb-contact__booking-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="5" width="18" height="16" rx="2"></rect>
+                <path d="M7 3v4M17 3v4M3 10h18M8 15h3M8 18h5"></path>
+              </svg>
+            </span>
+            <span class="sb-contact__whatsapp-text">
+              <strong>Book an appointment</strong>
+              <small>{googleAppointmentsUrl ? 'Choose a day and time in Google Calendar' : 'Online booking coming soon'}</small>
+            </span>
+            <span class="sb-contact__whatsapp-arrow sb-contact__booking-arrow" aria-hidden="true">{googleAppointmentsUrl ? '↗' : 'COMING SOON'}</span>
+          </a>
+
+        </section>
+
+        <section class="sb-contact__form-col" aria-labelledby="sb-contact-form-title">
+          <div class="sb-contact__glass sb-contact__form-shell">
+            <div class="sb-contact__form-head">
+              <div>
+                <h2 id="sb-contact-form-title">Tell us<br/><em>your idea.</em></h2>
+              </div>
+              <span class="sb-contact__form-mark" aria-hidden="true">↗</span>
+            </div>
+            <p class="sb-contact__form-description">Fill in the details below and send your enquiry to SouthBear Studio. We'll reply to the email address you provide.</p>
+            <form id="sb-contact-form" autocomplete="on">
+              <div class="sb-contact__form-grid">
+                <label class="sb-contact__field">
+                  <span>Name <b>*</b></span>
+                  <input name="name" type="text" autocomplete="name" minlength="2" maxlength="120" placeholder="Your name" required/>
+                </label>
+                <label class="sb-contact__field">
+                  <span>Email address <b>*</b></span>
+                  <input name="email" type="email" autocomplete="email" maxlength="180" placeholder="you@example.com" required/>
+                </label>
+                <label class="sb-contact__field">
+                  <span>Phone <small>(optional)</small></span>
+                  <input name="phone" type="tel" autocomplete="tel" maxlength="40" placeholder="Your phone number"/>
+                </label>
+                <label class="sb-contact__field">
+                  <span>Company / brand <small>(optional)</small></span>
+                  <input name="company" type="text" autocomplete="organization" maxlength="160" placeholder="Company name"/>
+                </label>
+                <label class="sb-contact__field sb-contact__field--wide">
+                  <span>Which service are you interested in? <b>*</b></span>
+                  <select name="service" required>
+                    <option value="">Select a service</option>
+                    {services.map(s=><option value={s.value}>{s.label}</option>)}
+                  </select>
+                </label>
+                <label class="sb-contact__field sb-contact__field--wide">
+                  <span>Tell us what you need <b>*</b></span>
+                  <textarea name="message" rows="6" minlength="10" maxlength="2400" placeholder="Tell us about your project, your ideas, timescales or anything else you'd like to share…" required></textarea>
+                </label>
+              </div>
+
+              <label class="sb-contact__honeypot" aria-hidden="true">
+                <span>Leave this field blank</span><input name="website" type="text" tabindex="-1" autocomplete="off" />
+              </label>
+              <div class="sb-contact__turnstile">
+                <div class="cf-turnstile" data-sitekey="0x4AAAAAAFmX61EyBU-OotNU" data-theme="dark" data-action="southbear_contact" data-appearance="interaction-only"></div>
+              </div>
+              <label class="sb-contact__consent">
+                <input type="checkbox" name="understood" required/>
+                <span>I authorize SouthBear Studio to use my details to respond to this enquiry. <strong>Your message will be sent by email and will not be stored in this website's database.</strong></span>
+              </label>
+              <label class="sb-contact__consent">
+                <input type="checkbox" name="promotions"/>
+                <span>I'd like to receive <strong>news, promotions, marketing and offers from SouthBear Studio by email</strong>. This is optional and I can withdraw my consent at any time by emailing info@southbearstudio.com. It does not affect my enquiry.</span>
+              </label>
+              <div class="sb-contact__send-group">
+                <button class="sb-contact__submit" type="submit" disabled>Checking availability… <span aria-hidden="true">↗</span></button>
+                <button class="sb-contact__copy" id="sb-contact-copy" type="button">Copy message</button>
+              </div>
+              <p class="sb-contact__microcopy">Form details are sent to info@southbearstudio.com through an email delivery provider. You can exercise your data rights by writing to that address. If you opt in to marketing, we will retain only your name, email, phone and company or brand for that purpose until you withdraw consent. We will never store your message or requested service.</p>
+              <p id="sb-contact-status" class="sb-contact__status" role="status" aria-live="polite"></p>
+            </form>
+          </div>
+        </section>
+      </div>
+
+    </div>
+  </div>
+</Base>
+
+<style>
+  .sb-contact{
+    --sb-c-text:#f8f9fc;
+    --sb-c-muted:#b1b4bd;
+    --sb-c-glass:linear-gradient(138deg,rgba(255,255,255,.20) 0%,rgba(255,255,255,.105) 31%,rgba(255,255,255,.055) 70%,rgba(255,255,255,.08) 100%);
+    position:relative;isolation:isolate;overflow:hidden;color:var(--sb-c-text);
+    background:#080a0a;min-height:100vh;
+    padding:clamp(70px,8vw,140px) 0 clamp(55px,7vw,100px);
+  }
+  .sb-contact__inner{width:min(1460px,calc(100% - clamp(36px,8vw,140px)));margin-inline:auto;position:relative;z-index:1}
+  .sb-contact__glow{position:absolute;pointer-events:none;z-index:0;filter:blur(70px);opacity:.5;border-radius:50%}
+  .sb-contact__glow--one{width:690px;height:690px;right:-290px;top:180px;background:radial-gradient(circle,rgba(202,217,214,.21),rgba(108,136,136,.1) 46%,transparent 70%)}
+  .sb-contact__glow--two{width:620px;height:620px;left:-290px;bottom:40px;background:radial-gradient(circle,rgba(183,203,191,.19),rgba(124,153,138,.05) 55%,transparent 72%)}
+  .sb-contact__info-top>span,.sb-contact__areas>span{font-size:11px;letter-spacing:.16em;font-weight:720}
+  .sb-contact__hero h1{font-size:clamp(66px,9.2vw,154px);line-height:.93;letter-spacing:-.095em;font-weight:650;margin:0 0 26px;color:#fff}
+  .sb-contact__hero h1 span{color:#c5c8cb}
+  .sb-contact__hero-bottom{display:flex;justify-content:space-between;align-items:end;gap:26px;max-width:1280px}
+  .sb-contact__hero-bottom p{max-width:640px;margin:0;color:#c2c4c9;font-size:clamp(15px,1.55vw,19px);line-height:1.75;letter-spacing:-.018em}
+  .sb-contact__layout{display:grid;grid-template-columns:minmax(0,.91fr) minmax(0,1.09fr);gap:clamp(22px,3vw,48px);margin-top:clamp(70px,8vw,126px);align-items:start}
+  .sb-contact__section-title{margin-bottom:30px}
+  .sb-contact__section-title h2,.sb-contact__form-head h2{font-weight:630;letter-spacing:-.065em;line-height:1.04}
+  .sb-contact__section-title h2{font-size:clamp(30px,3.3vw,47px);margin:14px 0 0}
+  .sb-contact__section-title em,.sb-contact__form-head em{font-style:normal;color:#afb4bc}
+  .sb-contact__info-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}
+  .sb-contact__glass{
+    position:relative;overflow:hidden;
+    border:1px solid rgba(255,255,255,.28);
+    background:var(--sb-c-glass);
+    -webkit-backdrop-filter:blur(32px) saturate(150%);
+    backdrop-filter:blur(32px) saturate(150%);
+    border-radius:27px;
+    box-shadow:0 22px 55px rgba(0,0,0,.2),inset 0 1px 0 rgba(255,255,255,.24),inset 0 -1px 0 rgba(255,255,255,.04);
+  }
+  .sb-contact__glass::before{content:"";position:absolute;pointer-events:none;inset:0;border-radius:inherit;background:linear-gradient(124deg,rgba(255,255,255,.14),transparent 34%,transparent 70%,rgba(255,255,255,.035));opacity:.7}
+  .sb-contact__glass>*{position:relative;z-index:1}
+  .sb-contact__info-card{min-height:184px;padding:clamp(20px,2vw,30px);display:flex;flex-direction:column;justify-content:space-between;gap:28px}
+  .sb-contact__info-top{display:flex;align-items:start;justify-content:space-between;gap:12px;color:#e7e8ee}
+  .sb-contact__info-top>span{font-size:10px;color:#c9ccd2;line-height:1.5}
+  .sb-contact__info-top svg{width:22px;height:22px;flex-shrink:0;opacity:.92}
+  .sb-contact__info-body{display:grid;gap:9px}
+  .sb-contact__value{display:block;font-size:clamp(20px,2vw,27px);font-family:'Space Grotesk Variable',system-ui,sans-serif;font-weight:620;letter-spacing:-.055em;line-height:1.2;color:#fff;overflow-wrap:anywhere}
+  .sb-contact__value--email{font-size:clamp(15px,1.65vw,23px);text-decoration:none}
+  .sb-contact__value--email:hover{color:#e1ffad}
+  .sb-contact__info-body>span{color:#b6bdc2;font-size:11px;line-height:1.6}
+  .sb-contact__info-card--areas{min-height:184px}
+  .sb-contact__info-card--areas .sb-contact__info-body{gap:14px}
+  .sb-contact__areas{display:grid;gap:3px}
+  .sb-contact__areas>span{font-size:9px;color:#aeb4bd}
+  .sb-contact__areas strong{font-weight:560;font-size:clamp(14px,1.5vw,18px);letter-spacing:-.035em;line-height:1.35}
+  .sb-contact__whatsapp{display:flex;align-items:center;gap:16px;margin-top:16px;padding:18px 22px;border:1px solid rgba(255,255,255,.4);border-radius:21px;color:#fff;text-decoration:none;background:linear-gradient(110deg,rgba(255,255,255,.19),rgba(255,255,255,.07));-webkit-backdrop-filter:blur(28px) saturate(145%);backdrop-filter:blur(28px) saturate(145%);box-shadow:inset 0 1px 0 rgba(255,255,255,.27),0 12px 32px rgba(0,0,0,.16);transition:background .2s,border-color .2s,transform .2s}
+  .sb-contact__whatsapp:hover{color:#fff;background:linear-gradient(110deg,rgba(40,185,110,.34),rgba(255,255,255,.11));border-color:rgba(144,242,174,.6);transform:translateY(-2px)}
+  .sb-contact__whatsapp:focus-visible{outline:3px solid #dfffaa;outline-offset:4px}
+  .sb-contact__whatsapp-icon{display:grid;place-items:center;flex:none;width:51px;height:51px;border-radius:16px;background:#25d366;color:#fff;box-shadow:0 7px 21px rgba(37,211,102,.18)}
+  .sb-contact__whatsapp-icon svg{height:26px;width:26px}
+  .sb-contact__whatsapp-text{display:grid;gap:5px;min-width:0}
+  .sb-contact__whatsapp-text strong{font-family:'Space Grotesk Variable',system-ui,sans-serif;font-size:17px;letter-spacing:-.03em;font-weight:680;line-height:1.2}
+  .sb-contact__whatsapp-text small{color:#bfc8cb;font-size:11px;line-height:1.5}
+  .sb-contact__whatsapp-arrow{margin-left:auto;color:#e4f8e9;font-size:24px}
+  .sb-contact__booking-icon{background:rgba(255,255,255,.18);color:#fff;box-shadow:inset 0 1px 0 rgba(255,255,255,.2)}
+  .sb-contact__booking-arrow{color:#f5f8fa}
+  .sb-contact__booking:not([href]){cursor:default}
+  .sb-contact__booking:not([href]):hover{color:#fff;background:linear-gradient(110deg,rgba(255,255,255,.19),rgba(255,255,255,.07));border-color:rgba(255,255,255,.4);transform:none}
+  .sb-contact__booking:not([href]) .sb-contact__booking-arrow{font-size:9px;font-weight:760;letter-spacing:.08em;border:1px solid rgba(255,255,255,.25);border-radius:9px;padding:8px}
+  .sb-contact__booking[href]:hover{background:linear-gradient(110deg,rgba(255,255,255,.28),rgba(255,255,255,.11));border-color:rgba(255,255,255,.7)}
+  @media(max-width:390px){.sb-contact__booking{flex-wrap:wrap}.sb-contact__booking-arrow{margin-left:67px}}
+  .sb-contact__form-col{padding-top:0}
+  .sb-contact__form-shell{padding:clamp(25px,3.5vw,54px);border-radius:32px;background:linear-gradient(138deg,rgba(255,255,255,.235),rgba(255,255,255,.105) 40%,rgba(255,255,255,.055))}
+  .sb-contact__form-head{display:flex;align-items:start;justify-content:space-between;gap:12px}
+  .sb-contact__form-head h2{font-size:clamp(42px,4.8vw,69px);margin:15px 0 0}
+  .sb-contact__form-mark{display:grid;place-items:center;width:56px;height:56px;border:1px solid rgba(255,255,255,.25);border-radius:18px;font-size:26px;color:#fff;background:rgba(255,255,255,.08)}
+  .sb-contact__form-description{color:#c3c7ca;font-size:13px;line-height:1.7;margin:24px 0 25px}
+  .sb-contact__form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:19px 15px}
+  .sb-contact__field{display:grid;gap:10px;min-width:0}
+  .sb-contact__field--wide{grid-column:1/-1}
+  .sb-contact__field>span{font-size:11px;font-weight:640;color:#edf0f2;letter-spacing:.02em}
+  .sb-contact__field b{color:#dfffad}.sb-contact__field small{font-weight:400;color:#bbc2c6}
+  .sb-contact__field input,.sb-contact__field select,.sb-contact__field textarea{
+    display:block;width:100%;min-width:0;border:1px solid rgba(255,255,255,.26);outline:none;border-radius:12px;
+    background:rgba(12,14,15,.28);color:#fff;font-family:'Inter Variable',system-ui,sans-serif;
+    font-size:13px;line-height:1.55;padding:15px 16px;transition:border-color .2s,box-shadow .2s;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.045);
+  }
+  .sb-contact__field input::placeholder,.sb-contact__field textarea::placeholder{color:#bec3c9;opacity:.8}
+  .sb-contact__field select{appearance:none;cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='1.8'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-size:18px;background-position:right 15px center;padding-right:43px}
+  .sb-contact__field select option{background:#1b2020;color:#fff}
+  .sb-contact__field textarea{resize:vertical;min-height:154px}
+  .sb-contact__field input:focus-visible,.sb-contact__field select:focus-visible,.sb-contact__field textarea:focus-visible{border-color:rgba(220,255,156,.8);box-shadow:0 0 0 3px rgba(220,255,156,.11)}
+  .sb-contact__honeypot{position:absolute!important;left:-9999px!important;width:1px!important;height:1px!important;overflow:hidden!important}
+  .sb-contact__turnstile{margin-top:22px;min-height:24px}
+  .sb-contact__submit:disabled{cursor:not-allowed;opacity:.62;transform:none}
+  .sb-contact__submit:disabled:hover{background:#f5f5f7;transform:none}
+  .sb-contact__consent{display:flex;align-items:start;gap:10px;margin-top:22px;cursor:pointer}
+  .sb-contact__consent input{margin-top:3px;width:17px;height:17px;accent-color:#dfff9d;flex-shrink:0}
+  .sb-contact__consent>span{font-size:11px;line-height:1.65;color:#bdc2c7}
+  .sb-contact__consent strong{font-weight:680;color:#f2f2f5}
+  .sb-contact__send-group{display:flex;flex-wrap:wrap;gap:10px;margin-top:25px}
+  .sb-contact__submit{flex:1;min-width:210px;display:flex;justify-content:space-between;align-items:center;gap:12px;border-radius:13px;padding:17px 19px;border:1px solid #fff;background:#f5f5f7;color:#101414;font-size:13px;font-weight:750;transition:background .18s,transform .18s}
+  .sb-contact__submit:hover{background:#dfffaa;color:#101414;transform:translateY(-1px)}
+  .sb-contact__submit:focus-visible,.sb-contact__copy:focus-visible{outline:3px solid #dfffaa;outline-offset:3px}
+  .sb-contact__copy{padding:16px;border-radius:13px;background:rgba(255,255,255,.06);color:#f4f4f6;border:1px solid rgba(255,255,255,.27);font-size:12px;font-weight:650}
+  .sb-contact__copy:hover{background:rgba(255,255,255,.17);color:#fff}
+  .sb-contact__microcopy{font-size:10px;color:#abb3b9;line-height:1.6;margin:17px 0 0}
+  .sb-contact__status{min-height:1em;color:#e3ffaf;font-size:12px;line-height:1.6;margin:12px 0 0}
+  @media(max-width:1150px){.sb-contact__layout{grid-template-columns:1fr}.sb-contact__form-col{max-width:850px}.sb-contact__info-card{min-height:175px}}
+  @media(max-width:710px){.sb-contact{padding:72px 0 40px}.sb-contact__hero h1{font-size:clamp(57px,13vw,90px)}.sb-contact__info-grid{grid-template-columns:1fr 1fr}.sb-contact__info-card{padding:20px;min-height:175px}.sb-contact__form-shell{padding:26px}}
+  @media(max-width:520px){.sb-contact__inner{width:calc(100% - 32px)}.sb-contact__hero h1{font-size:clamp(52px,14vw,80px)}.sb-contact__info-grid{grid-template-columns:1fr}.sb-contact__info-card{min-height:155px}.sb-contact__form-grid{grid-template-columns:1fr}.sb-contact__form-head h2{font-size:49px}.sb-contact__form-mark{width:44px;height:44px}.sb-contact__glass{border-radius:22px}.sb-contact__form-shell{padding:22px}.sb-contact__hero-bottom p{font-size:15px}}
+  @media(prefers-reduced-motion:reduce){.sb-contact__field input,.sb-contact__submit{transition:none}}
+  @supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){.sb-contact__glass{background:#272d2d}}
+</style>
+
+<script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+
+<script define:vars={{contactEmail:mail}}>
+  // Envío desde el servidor: no se abre Gmail, Outlook ni otra app del cliente.
+  const form=document.getElementById('sb-contact-form');
+  const copy=document.getElementById('sb-contact-copy');
+  const submit=form.querySelector('.sb-contact__submit');
+  const status=document.getElementById('sb-contact-status');
+  let ready=false;
+  const actionLabel='Enviar consulta';
+  const unavailable='Envío directo pendiente de activación';
+  const show=value=>{status.textContent=value;};
+  function getMessage(){
+    const f=form.elements;
+    const select=f.namedItem('service');
+    const service=select.options[select.selectedIndex]?.text||'Sin especificar';
+    return [
+      'SOLICITUD DE CONTACTO · SOUTHBEAR STUDIO',
+      '',
+      'Nombre: '+f.namedItem('name').value.trim(),
+      'Email: '+f.namedItem('email').value.trim(),
+      'Teléfono: '+(f.namedItem('phone').value.trim()||'No indicado'),
+      'Empresa/marca: '+(f.namedItem('company').value.trim()||'No indicada'),
+      'Servicio: '+service,
+      '',
+      'MENSAJE:',
+      f.namedItem('message').value.trim()
+    ].join('\n');
+  }
+  function resetTurnstile(){
+    if(window.turnstile?.reset)try{window.turnstile.reset();}catch{}
+  }
+  function updateButton(){
+    submit.disabled=!ready;
+    submit.innerHTML=(ready?actionLabel:unavailable)+' <span aria-hidden="true">↗</span>';
+  }
+  async function checkStatus(){
+    try{
+      const response=await fetch('/api/contacto/',{headers:{Accept:'application/json'},cache:'no-store'});
+      const payload=await response.json();
+      ready=Boolean(response.ok&&payload.ready);
+    }catch{ready=false;}
+    updateButton();
+    if(!ready)show('El envío directo está pendiente de activación. Mientras tanto, puedes escribirnos por WhatsApp o a '+contactEmail+'.');
+  }
+  form.addEventListener('submit',async event=>{
+    event.preventDefault();
+    if(!ready||!form.reportValidity())return;
+    const f=form.elements;
+    const token=new FormData(form).get('cf-turnstile-response');
+    if(!token){
+      show('Completa la comprobación de seguridad e inténtalo de nuevo.');
+      return;
+    }
+    const payload={
+      name:f.namedItem('name').value.trim(),
+      email:f.namedItem('email').value.trim(),
+      phone:f.namedItem('phone').value.trim(),
+      company:f.namedItem('company').value.trim(),
+      service:f.namedItem('service').value,
+      message:f.namedItem('message').value.trim(),
+      consent:f.namedItem('understood').checked,
+      promotions:f.namedItem('promotions').checked,
+      website:f.namedItem('website').value,
+      token:String(token)
+    };
+    submit.disabled=true;
+    submit.textContent='Enviando consulta…';
+    show('Estamos enviando tu consulta de forma segura.');
+    try{
+      const response=await fetch('/api/contacto/',{
+        method:'POST',
+        headers:{'Content-Type':'application/json',Accept:'application/json'},
+        body:JSON.stringify(payload)
+      });
+      const result=await response.json().catch(()=>({}));
+      if(!response.ok||!result.ok){
+        if(response.status===429)throw Error('Has enviado varias consultas seguidas. Inténtalo de nuevo dentro de una hora.');
+        if(response.status===503){
+          ready=false;
+          throw Error('El envío directo no está disponible temporalmente. Contacta por WhatsApp o teléfono.');
+        }
+        throw Error(result.error||'No se pudo enviar tu consulta. Inténtalo de nuevo.');
+      }
+      form.reset();
+      resetTurnstile();
+      show('¡Consulta enviada correctamente! Te responderemos lo antes posible.');
+    }catch(error){
+      resetTurnstile();
+      show(error.message||'Se produjo un error de conexión. Inténtalo de nuevo.');
+    }finally{
+      updateButton();
+    }
+  });
+  copy.addEventListener('click',async()=>{
+    if(!form.reportValidity())return;
+    try{
+      await navigator.clipboard.writeText(getMessage());
+      show('Mensaje copiado. Puedes pegarlo en un correo para '+contactEmail+'.');
+    }catch{
+      show('No se pudo copiar automáticamente. Puedes escribir directamente a '+contactEmail+'.');
+    }
+  });
+  checkStatus();
+</script>

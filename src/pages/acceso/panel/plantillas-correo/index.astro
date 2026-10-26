@@ -1,0 +1,35 @@
+---
+import Private from '../../../../layouts/Private.astro';
+---
+<Private workspace title="Plantillas de correo" description="Edita los correos automáticos de SouthBear Studio.">
+<section class="mail-editor">
+<p class="breadcrumb"><a href="/acceso/panel/">SOUTHBEAR OS</a> / PLANTILLAS DE CORREO</p>
+<header><h1>PLANTILLAS <span>DE CORREO.</span></h1><p>Personaliza los mensajes enviados desde info@southbearstudio.com. Ambos incluyen el logotipo oficial de SouthBear Studio.</p></header>
+<div class="mail-grid">
+<form id="template-form">
+<label>Selecciona una plantilla<select id="template"><option value="contact_receipt">Confirmación de consulta</option><option value="promotion_welcome">Bienvenida a promociones</option></select></label>
+<label>Asunto<input name="subject" maxlength="180" required/></label>
+<label>Título principal<input name="headline" maxlength="180" required/></label>
+<label>Cuerpo del mensaje <small>Utiliza {nombre} para personalizar el saludo</small><textarea name="body" rows="12" maxlength="6000" required></textarea></label>
+<label>Texto del botón<input name="button_label" maxlength="100"/></label>
+<label>Enlace del botón (solo southbearstudio.com)<input name="button_url" maxlength="400" type="url"/></label>
+<div class="actions"><button type="submit">Guardar plantilla</button><span id="status" role="status"></span></div>
+</form>
+<div class="preview"><h2>Vista previa</h2><div class="email"><div class="brand"><img src="/southbear-logo.svg" alt="Logo SouthBear Studio"/></div><div class="inner"><h2 id="email-title"></h2><div id="email-body"></div><a id="email-button" href="https://southbearstudio.com/" target="_blank" rel="noopener"></a></div><footer>SOUTHBEAR STUDIO · Diseño, web y audiovisual<br/>info@southbearstudio.com<p id="unsubscribe"></p></footer></div></div>
+</div>
+</section>
+</Private>
+<style>
+.mail-editor{max-width:1450px;margin:auto;color:white;padding:24px 0 70px}.breadcrumb{font-size:11px;letter-spacing:.12em;color:#b2c2ba}.breadcrumb a{color:inherit}header{margin:45px 0}header h1{font-family:'Space Grotesk Variable',sans-serif;font-size:clamp(38px,5vw,68px);letter-spacing:-.06em}header h1 span{color:#b7cbc0}header p{color:#c2d2c8;max-width:650px;line-height:1.7}.mail-grid{display:grid;grid-template-columns:1fr 1fr;gap:30px}.mail-grid form{padding:27px;border:1px solid #45584c;border-radius:19px;background:#18251e;display:grid;gap:18px}.mail-grid label{display:grid;gap:9px;font-size:13px;color:#e1eae4}.mail-grid input,.mail-grid select,.mail-grid textarea{width:100%;border:1px solid #536858;background:#0f1a14;border-radius:10px;padding:14px;color:#fff;font:inherit}.mail-grid textarea{resize:vertical;line-height:1.6}.mail-grid small{color:#b9c7bc}.actions{display:flex;align-items:center;gap:15px}.actions button{background:#d5f3cc;color:#183021;border:0;border-radius:10px;padding:15px 24px;font-weight:bold;cursor:pointer}.actions span{font-size:12px}.preview>h2{font-size:15px;margin:0 0 16px}.email{overflow:hidden;background:#fff;border-radius:14px;color:#27332e;font-family:Arial,sans-serif}.brand{background:#101b16;padding:27px;text-align:center}.brand img{width:235px;max-width:100%;background:#fff;padding:8px;border-radius:5px}.inner{padding:38px}.inner h2{font-size:27px;color:#183122}.inner #email-body{white-space:pre-wrap;line-height:1.75;font-size:15px}.inner a{display:inline-block;margin-top:20px;background:#233b2d;border-radius:9px;padding:14px 22px;color:#fff;text-decoration:none}footer{background:#e7eee7;text-align:center;padding:22px;font-size:12px;line-height:1.8;color:#4c6051}@media(max-width:1000px){.mail-grid{grid-template-columns:1fr}}@media(max-width:600px){.inner{padding:23px}}
+</style>
+<script>
+const API='/api/southbear/plantillas-correo/';
+let templates={};const form=document.getElementById('template-form'),select=document.getElementById('template'),status=document.getElementById('status');
+const fields=['subject','headline','body','button_label','button_url'];
+function draw(){const data=Object.fromEntries(fields.map(k=>[k,form.elements.namedItem(k).value]));document.getElementById('email-title').textContent=data.headline.replaceAll('{nombre}','María');document.getElementById('email-body').textContent=data.body.replaceAll('{nombre}','María');const b=document.getElementById('email-button');b.textContent=data.button_label;b.hidden=!data.button_label;b.href=data.button_url.startsWith('https://southbearstudio.com/')?data.button_url:'https://southbearstudio.com/';document.getElementById('unsubscribe').textContent=select.value==='promotion_welcome'?'Puedes cancelar las comunicaciones comerciales escribiendo a info@southbearstudio.com.':'';}
+function selectTemplate(){const t=templates[select.value];if(!t)return;for(const f of fields)form.elements.namedItem(f).value=t[f]||'';draw();}
+async function load(){try{const r=await fetch(API,{credentials:'same-origin'});const d=await r.json();if(!r.ok||!d.ok)throw Error(d.error||'Error al cargar');templates=Object.fromEntries(d.items.map(t=>[t.id,t]));selectTemplate();}catch(e){status.textContent=e.message;}}
+select.addEventListener('change',selectTemplate);form.addEventListener('input',draw);
+form.addEventListener('submit',async e=>{e.preventDefault();status.textContent='Guardando…';try{const payload={id:select.value,...Object.fromEntries(fields.map(k=>[k,form.elements.namedItem(k).value]))};const r=await fetch(API,{method:'PUT',credentials:'same-origin',headers:{'Content-Type':'application/json','X-SouthBear-Request':'1'},body:JSON.stringify(payload)});const d=await r.json();if(!r.ok||!d.ok)throw Error(d.error||'No se pudo guardar');templates[select.value]=payload;status.textContent='Guardado correctamente';}catch(e){status.textContent=e.message;}});
+load();
+</script>

@@ -21,18 +21,15 @@ const services=[
     <div class="sb-contact__glow sb-contact__glow--two" aria-hidden="true"></div>
     <div class="sb-contact__inner">
       <header class="sb-contact__hero">
-        <div class="sb-contact__eyebrow"><span class="sb-contact__signal" aria-hidden="true"></span> SOUTHBEAR STUDIO <span class="sb-contact__slash">/</span> CONTACTO</div>
         <h1>Hablemos de<br/><span>tu proyecto.</span></h1>
         <div class="sb-contact__hero-bottom">
           <p>Una buena idea merece una conversación. Cuéntanos qué tienes en mente y buscaremos la mejor forma de darle vida.</p>
-          <span class="sb-contact__edition">DISEÑO <span>·</span> WEB <span>·</span> AUDIOVISUAL</span>
         </div>
       </header>
 
       <div class="sb-contact__layout">
         <section class="sb-contact__information" aria-labelledby="sb-contact-details-heading">
           <div class="sb-contact__section-title">
-            <span>01 / INFORMACIÓN</span>
             <h2 id="sb-contact-details-heading">Estamos cerca.<br/><em>Estés donde estés.</em></h2>
           </div>
 
@@ -89,17 +86,12 @@ const services=[
             <span class="sb-contact__whatsapp-arrow" aria-hidden="true">↗</span>
           </a>
 
-          <div class="sb-contact__side-note">
-            <span class="sb-contact__note-number">SB / 01</span>
-            <p>Sin ideas demasiado pequeñas ni proyectos demasiado grandes. Lo importante es empezar a hablar.</p>
-          </div>
         </section>
 
         <section class="sb-contact__form-col" aria-labelledby="sb-contact-form-title">
           <div class="sb-contact__glass sb-contact__form-shell">
             <div class="sb-contact__form-head">
               <div>
-                <span class="sb-contact__step">02 / TU CONSULTA</span>
                 <h2 id="sb-contact-form-title">Cuéntanos<br/><em>tu idea.</em></h2>
               </div>
               <span class="sb-contact__form-mark" aria-hidden="true">↗</span>
@@ -151,10 +143,6 @@ const services=[
         </section>
       </div>
 
-      <footer class="sb-contact__bottom">
-        <span>SOUTHBEAR STUDIO <span class="sb-contact__slash">/</span> IDEAS QUE DEJAN HUELLA.</span>
-        <a href="/presupuesto/">¿Prefieres solicitar presupuesto? <span aria-hidden="true">↗</span></a>
-      </footer>
     </div>
   </div>
 </Base>
@@ -166,24 +154,19 @@ const services=[
     --sb-c-glass:linear-gradient(138deg,rgba(255,255,255,.20) 0%,rgba(255,255,255,.105) 31%,rgba(255,255,255,.055) 70%,rgba(255,255,255,.08) 100%);
     position:relative;isolation:isolate;overflow:hidden;color:var(--sb-c-text);
     background:#080a0a;min-height:100vh;
-    padding:clamp(70px,8vw,140px) 0 65px;
+    padding:clamp(70px,8vw,140px) 0 clamp(55px,7vw,100px);
   }
   .sb-contact__inner{width:min(1460px,calc(100% - clamp(36px,8vw,140px)));margin-inline:auto;position:relative;z-index:1}
   .sb-contact__glow{position:absolute;pointer-events:none;z-index:0;filter:blur(70px);opacity:.5;border-radius:50%}
   .sb-contact__glow--one{width:690px;height:690px;right:-290px;top:180px;background:radial-gradient(circle,rgba(202,217,214,.21),rgba(108,136,136,.1) 46%,transparent 70%)}
   .sb-contact__glow--two{width:620px;height:620px;left:-290px;bottom:40px;background:radial-gradient(circle,rgba(183,203,191,.19),rgba(124,153,138,.05) 55%,transparent 72%)}
-  .sb-contact__eyebrow,.sb-contact__section-title>span,.sb-contact__step,.sb-contact__edition,.sb-contact__info-top>span,.sb-contact__areas>span,.sb-contact__bottom{font-size:11px;letter-spacing:.16em;font-weight:720}
-  .sb-contact__eyebrow{display:flex;align-items:center;gap:10px;color:#d4d5d9}
-  .sb-contact__signal{width:8px;height:8px;display:block;border-radius:50%;background:#dcff9c;box-shadow:0 0 18px rgba(220,255,156,.55)}
-  .sb-contact__slash{color:#82858b}
-  .sb-contact__hero h1{font-size:clamp(66px,9.2vw,154px);line-height:.93;letter-spacing:-.095em;font-weight:650;margin:26px 0 26px;color:#fff}
+  .sb-contact__info-top>span,.sb-contact__areas>span{font-size:11px;letter-spacing:.16em;font-weight:720}
+  .sb-contact__hero h1{font-size:clamp(66px,9.2vw,154px);line-height:.93;letter-spacing:-.095em;font-weight:650;margin:0 0 26px;color:#fff}
   .sb-contact__hero h1 span{color:#c5c8cb}
   .sb-contact__hero-bottom{display:flex;justify-content:space-between;align-items:end;gap:26px;max-width:1280px}
   .sb-contact__hero-bottom p{max-width:640px;margin:0;color:#c2c4c9;font-size:clamp(15px,1.55vw,19px);line-height:1.75;letter-spacing:-.018em}
-  .sb-contact__edition{white-space:nowrap;color:#7e8586;margin-bottom:8px}.sb-contact__edition span{color:#d6d8da}
   .sb-contact__layout{display:grid;grid-template-columns:minmax(0,.91fr) minmax(0,1.09fr);gap:clamp(22px,3vw,48px);margin-top:clamp(70px,8vw,126px);align-items:start}
   .sb-contact__section-title{margin-bottom:30px}
-  .sb-contact__section-title>span,.sb-contact__step{color:#b9bec6}
   .sb-contact__section-title h2,.sb-contact__form-head h2{font-weight:630;letter-spacing:-.065em;line-height:1.04}
   .sb-contact__section-title h2{font-size:clamp(30px,3.3vw,47px);margin:14px 0 0}
   .sb-contact__section-title em,.sb-contact__form-head em{font-style:normal;color:#afb4bc}
@@ -222,9 +205,6 @@ const services=[
   .sb-contact__whatsapp-text strong{font-family:'Space Grotesk Variable',system-ui,sans-serif;font-size:17px;letter-spacing:-.03em;font-weight:680;line-height:1.2}
   .sb-contact__whatsapp-text small{color:#bfc8cb;font-size:11px;line-height:1.5}
   .sb-contact__whatsapp-arrow{margin-left:auto;color:#e4f8e9;font-size:24px}
-  .sb-contact__side-note{display:flex;gap:24px;align-items:start;border-top:1px solid rgba(255,255,255,.24);padding-top:27px;margin-top:31px}
-  .sb-contact__note-number{white-space:nowrap;letter-spacing:.13em;color:#bcc2c4;font-size:11px;font-weight:700}
-  .sb-contact__side-note p{color:#afb3bb;line-height:1.75;font-size:13px;margin:0;max-width:420px}
   .sb-contact__form-col{padding-top:0}
   .sb-contact__form-shell{padding:clamp(25px,3.5vw,54px);border-radius:32px;background:linear-gradient(138deg,rgba(255,255,255,.235),rgba(255,255,255,.105) 40%,rgba(255,255,255,.055))}
   .sb-contact__form-head{display:flex;align-items:start;justify-content:space-between;gap:12px}
@@ -259,10 +239,8 @@ const services=[
   .sb-contact__copy:hover{background:rgba(255,255,255,.17);color:#fff}
   .sb-contact__microcopy{font-size:10px;color:#abb3b9;line-height:1.6;margin:17px 0 0}
   .sb-contact__status{min-height:1em;color:#e3ffaf;font-size:12px;line-height:1.6;margin:12px 0 0}
-  .sb-contact__bottom{display:flex;justify-content:space-between;align-items:center;gap:22px;border-top:1px solid rgba(255,255,255,.21);margin-top:clamp(80px,10vw,150px);padding-top:25px;color:#aeb5ba;font-size:10px}
-  .sb-contact__bottom a{color:#f8fafb;letter-spacing:.04em}.sb-contact__bottom a:hover{color:#deff9a}
-  @media(max-width:1150px){.sb-contact__layout{grid-template-columns:1fr}.sb-contact__form-col{max-width:850px}.sb-contact__info-card{min-height:175px}.sb-contact__edition{display:none}}
-  @media(max-width:710px){.sb-contact{padding:72px 0 40px}.sb-contact__hero h1{font-size:clamp(57px,13vw,90px)}.sb-contact__info-grid{grid-template-columns:1fr 1fr}.sb-contact__info-card{padding:20px;min-height:175px}.sb-contact__form-shell{padding:26px}.sb-contact__bottom{align-items:start;flex-direction:column;line-height:1.8}}
+  @media(max-width:1150px){.sb-contact__layout{grid-template-columns:1fr}.sb-contact__form-col{max-width:850px}.sb-contact__info-card{min-height:175px}}
+  @media(max-width:710px){.sb-contact{padding:72px 0 40px}.sb-contact__hero h1{font-size:clamp(57px,13vw,90px)}.sb-contact__info-grid{grid-template-columns:1fr 1fr}.sb-contact__info-card{padding:20px;min-height:175px}.sb-contact__form-shell{padding:26px}}
   @media(max-width:520px){.sb-contact__inner{width:calc(100% - 32px)}.sb-contact__hero h1{font-size:clamp(52px,14vw,80px)}.sb-contact__info-grid{grid-template-columns:1fr}.sb-contact__info-card{min-height:155px}.sb-contact__form-grid{grid-template-columns:1fr}.sb-contact__form-head h2{font-size:49px}.sb-contact__form-mark{width:44px;height:44px}.sb-contact__glass{border-radius:22px}.sb-contact__form-shell{padding:22px}.sb-contact__hero-bottom p{font-size:15px}}
   @media(prefers-reduced-motion:reduce){.sb-contact__field input,.sb-contact__submit{transition:none}}
   @supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){.sb-contact__glass{background:#272d2d}}

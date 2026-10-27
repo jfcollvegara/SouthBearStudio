@@ -37,9 +37,23 @@ const motifs=['business-card','cross','flyer','diptych','triptych','lines','aste
     {service.extras.map(extra=><details class="extra-line"><summary><span class="extra-name">{extra.name}</span><span class="extra-price">{money(extra)}</span><span class="extra-plus" aria-hidden="true">+</span></summary><p>{extra.detail}</p></details>)}
    </div>
   </section>
+  <section class="editorial-process" aria-label="Cómo trabajamos">
+   <div class="process-intro"><h2>De la idea<br/>a la pieza<span class="period">.</span></h2><p>Un proceso sencillo, con todo claro desde el principio.</p></div>
+   <div class="process-grid">
+    <div class="process-step"><span class="process-mark" aria-hidden="true">✳</span><h3>Nos cuentas tu idea</h3><p>Qué necesitas, para quién es y dónde se va a utilizar.</p></div>
+    <div class="process-step"><span class="process-mark" aria-hidden="true">□</span><h3>Diseñamos</h3><p>Preparamos la pieza gráfica adaptada al formato y al alcance acordado.</p></div>
+    <div class="process-step"><span class="process-mark" aria-hidden="true">↗</span><h3>Revisamos y entregamos</h3><p>Aplicamos las revisiones incluidas y entregamos los archivos finales correspondientes.</p></div>
+   </div>
+   <div class="print-note"><span class="print-icon" aria-hidden="true">▤</span><div><h3>¿También necesitas imprimirlo?</h3><p>Podemos gestionar la impresión física de tus diseños, bajo presupuesto según cantidades, materiales, acabados y envío. La impresión no está incluida en el precio del diseño.</p></div></div>
+  </section>
   <section class="editorial-terms" aria-label="Información del servicio">
    <div><h2>Todo claro.</h2><p>El buen diseño también está en los detalles.</p></div>
    <div><ul>{service.common.map(item=><li>{item}</li>)}</ul><p><strong>No incluido:</strong> {service.notIncluded}</p><p>Todos los precios indicados incluyen IVA.</p></div>
+  </section>
+  <section class="editorial-close" aria-label="Hablemos de tu proyecto">
+   <span class="close-ornament" aria-hidden="true"></span>
+   <h2>¿Tienes una idea?<br/><span>Hagámosla visible.</span></h2>
+   <a href="/contacto/">Ponte en contacto <span aria-hidden="true">↗</span></a>
   </section>
  </main>
 </Base>
@@ -118,6 +132,26 @@ const motifs=['business-card','cross','flyer','diptych','triptych','lines','aste
 .editorial-terms p,.editorial-terms li{font-size:14px;line-height:1.7;color:#c6cbc4}
 .editorial-terms ul{margin:0 0 22px;padding-left:20px;display:grid;gap:12px}
 .editorial-terms strong{color:#fff}
+.editorial-process{background:#f7f8f5;padding:115px clamp(22px,5.7vw,100px) 110px}
+.process-intro{display:flex;justify-content:space-between;align-items:end;gap:32px;margin-bottom:60px}
+.process-intro h2{font-size:clamp(45px,6.8vw,106px);line-height:.96;letter-spacing:-.085em;margin:0}
+.process-intro p{max-width:260px;font-size:16px;line-height:1.6;margin:0}
+.process-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.process-step{min-height:260px;padding:30px;display:flex;flex-direction:column;align-items:start;background:linear-gradient(135deg,rgba(255,255,255,.86),rgba(255,255,255,.45));border:1px solid rgba(255,255,255,.96);box-shadow:inset 1px 1px 0 #fff,0 12px 38px rgba(21,36,14,.06);backdrop-filter:blur(18px);border-radius:0}
+.process-mark{display:grid;place-items:center;width:58px;height:58px;border:1px solid #cbd2c6;background:#DDFF9A;font-size:34px;font-weight:300;margin-bottom:auto}
+.process-step h3{font-family:'Space Grotesk Variable',Arial,sans-serif;font-size:clamp(23px,2.3vw,32px);letter-spacing:-.055em;margin:32px 0 10px;line-height:1.06}
+.process-step p{font-size:14px;line-height:1.65;color:#60675d;margin:0}
+.print-note{display:flex;gap:24px;align-items:start;margin-top:30px;padding:30px 0;border-top:1px solid #d6dcd3;border-bottom:1px solid #d6dcd3}
+.print-icon{flex:none;font-size:38px;line-height:1;color:#637b4b}
+.print-note h3{font-size:clamp(22px,2.3vw,32px);letter-spacing:-.05em;margin:0 0 10px}
+.print-note p{font-size:14px;line-height:1.75;max-width:740px;color:#5b6358;margin:0}
+.editorial-close{position:relative;overflow:hidden;padding:clamp(90px,11vw,165px) clamp(22px,5.7vw,100px);background:#fff;isolation:isolate}
+.editorial-close h2{position:relative;z-index:1;font-size:clamp(45px,7.8vw,123px);line-height:1.02;letter-spacing:-.09em;margin:0 0 58px}
+.editorial-close h2 span{color:#617552}
+.editorial-close a{position:relative;z-index:1;display:inline-flex;align-items:center;gap:42px;padding:17px 0;border-bottom:2px solid #171a16;font-weight:650;font-size:17px}
+.editorial-close a:hover{color:#4b7524;border-color:#4b7524}
+.close-ornament{position:absolute;z-index:0;right:-90px;top:5%;width:clamp(260px,36vw,520px);aspect-ratio:1;border:clamp(25px,4vw,60px) solid #DDFF9A;border-radius:50%;opacity:.85}
+@media(max-width:760px){.editorial-process{padding:80px 20px}.process-intro{display:block;margin-bottom:36px}.process-intro p{margin-top:22px}.process-grid{grid-template-columns:1fr}.process-step{min-height:215px;padding:25px}.print-note{gap:15px}.editorial-close{padding:95px 20px}.close-ornament{right:-190px;top:4%;opacity:.55}.editorial-close h2{margin-bottom:50px}}
 @keyframes tile-arrive{from{opacity:0;translate:0 28px;filter:blur(7px)}to{opacity:1;translate:0 0;filter:blur(0)}}
 @keyframes details-in{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
 @keyframes art-float{50%{transform:translateY(22px) rotate(10deg)}}

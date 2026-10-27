@@ -1,9 +1,130 @@
 ---
 import Base from '../../layouts/Base.astro';
+import {catalog} from '../../data/catalog.js';
+const service=catalog.find(item=>item.slug==='diseno-grafico');
+const money=item=>item.price==null?'Bajo presupuesto':(item.from?'Desde ':'')+item.price.toLocaleString('es-ES')+' €';
+const motifs=['circle','cross','bars','disc','corner','lines','asterisk','frame','dot'];
 ---
-<Base title="Diseño gráfico y publicidad" description="Diseño gráfico y publicidad en SouthBear Studio.">
-  <main class="graphic-blank" aria-label="Diseño gráfico y publicidad"></main>
+<Base title="Diseño gráfico y publicidad" description={service.intro}>
+ <main class="editorial">
+  <section class="editorial-hero">
+   <div class="hero-label"><span class="signal" aria-hidden="true"></span><span>SOUTHBEAR STUDIO — SERVICIOS CREATIVOS</span></div>
+   <h1>Diseño<br/><span>gráfico</span><br/><em>& publicidad<span class="period">.</span></em></h1>
+   <div class="hero-footer"><p>{service.intro}</p><a href="#piezas">Explora los diseños <span aria-hidden="true">↓</span></a></div>
+   <div class="hero-art" aria-hidden="true"><span class="art-ring"></span><span class="art-square"></span><span class="art-cross">+</span></div>
+  </section>
+  <section class="editorial-work" id="piezas" aria-label="Servicios de diseño gráfico">
+   <div class="section-opening"><h2>Ideas que<br/>toman forma<span class="period">.</span></h2><p>Cada formato, una forma distinta de comunicar. Selecciona una pieza y descubre qué incluye.</p></div>
+   <div class="work-grid">
+    {service.packages.map((pkg,index)=>(
+     <details class:list={['work-tile','work-tile--'+index]} data-reveal>
+      <summary aria-label={'Ver detalles de '+pkg.name}>
+       <span class="tile-top"><span class="tile-category">{index<6?'Impresión y editorial':'Diseño digital'}</span><span class="tile-arrow" aria-hidden="true">↗</span></span>
+       <span class:list={['tile-motif','tile-motif--'+motifs[index]]} aria-hidden="true"><i></i><i></i><i></i></span>
+       <span class="tile-bottom"><span class="tile-name">{pkg.name}</span><span class="tile-price">{money(pkg)}</span></span>
+       <span class="tile-invite">Ver detalles <span aria-hidden="true">+</span></span>
+      </summary>
+      <div class="tile-details">
+       <ul>{pkg.features.map(feature=><li>{feature}</li>)}</ul>
+       <a href={'/presupuesto/?servicio=diseno-grafico&paquete='+encodeURIComponent(pkg.name)}>Consultar este diseño <span aria-hidden="true">↗</span></a>
+      </div>
+     </details>
+    ))}
+   </div>
+  </section>
+  <section class="editorial-extras" aria-label="Complementos">
+   <div class="extras-title"><h2>Un poco<br/>más<span class="period">.</span></h2><p>Para cuando una idea necesita llegar más lejos.</p></div>
+   <div class="extras-list">
+    {service.extras.map(extra=><details class="extra-line"><summary><span class="extra-name">{extra.name}</span><span class="extra-price">{money(extra)}</span><span class="extra-plus" aria-hidden="true">+</span></summary><p>{extra.detail}</p></details>)}
+   </div>
+  </section>
+  <section class="editorial-terms" aria-label="Información del servicio">
+   <div><h2>Todo claro.</h2><p>El buen diseño también está en los detalles.</p></div>
+   <div><ul>{service.common.map(item=><li>{item}</li>)}</ul><p><strong>No incluido:</strong> {service.notIncluded}</p><p>Todos los precios indicados incluyen IVA.</p></div>
+  </section>
+ </main>
 </Base>
 <style>
-.graphic-blank{min-height:100vh;min-height:100svh;background:#fff}
+.editorial{--ink:#171a16;--accent:#a5eb5d;--muted:#7a7e77;color:var(--ink);background:#fff;font-family:'Inter Variable',Arial,sans-serif;overflow:hidden}
+.editorial h1,.editorial h2,.tile-name{font-family:'Space Grotesk Variable',Arial,sans-serif}
+.editorial-hero{min-height:calc(100svh - 60px);position:relative;padding:clamp(95px,11vw,155px) clamp(22px,5.7vw,100px) 48px;display:flex;flex-direction:column;justify-content:space-between;isolation:isolate;overflow:hidden}
+.hero-label{font-size:clamp(10px,.85vw,12px);font-weight:700;letter-spacing:.1em;display:flex;align-items:center;gap:12px;z-index:1}
+.signal{width:9px;height:9px;background:var(--accent);border-radius:50%;box-shadow:0 0 0 5px #e9f9db}
+.editorial-hero h1{z-index:1;position:relative;letter-spacing:-.095em;font-size:clamp(62px,11.5vw,188px);line-height:.84;font-weight:680;max-width:1200px;margin:55px 0 65px}
+.editorial-hero h1>span{margin-left:clamp(10px,7vw,115px)}
+.editorial-hero h1 em{font-style:normal;white-space:nowrap;font-weight:450;font-size:.73em}
+.period{color:#76bd38}
+.hero-footer{z-index:1;display:flex;justify-content:space-between;align-items:end;gap:28px}
+.hero-footer p{font-size:clamp(15px,1.35vw,20px);line-height:1.5;max-width:365px;margin:0}
+.hero-footer a{color:var(--ink);text-decoration:none;border-bottom:1px solid currentColor;padding-bottom:10px;font-size:13px;font-weight:650;white-space:nowrap}
+.hero-footer a span{display:inline-block;margin-left:18px}
+.hero-art{position:absolute;inset:0;pointer-events:none;z-index:0}
+.art-ring{position:absolute;width:clamp(150px,19vw,320px);aspect-ratio:1;border:1px solid #d4d9d0;border-radius:50%;right:9%;top:16%;animation:art-float 8s ease-in-out infinite}
+.art-ring::before{content:'';position:absolute;inset:24%;border:1px solid #e4e7e2;border-radius:50%}
+.art-square{position:absolute;right:6%;bottom:14%;width:clamp(45px,6vw,100px);aspect-ratio:1;border:2px solid #1c211b;transform:rotate(14deg)}
+.art-cross{position:absolute;right:28%;top:29%;font:300 clamp(40px,6vw,100px)/1 'Space Grotesk Variable';color:#a6dc72}
+.editorial-work{padding:110px clamp(18px,5.7vw,100px) 130px;scroll-margin-top:90px;background:#f7f8f5}
+.section-opening,.extras-title{display:flex;justify-content:space-between;align-items:end;gap:30px;margin-bottom:62px}
+.section-opening h2,.extras-title h2{font-size:clamp(46px,7vw,116px);font-weight:640;line-height:.94;letter-spacing:-.085em;margin:0}
+.section-opening p,.extras-title p{font-size:clamp(14px,1.3vw,18px);line-height:1.5;max-width:280px;margin:0}
+.work-grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));grid-auto-flow:row dense;gap:16px;align-items:start}
+.work-tile{position:relative;min-width:0;grid-column:span 4;background:#fff;border:1px solid #dfe4dc;transition:border-color .3s,box-shadow .3s,transform .3s;opacity:0;translate:0 28px}
+.work-tile.appeared{animation:tile-arrive .85s cubic-bezier(.16,1,.3,1) both}
+.work-tile--0{grid-column:span 5}.work-tile--1{grid-column:span 7}.work-tile--2{grid-column:span 4}.work-tile--3{grid-column:span 4}.work-tile--4{grid-column:span 4}.work-tile--5{grid-column:span 7}.work-tile--6{grid-column:span 5}.work-tile--7{grid-column:span 6}.work-tile--8{grid-column:span 6}
+.work-tile:hover{border-color:#88917f;box-shadow:0 16px 48px rgba(22,31,19,.06);transform:translateY(-4px)}
+.work-tile summary{list-style:none;min-height:clamp(260px,29vw,420px);padding:clamp(20px,2.4vw,34px);display:flex;flex-direction:column;justify-content:space-between;cursor:pointer;overflow:hidden}
+.work-tile summary::-webkit-details-marker,.extra-line summary::-webkit-details-marker{display:none}
+.tile-top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.tile-category{font-size:11px;color:var(--muted);font-weight:650}
+.tile-arrow{font-size:23px;transition:transform .25s}
+.work-tile:hover .tile-arrow{transform:translate(3px,-3px)}
+.tile-motif{align-self:center;position:relative;width:clamp(100px,13vw,205px);height:clamp(100px,13vw,205px);display:block;transition:transform .6s cubic-bezier(.2,.8,.2,1)}
+.work-tile:hover .tile-motif{transform:rotate(12deg) scale(1.07)}
+.tile-motif i{position:absolute;display:block}
+.tile-motif--circle i:first-child{inset:10%;border:clamp(12px,2vw,27px) solid var(--accent);border-radius:50%}
+.tile-motif--cross i:first-child{width:100%;height:15%;background:#1e231b;top:42%}.tile-motif--cross i:nth-child(2){height:100%;width:15%;background:#1e231b;left:42%}
+.tile-motif--bars i{width:22%;height:100%;background:#a6eb65;left:7%;transform:rotate(-15deg)}.tile-motif--bars i:nth-child(2){left:39%}.tile-motif--bars i:nth-child(3){left:71%}
+.tile-motif--disc i:first-child{inset:8%;border-radius:50%;background:#1c211a}.tile-motif--disc i:nth-child(2){inset:36%;background:#fff;border-radius:50%}
+.tile-motif--corner i:first-child{width:90%;height:90%;border:18px solid #9fe65c;border-right:0;border-bottom:0;left:5%;top:5%}
+.tile-motif--lines i{top:15%;left:0;right:0;height:2px;background:#222}.tile-motif--lines i:nth-child(2){top:48%}.tile-motif--lines i:nth-child(3){top:81%}
+.tile-motif--asterisk i:first-child{top:44%;left:0;width:100%;height:12%;background:#a2e45e}.tile-motif--asterisk i:nth-child(2){top:44%;left:0;width:100%;height:12%;background:#a2e45e;transform:rotate(60deg)}.tile-motif--asterisk i:nth-child(3){top:44%;left:0;width:100%;height:12%;background:#a2e45e;transform:rotate(120deg)}
+.tile-motif--frame i:first-child{inset:8%;border:3px solid #1d211a;transform:rotate(10deg)}.tile-motif--frame i:nth-child(2){inset:22%;border:3px solid #a2e45e;transform:rotate(-10deg)}
+.tile-motif--dot i:first-child{inset:18%;background:#a5eb5d;border-radius:50%;box-shadow:24px 24px 0 #1b211b}
+.tile-bottom{display:flex;align-items:end;justify-content:space-between;gap:14px}
+.tile-name{font-size:clamp(22px,2.3vw,38px);font-weight:620;letter-spacing:-.065em;line-height:1.05;max-width:275px}
+.tile-price{font-weight:650;white-space:nowrap;font-size:clamp(13px,1.25vw,18px)}
+.tile-invite{font-size:11px;color:#868b83;margin-top:18px;display:flex;justify-content:space-between;align-items:center}
+.tile-invite span{font-size:20px}
+.tile-details{padding:0 clamp(20px,2.4vw,34px) 30px;animation:details-in .3s both}
+.tile-details ul{padding:22px 0 0;margin:0 0 26px;border-top:1px solid #dfe4dc;list-style:none;display:grid;gap:11px}
+.tile-details li{font-size:13px;line-height:1.5;color:#5d6259}.tile-details li::before{content:'— ';color:#6caf35}
+.tile-details a{color:#1b2716;font-size:13px;font-weight:650;text-underline-offset:4px}
+.editorial-extras{padding:120px clamp(22px,5.7vw,100px);background:#fff}
+.extras-list{border-top:1px solid #d9ddd6;max-width:1150px;margin-left:auto}
+.extra-line{border-bottom:1px solid #d9ddd6}
+.extra-line summary{cursor:pointer;display:grid;grid-template-columns:1fr auto 35px;align-items:center;gap:24px;padding:25px 4px;list-style:none}
+.extra-line summary:hover .extra-name{transform:translateX(5px)}
+.extra-name{font-size:clamp(15px,1.65vw,24px);font-weight:600;letter-spacing:-.04em;transition:transform .25s}
+.extra-price{font-size:14px;color:#5a6157;white-space:nowrap}
+.extra-plus{font-size:25px;font-weight:300;text-align:right;transition:transform .2s}
+.extra-line[open] .extra-plus{transform:rotate(45deg)}
+.extra-line p{margin:0;padding:0 45px 25px 4px;font-size:14px;line-height:1.6;color:#62685f}
+.editorial-terms{background:#191d18;color:#fff;padding:85px clamp(22px,5.7vw,100px);display:grid;grid-template-columns:1fr 1fr;gap:55px}
+.editorial-terms h2{font-size:clamp(42px,6vw,84px);letter-spacing:-.08em;line-height:1;margin:0 0 20px}
+.editorial-terms p,.editorial-terms li{font-size:14px;line-height:1.7;color:#c6cbc4}
+.editorial-terms ul{margin:0 0 22px;padding-left:20px;display:grid;gap:12px}
+.editorial-terms strong{color:#fff}
+@keyframes tile-arrive{from{opacity:0;translate:0 28px;filter:blur(7px)}to{opacity:1;translate:0 0;filter:blur(0)}}
+@keyframes details-in{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
+@keyframes art-float{50%{transform:translateY(22px) rotate(10deg)}}
+@media(max-width:760px){.editorial-hero{min-height:92svh;padding:90px 20px 36px}.editorial-hero h1{font-size:clamp(53px,11vw,88px);margin:45px 0;line-height:.94}.editorial-hero h1>span{margin-left:6px}.editorial-hero h1 em{white-space:normal;font-size:.67em}.hero-art{opacity:.55}.art-ring{top:25%;right:-18%}.hero-footer{align-items:start;flex-direction:column;gap:25px}.editorial-work,.editorial-extras{padding:75px 17px}.section-opening,.extras-title{display:block;margin-bottom:35px}.section-opening p,.extras-title p{margin-top:24px}.work-grid{gap:12px}.work-tile,.work-tile--0,.work-tile--1,.work-tile--2,.work-tile--3,.work-tile--4,.work-tile--5,.work-tile--6,.work-tile--7,.work-tile--8{grid-column:span 6}.work-tile summary{min-height:285px;padding:18px}.tile-motif{width:95px;height:95px}.tile-name{font-size:22px}.tile-bottom{align-items:start;flex-direction:column;gap:6px}.tile-price{font-size:15px}.editorial-terms{grid-template-columns:1fr;padding:75px 20px;gap:24px}}
+@media(max-width:480px){.work-tile,.work-tile--0,.work-tile--1,.work-tile--2,.work-tile--3,.work-tile--4,.work-tile--5,.work-tile--6,.work-tile--7,.work-tile--8{grid-column:span 12}.work-tile summary{min-height:350px}.tile-motif{width:140px;height:140px}.tile-name{font-size:29px}.tile-bottom{flex-direction:row;align-items:end}.extra-line summary{grid-template-columns:1fr auto 22px;gap:10px}.extra-price{font-size:12px}}
+@media(prefers-reduced-motion:reduce){.work-tile{opacity:1;translate:none}.work-tile.appeared{animation:none}.art-ring{animation:none}.tile-motif,.tile-arrow{transition:none}}
 </style>
+<script>
+ const tiles=document.querySelectorAll('.work-tile');
+ if('IntersectionObserver' in window && !window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+  const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('appeared');observer.unobserve(entry.target)}}),{threshold:.12});
+  tiles.forEach(tile=>observer.observe(tile));
+ }else tiles.forEach(tile=>tile.classList.add('appeared'));
+</script>

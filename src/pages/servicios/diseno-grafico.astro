@@ -18,7 +18,7 @@ const motifs=['business-card','cross','flyer','diptych','triptych','lines','aste
     {service.packages.map((pkg,index)=>(
      <details class:list={['work-tile','work-tile--'+index]} data-reveal>
       <summary aria-label={'Ver detalles de '+pkg.name}>
-       <span class="tile-top"><span class="tile-arrow" aria-hidden="true">↗</span></span>
+       <span class="tile-top"></span>
        <span class:list={['tile-motif','tile-motif--'+motifs[index]]} aria-hidden="true"><i></i><i></i><i></i></span>
        <span class="tile-bottom"><span class="tile-name">{pkg.name}</span><span class="tile-price">{money(pkg)}</span></span>
        <span class="tile-invite">Ver detalles <span aria-hidden="true">+</span></span>

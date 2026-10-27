@@ -4,7 +4,7 @@ import {catalog} from '../../data/catalog.js';
 export function getStaticPaths(){
   // Diseño web y Producción audiovisual cuentan con rutas propias de diseño.
   // Todos sus paquetes, extras, precios y condiciones permanecen guardados en src/data/catalog.js.
-  return catalog.filter(service=>!['diseno-web','audiovisual','branding'].includes(service.slug)).map(service=>({params:{slug:service.slug},props:{service}}));
+  return catalog.filter(service=>!['diseno-web','audiovisual','branding','diseno-grafico'].includes(service.slug)).map(service=>({params:{slug:service.slug},props:{service}}));
 }
 const {service}=Astro.props;
 const base=import.meta.env.BASE_URL.replace(/\/$/,'');

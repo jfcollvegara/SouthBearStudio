@@ -1,0 +1,96 @@
+---
+import Private from '../../../../layouts/Private.astro';
+---
+<Private workspace title="Briefings recibidos" description="Respuestas y preferencias creativas enviadas por tus clientes.">
+<section class="sb-br">
+ <div class="sb-ws-topline"><span class="sb-ws-breadcrumb"><a href="/acceso/panel/">SOUTHBEAR OS</a> <span>/</span> BRIEFINGS</span><span class="sb-ws-topline__session"><i aria-hidden="true"></i> INFORMACIÓN CONFIDENCIAL</span></div>
+ <header class="sb-br-heading"><div><p class="sb-br-kicker">SOUTHBEAR / CREATIVE INTAKE</p><h1>BRIEFINGS<span>.</span></h1><p>Las preferencias y respuestas de tus clientes, organizadas por proyecto. Solo tú puedes consultar este apartado.</p></div><a href="/acceso/panel/formularios/">+ Nuevo formulario ↗</a></header>
+ <div class="sb-br-summary"><div><span>RECIBIDOS</span><strong id="sb-br-total">—</strong></div><div><span>PENDIENTES DE REVISAR</span><strong id="sb-br-pending">—</strong></div><div><span>REVISADOS</span><strong id="sb-br-reviewed">—</strong></div></div>
+ <div class="sb-br-controls"><label>Buscar briefing<input id="sb-br-search" type="search" placeholder="Empresa, proyecto o servicio…" autocomplete="off"/></label><label>Mostrar<select id="sb-br-filter"><option value="recibido">Sin revisar</option><option value="todos">Todos los recibidos</option><option value="cerrado">Revisados</option></select></label><button id="sb-br-refresh" type="button">↻ Actualizar</button></div>
+ <p class="sb-br-feedback" id="sb-br-feedback" role="status" aria-live="polite"></p>
+ <div id="sb-br-records" class="sb-br-records" aria-live="polite"><p>Cargando respuestas…</p></div>
+ <footer class="sb-br-foot">SOUTHBEAR OS / BRIEFING CREATIVO · RESPUESTAS CONFIDENCIALES DE CLIENTES</footer>
+</section>
+<style>
+.sb-br{max-width:1580px;margin:0 auto;padding:32px clamp(20px,4vw,58px) 90px;color:white}
+.sb-br-heading{display:flex;justify-content:space-between;align-items:end;gap:20px;margin:40px 0}
+.sb-br-kicker{font-size:10px;color:#ddff9a;letter-spacing:.19em;font-weight:850}
+.sb-br-heading h1{font:750 clamp(40px,5.5vw,78px)/1 'Space Grotesk Variable',sans-serif;letter-spacing:-.08em;margin:12px 0}.sb-br-heading h1 span{color:#ddff9a}
+.sb-br-heading p:not(.sb-br-kicker){color:#b6c1b2;line-height:1.6;max-width:570px;font-size:14px}
+.sb-br-heading>a,.sb-br-controls button,.sb-br-card button{border:1px solid #ddff9a88;color:#ddff9a;background:transparent;padding:13px 18px;font-size:12px;font-weight:750;cursor:pointer;text-decoration:none}
+.sb-br-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px;margin-bottom:24px}
+.sb-br-summary>div{background:#222923;border:1px solid #ffffff21;padding:22px;display:grid;gap:15px;border-radius:10px}
+.sb-br-summary span{font-size:10px;color:#a5b4a2;font-weight:750;letter-spacing:.1em}.sb-br-summary strong{font-size:42px;color:#ddff9a;letter-spacing:-.06em}
+.sb-br-controls{display:flex;gap:15px;align-items:end;margin:26px 0;flex-wrap:wrap}
+.sb-br-controls label{display:grid;gap:9px;flex:1;min-width:185px;font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:#bbc9b4}
+.sb-br-controls input,.sb-br-controls select{color:#fff;background:#111911;border:1px solid #52614d;padding:13px 12px;border-radius:6px;font-size:13px;letter-spacing:normal;text-transform:none}
+.sb-br-feedback{min-height:1em;color:#ddff9a;font-size:12px}.sb-br-records{display:grid;gap:15px}
+.sb-br-card{border:1px solid #ffffff28;background:linear-gradient(120deg,#1f281f,#161b17);border-radius:13px;overflow:hidden}
+.sb-br-card>summary{list-style:none;cursor:pointer;padding:23px;display:flex;justify-content:space-between;align-items:center;gap:20px}.sb-br-card>summary::-webkit-details-marker{display:none}
+.sb-br-card h2{font:720 clamp(20px,2.4vw,29px)/1.2 'Space Grotesk Variable',sans-serif;margin:8px 0}
+.sb-br-card small{color:#b3c2ad;font-size:12px}.sb-br-card .sb-br-tag{font-weight:800;font-size:10px;color:#ddff9a;letter-spacing:.1em}
+.sb-br-arrow{font-size:30px;font-weight:300;color:#ddff9a}.sb-br-card[open] .sb-br-arrow{transform:rotate(45deg)}
+.sb-br-body{padding:0 23px 25px;border-top:1px solid #ffffff1c}
+.sb-br-answers{display:grid;gap:18px;margin:20px 0}
+.sb-br-answer{border-bottom:1px solid #ffffff1a;padding-bottom:14px;min-width:0}
+.sb-br-answer dt{font-size:12px;font-weight:720;color:#ddff9a;margin-bottom:8px}.sb-br-answer dd{margin:0;color:#e1e9df;line-height:1.7;font-size:13px;white-space:pre-wrap;overflow-wrap:anywhere}
+.sb-br-actions{display:flex;gap:10px;flex-wrap:wrap;padding-top:10px}.sb-br-actions button{border-radius:6px}.sb-br-card button.is-review{background:#ddff9a;color:#172017}
+.sb-br-foot{padding-top:25px;margin-top:35px;border-top:1px solid #ffffff29;color:#7e8c7a;font-size:10px;letter-spacing:.1em}
+@media(max-width:680px){.sb-br-heading{flex-direction:column;align-items:start}.sb-br-summary{grid-template-columns:1fr 1fr}.sb-br-summary>div{padding:17px}.sb-br-summary strong{font-size:32px}}
+</style>
+<script>
+import {BRIEFING_QUESTIONS,BRIEFING_SERVICES} from '../../../../data/briefing-questions.js';
+const qMap=new Map(BRIEFING_QUESTIONS.map(q=>[q.id,q]));
+const serviceMap=new Map(BRIEFING_SERVICES.map(s=>[s.id,s.label]));
+const area=document.querySelector('#sb-br-records'),feedback=document.querySelector('#sb-br-feedback'),filter=document.querySelector('#sb-br-filter'),search=document.querySelector('#sb-br-search');
+let all=[];
+async function request(method='GET',payload){
+ const response=await fetch('/api/southbear/briefings/',{method,credentials:'same-origin',cache:'no-store',headers:{'Content-Type':'application/json','X-SouthBear-Request':'1'},body:payload?JSON.stringify(payload):undefined});
+ const data=await response.json().catch(()=>({ok:false,error:'No se pudo interpretar la respuesta.'}));
+ if(!response.ok||!data.ok)throw Error(data.error||'No se pudieron cargar los briefings.');
+ return data;
+}
+const el=(tag,className,text)=>{const n=document.createElement(tag);if(className)n.className=className;if(text!=null)n.textContent=text;return n;};
+function textReport(item){
+ const lines=['SOUTHBEAR STUDIO · BRIEFING CREATIVO',item.company_name,item.title,serviceMap.get(item.service_slug)||item.service_slug,'Recibido: '+(item.submitted_at||''),''];
+ for(const id of item.question_ids){const q=qMap.get(id);if(!q)continue;const value=item.answers?.[id];lines.push(q.label,Array.isArray(value)?value.join(', '):value||'(Sin respuesta)','');}
+ return lines.join('\n');
+}
+function render(){
+ const received=all.filter(x=>x.status==='recibido'||x.status==='cerrado');
+ document.querySelector('#sb-br-total').textContent=received.length;
+ document.querySelector('#sb-br-pending').textContent=received.filter(x=>x.status==='recibido').length;
+ document.querySelector('#sb-br-reviewed').textContent=received.filter(x=>x.status==='cerrado').length;
+ const needle=search.value.trim().toLowerCase();
+ const rows=received.filter(x=>(filter.value==='todos'||x.status===filter.value)&&[x.company_name,x.title,serviceMap.get(x.service_slug)||''].join(' ').toLowerCase().includes(needle));
+ area.replaceChildren();
+ if(!rows.length){area.append(el('p','','No hay briefings que coincidan con el filtro.'));return;}
+ for(const item of rows){
+  const details=el('details','sb-br-card'),summary=el('summary'),meta=el('div');
+  meta.append(el('span','sb-br-tag',item.status==='recibido'?'POR REVISAR':'REVISADO'),el('h2','',item.company_name),el('small','',(serviceMap.get(item.service_slug)||item.service_slug)+' · '+item.title+' · '+(item.submitted_at||'')));
+  summary.append(meta,el('span','sb-br-arrow','+'));details.append(summary);
+  const body=el('div','sb-br-body'),answers=el('dl','sb-br-answers');
+  for(const id of item.question_ids){
+   const q=qMap.get(id);if(!q)continue;
+   const row=el('div','sb-br-answer'),value=item.answers?.[id];
+   row.append(el('dt','',q.label),el('dd','',Array.isArray(value)?value.join(', '):value||'Sin respuesta'));answers.append(row);
+  }
+  body.append(answers);
+  const actions=el('div','sb-br-actions'),save=el('button','','Descargar respuestas .txt');save.type='button';
+  save.addEventListener('click',()=>{
+   const url=URL.createObjectURL(new Blob([textReport(item)],{type:'text/plain;charset=utf-8'}));
+   const anchor=document.createElement('a');anchor.href=url;anchor.download='briefing-'+item.company_name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').slice(0,65)+'.txt';
+   document.body.append(anchor);anchor.click();anchor.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
+  });actions.append(save);
+  if(item.status==='recibido'){
+   const review=el('button','is-review','Marcar como revisado');review.type='button';
+   review.addEventListener('click',async()=>{try{await request('PATCH',{id:item.id,action:'cerrar'});await load();feedback.textContent='Briefing marcado como revisado.';}catch(e){feedback.textContent=e.message;}});
+   actions.append(review);
+  }
+  body.append(actions);details.append(body);area.append(details);
+ }
+}
+async function load(){area.textContent='Consultando respuestas…';try{const r=await request();all=r.items;feedback.textContent='';render();}catch(e){area.textContent=e.message;}}
+search.addEventListener('input',render);filter.addEventListener('change',render);document.querySelector('#sb-br-refresh').addEventListener('click',load);load();
+</script>
+</Private>

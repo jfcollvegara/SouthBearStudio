@@ -6,6 +6,8 @@ export const privateNavigation = [
   ]},
   {label:'GESTIÓN DEL ESTUDIO',items:[
     {slug:'clientes',title:'Clientes',icon:'users'},
+    {slug:'formularios',title:'Formularios',icon:'file-text'},
+    {slug:'briefings',title:'Briefings',icon:'folder'},
     {slug:'correos-promociones',title:'Correos promociones',icon:'file-text'},
     {slug:'campanas',title:'Campañas promocionales',icon:'file-text'},
     {slug:'plantillas-correo',title:'Plantillas de correo',icon:'file-text'},

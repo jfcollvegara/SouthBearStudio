@@ -1,7 +1,7 @@
-import {BRIEFING_SERVICES,BRIEFING_QUESTIONS,defaultBriefingQuestions} from '../../../../src/data/briefing-questions.js';
+import {BRIEFING_SERVICES,BRIEFING_QUESTIONS,activeBriefingQuestions} from '../../../../src/data/briefing-questions.js';
 import {apiError,apiResponse,requestBody,dbError} from '../../../../src/server/southbear-clients.js';
 
-const questionIds=new Set(BRIEFING_QUESTIONS.map(q=>q.id));
+const questionIds=new Set(activeBriefingQuestions().map(q=>q.id));
 const services=new Set(BRIEFING_SERVICES.map(s=>s.id));
 const invalid=text=>/[\u0000-\u001f\u007f]/.test(text);
 const validId=id=>typeof id==='string'&&/^[\da-f-]{36}$/i.test(id);
@@ -32,9 +32,10 @@ export async function onRequestPost({request,env}){
  if(!services.has(service_slug))return apiError('Selecciona un servicio válido.',400);
  if(!Array.isArray(selected)||selected.length<1||selected.length>BRIEFING_QUESTIONS.length||selected.some(id=>typeof id!=='string'||!questionIds.has(id))||new Set(selected).size!==selected.length)
    return apiError('Selecciona preguntas válidas.',400);
- if(!selected.includes('actividad')||!selected.includes('objetivo')||!selected.includes('publico'))
-   return apiError('Las preguntas fundamentales del briefing general deben estar incluidas.',400);
- const sorted=BRIEFING_QUESTIONS.filter(q=>selected.includes(q.id)).map(q=>q.id);
+ const permitted=new Set(BRIEFING_SERVICES.find(s=>s.id===service_slug).sections);
+ if(selected.some(id=>!permitted.has(BRIEFING_QUESTIONS.find(q=>q.id===id)?.section)))
+   return apiError('Las preguntas deben corresponder al servicio seleccionado.',400);
+ const sorted=BRIEFING_QUESTIONS.filter(q=>!q.legacy&&selected.includes(q.id)).map(q=>q.id);
  const id=crypto.randomUUID(),secret=token(),label=title||'Briefing de '+BRIEFING_SERVICES.find(s=>s.id===service_slug).label;
  try{
   await env.SOUTHBEAR_DB.prepare(

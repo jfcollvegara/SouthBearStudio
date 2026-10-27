@@ -1,24 +1,26 @@
 ---
 import Private from '../../../../layouts/Private.astro';
-import {BRIEFING_SERVICES,BRIEFING_SECTIONS,BRIEFING_QUESTIONS} from '../../../../data/briefing-questions.js';
+import {BRIEFING_SERVICES,BRIEFING_SECTIONS,activeBriefingQuestions} from '../../../../data/briefing-questions.js';
+const currentQuestions=activeBriefingQuestions();
 ---
 <Private workspace title="Formularios creativos" description="Crea briefings personalizados para tus clientes.">
 <section class="sb-form-builder">
  <div class="sb-ws-topline"><span class="sb-ws-breadcrumb"><a href="/acceso/panel/">SOUTHBEAR OS</a> <span>/</span> FORMULARIOS</span><span class="sb-ws-topline__session"><i aria-hidden="true"></i> ÁREA PROTEGIDA</span></div>
- <header class="sb-fb-heading"><div><p class="sb-fb-kicker">BRIEFINGS / CREACIÓN</p><h1>FORMULARIOS<span>.</span></h1><p>Prepara un cuestionario a medida según el servicio contratado. El cliente recibirá su enlace y no tendrá que volver a indicar el nombre de su negocio.</p></div><a href="/acceso/panel/briefings/">Ver briefings recibidos ↗</a></header>
+ <header class="sb-fb-heading"><div><p class="sb-fb-kicker">BRIEFINGS / CREACIÓN</p><h1>FORMULARIOS<span>.</span></h1><p>Descubre los gustos estéticos del cliente antes de crear una propuesta. Las medidas, contenidos y requisitos técnicos se concretarán en tu entrevista, no aquí.</p></div><a href="/acceso/panel/briefings/">Ver briefings recibidos ↗</a></header>
  <div class="sb-fb-layout">
   <form id="sb-fb-create" class="sb-fb-panel">
    <div class="sb-fb-paneltitle"><span>01 / CONFIGURAR</span><h2>Nuevo formulario</h2></div>
    <label class="sb-fb-field">Empresa o profesional <b>*</b><input name="company_name" required maxlength="160" placeholder="Ej. La Panadería de Ana" autocomplete="organization"/></label>
    <label class="sb-fb-field">Servicio contratado <b>*</b><select name="service_slug" id="sb-fb-service">{BRIEFING_SERVICES.map(s=><option value={s.id}>{s.label}</option>)}</select></label>
+   <label class="sb-fb-field">Punto de partida<select id="sb-fb-mode"><option value="desde-cero">Nueva creación desde cero</option><option value="identidad-existente">El cliente ya tiene identidad visual (solo estilo)</option></select></label>
    <label class="sb-fb-field">Título del briefing (opcional)<input name="title" maxlength="180" placeholder="Ej. Nueva identidad para La Panadería de Ana"/></label>
    <div class="sb-fb-questions">
-    <div class="sb-fb-questions__top"><div><strong>Preguntas que recibirá el cliente</strong><p>Marca o desmarca las que necesites. Las tres preguntas básicas son obligatorias.</p></div><span id="sb-fb-count"></span></div>
+    <div class="sb-fb-questions__top"><div><strong>Preguntas que recibirá el cliente</strong><p>Selecciona solo las preguntas que ayuden a definir el estilo. Puedes prescindir del briefing de marca cuando ya existe una identidad visual.</p></div><span id="sb-fb-count"></span></div>
     {BRIEFING_SECTIONS.map(section=>(
-     <details class="sb-fb-group" open={section.id==='general'}>
+     <details class="sb-fb-group" data-section={section.id} open={section.id==='general'}>
       <summary><strong>{section.title}</strong><span>{section.subtitle}</span></summary>
-      <div>{BRIEFING_QUESTIONS.filter(q=>q.section===section.id).map(q=>(
-       <label class="sb-fb-question"><input type="checkbox" value={q.id} data-section={section.id} data-required={['actividad','objetivo','publico'].includes(q.id)?'1':'0'}/><span>{q.label}</span></label>
+      <div>{currentQuestions.filter(q=>q.section===section.id).map(q=>(
+       <label class="sb-fb-question"><input type="checkbox" value={q.id} data-section={section.id}/><span>{q.label}</span></label>
       ))}</div>
      </details>
     ))}
@@ -72,16 +74,18 @@ import {BRIEFING_SERVICES,BRIEFING_SECTIONS,BRIEFING_QUESTIONS} from '../../../.
 <script>
 import {BRIEFING_SERVICES,BRIEFING_QUESTIONS,defaultBriefingQuestions} from '../../../../data/briefing-questions.js';
 const form=document.querySelector('#sb-fb-create'),status=document.querySelector('#sb-fb-status'),count=document.querySelector('#sb-fb-count');
-const service=document.querySelector('#sb-fb-service'),checks=[...document.querySelectorAll('.sb-fb-question input')];
-const required=new Set(['actividad','objetivo','publico']),root='https://southbearstudio.com/briefing/?token=';
+const service=document.querySelector('#sb-fb-service'),mode=document.querySelector('#sb-fb-mode'),checks=[...document.querySelectorAll('.sb-fb-question input')];
+const root='https://southbearstudio.com/briefing/?token=';
 function selection(){return checks.filter(x=>x.checked).map(x=>x.value);}
 function refreshCount(){count.textContent=selection().length+' preguntas elegidas';}
 function defaults(){
- const chosen=new Set(defaultBriefingQuestions(service.value));
- checks.forEach(input=>{input.checked=chosen.has(input.value)||required.has(input.value);input.disabled=required.has(input.value);});
+ const chosen=new Set(defaultBriefingQuestions(service.value,mode.value));
+ const section=BRIEFING_SERVICES.find(s=>s.id===service.value)?.sections[1];
+ document.querySelectorAll('.sb-fb-group').forEach(group=>{group.hidden=group.dataset.section!=='general'&&group.dataset.section!==section;});
+ checks.forEach(input=>{input.checked=chosen.has(input.value);input.disabled=false;});
  refreshCount();
 }
-service.addEventListener('change',defaults);checks.forEach(x=>x.addEventListener('change',refreshCount));defaults();
+service.addEventListener('change',defaults);mode.addEventListener('change',defaults);checks.forEach(x=>x.addEventListener('change',refreshCount));defaults();
 async function api(method,payload){
  const response=await fetch('/api/southbear/briefings/',{method,credentials:'same-origin',cache:'no-store',headers:{'Content-Type':'application/json','X-SouthBear-Request':'1'},body:payload?JSON.stringify(payload):undefined});
  const result=await response.json().catch(()=>({ok:false,error:'Respuesta no válida del servidor.'}));

@@ -67,14 +67,14 @@ const motifs=['business-card','cross','flyer','diptych','triptych','lines','aste
 .editorial-hero h1>span{margin-left:clamp(10px,7vw,115px)}
 .editorial-hero h1 em{font-style:normal;white-space:nowrap;font-weight:450;font-size:.73em}
 .period{color:#DDFF9A}
-.hero-footer{z-index:1;display:flex;justify-content:space-between;align-items:end;gap:28px}
+.hero-footer{position:relative;z-index:5;display:flex;justify-content:space-between;align-items:end;gap:28px}
 .hero-footer p{font-size:clamp(15px,1.35vw,20px);line-height:1.5;max-width:365px;margin:0}
 .hero-footer a{color:var(--ink);text-decoration:none;border-bottom:1px solid currentColor;padding-bottom:10px;font-size:13px;font-weight:650;white-space:nowrap}
 .hero-footer a span{display:inline-block;margin-left:18px}
 .hero-art{position:absolute;inset:0;pointer-events:none;z-index:1;opacity:.92}
 .art-ring{position:absolute;width:clamp(260px,32vw,570px);aspect-ratio:1;border:clamp(18px,3vw,46px) solid #DDFF9A;border-radius:50%;right:-4%;top:13%;filter:drop-shadow(0 22px 36px rgba(20,34,9,.12));animation:art-float 8s ease-in-out infinite}
 .art-ring::before{content:'';position:absolute;inset:22%;border:3px solid #1c211b;border-radius:50%}
-.art-square{position:absolute;right:8%;bottom:8%;width:clamp(110px,13vw,240px);aspect-ratio:1;border:clamp(5px,1vw,12px) solid #1c211b;transform:rotate(14deg)}
+.art-square{position:absolute;right:8%;bottom:22%;width:clamp(110px,13vw,240px);aspect-ratio:1;border:clamp(5px,1vw,12px) solid #1c211b;transform:rotate(14deg)}
 .art-cross{position:absolute;right:26%;top:18%;font:300 clamp(80px,11vw,200px)/1 'Space Grotesk Variable';color:#DDFF9A}
 .editorial-work{padding:110px clamp(18px,5.7vw,100px) 130px;scroll-margin-top:90px;background:#f7f8f5}
 .section-opening,.extras-title{display:flex;justify-content:space-between;align-items:end;gap:30px;margin-bottom:62px}

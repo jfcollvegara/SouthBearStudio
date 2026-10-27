@@ -61,6 +61,87 @@ function fillCatalogue() {
 }
 fillCatalogue();
 
+// Bespoke branding, graphic design and QR/NFC service pages.
+// The shared catalogue translations supply all product details and conditions.
+const bespokePageEnglish = {
+  "Logotipos": "Logos",
+  "e identidad visual": "and visual identity",
+  "Logotipos e identidad visual en SouthBear Studio.": "Logos and visual identity at SouthBear Studio.",
+  "Paquetes de logotipos e identidad visual": "Logo and visual identity packages",
+  "Haz clic para saber más": "Click to learn more",
+  "Ver paquete": "View package",
+  "← Logotipos e identidad visual": "← Logos and visual identity",
+  "Qué incluye": "What's included",
+  "Aplicaciones incluidas": "Included brand applications",
+  "Elige 3 aplicaciones corporativas sencillas de entre las siguientes opciones:": "Choose 3 simple branded applications from the following options:",
+  "Incluye 6 aplicaciones corporativas en total, no 3 + 6. Opciones contempladas:": "Includes 6 branded applications in total, not 3 + 6. Available options:",
+  "5 plantillas editables para redes sociales": "5 editable social media templates",
+  "También incluye papelería: tarjeta de visita, hoja membretada y sobre.": "Stationery is also included: business card, letterhead and envelope.",
+  "Exclusiones y limitaciones": "Exclusions and limitations",
+  "Precios con IVA incluido.": "Prices include VAT.",
+  "de SouthBear Studio. Conoce qué incluye este paquete de identidad visual.": "at SouthBear Studio. Find out what this visual identity package includes.",
+  "Explora los diseños": "Explore the designs",
+  "Servicios de diseño gráfico": "Graphic design services",
+  "Ideas que": "Ideas that",
+  "toman forma": "take shape",
+  "Cada formato, una forma distinta de comunicar. Selecciona una pieza y descubre qué incluye.": "Every format is a different way to communicate. Choose a design to see what's included.",
+  "Ver detalles de": "View details of",
+  "Ponte en contacto": "Get in touch",
+  "Complementos": "Add-ons",
+  "Un poco": "A little",
+  "más": "more",
+  "Para cuando una idea necesita llegar más lejos.": "For when an idea needs to go further.",
+  "Cómo trabajamos": "How we work",
+  "De la idea": "From an idea",
+  "a la pieza": "to the finished design",
+  "Un proceso sencillo, con todo claro desde el principio.": "A straightforward process, with everything clear from the start.",
+  "Nos cuentas tu idea": "Tell us your idea",
+  "Qué necesitas, para quién es y dónde se va a utilizar.": "Tell us what you need, who it's for and where it will be used.",
+  "Diseñamos": "We design",
+  "Preparamos la pieza gráfica adaptada al formato y al alcance acordado.": "We create your design to match the agreed format and scope.",
+  "Revisamos y entregamos": "We review and deliver",
+  "Aplicamos las revisiones incluidas y entregamos los archivos finales correspondientes.": "We make the included revisions and deliver the agreed final files.",
+  "¿También necesitas imprimirlo?": "Need it printed too?",
+  "Podemos gestionar la impresión física de tus diseños, bajo presupuesto según cantidades, materiales, acabados y envío. La impresión no está incluida en el precio del diseño.": "We can arrange physical printing for your designs, quoted separately according to quantities, materials, finishes and delivery. Printing is not included in the design price.",
+  "Información del servicio": "Service information",
+  "Todo claro.": "Everything clear.",
+  "El buen diseño también está en los detalles.": "Great design is in the details, too.",
+  "No incluido:": "Not included:",
+  "Todos los precios indicados incluyen IVA.": "All listed prices include VAT.",
+  "¿Tienes una idea?": "Have an idea?",
+  "Hagámosla visible.": "Let's bring it to life.",
+  "Tu negocio.": "Your business.",
+  "En un toque.": "One tap away.",
+  "Cartas, catálogos y soluciones QR/NFC para conectar tu negocio con tus clientes. Sencillo, directo y pensado para móviles.": "Digital menus, catalogues and QR/NFC solutions that connect your business with customers. Simple, direct and designed for mobile.",
+  "Descubre las soluciones": "Explore the solutions",
+  "Vista de carta digital en un smartphone": "Digital menu displayed on a smartphone",
+  "Escanea.": "Scan.",
+  "Descubre.": "Discover.",
+  "Conecta.": "Connect.",
+  "Sin instalar aplicaciones. Solo un código QR o un toque NFC para acceder a la información.": "No apps to install. Just scan a QR code or tap with NFC to access the information.",
+  "Ejemplo del uso de un código QR": "Example of QR code scanning",
+  "Soluciones": "Solutions",
+  "a tu medida": "tailored to you",
+  "Selecciona una opción para conocer sus características y condiciones.": "Choose an option to see its features and terms.",
+  "Reseñas": "Reviews",
+  "Catálogos digitales": "Digital catalogues",
+  "Ver qué incluye": "See what's included",
+  "Todo tu catálogo.": "Your entire catalogue.",
+  "Siempre a mano.": "Always within reach.",
+  "La información organizada y preparada para consultar desde cualquier móvil.": "Your information, organised and ready to browse on any smartphone.",
+  "Ejemplo de catálogo digital": "Digital catalogue example",
+  "Del soporte físico": "From physical displays",
+  "al mundo digital.": "to the digital world.",
+  "Metacrilato, madera y NFC como punto de encuentro con tu contenido.": "Acrylic, wood and NFC: connecting people with your digital content.",
+  "Ejemplo de soportes QR y NFC": "QR and NFC display examples",
+  "Un poco más": "A little extra",
+  "Extras, soportes y complementos para adaptar cada solución a tu negocio.": "Extras, physical displays and add-ons to tailor each solution to your business.",
+  "Sin sorpresas.": "No surprises.",
+  "Una idea.": "One idea.",
+  "Mil conexiones.": "A thousand connections."
+};
+for (const [spanish, english] of Object.entries(bespokePageEnglish)) pair(spanish, english);
+
 const replacementEntries = [...translations].filter(([key])=>key.length>=3)
   .sort((a,b)=>b[0].length-a[0].length);
 
@@ -96,7 +177,7 @@ function translateTag(tag) {
   if (isAnchor && !isLocaleLink) {
     output=output.replace(/(\bhref=)(["'])(.*?)\2/gi,(_,key,q,value)=>key+q+englishPath(value)+q);
   }
-  output=output.replace(/\b(title|alt|aria-label|placeholder|content)=(["'])(.*?)\2/gi,
+  output=output.replace(/\b(title|alt|aria-label|placeholder|content|data-text)=(["'])(.*?)\2/gi,
     (whole,key,q,value)=>{
       // URLs, colours, MIME types and data attributes should never be translated.
       if (/^https?:|^#|^image\/|^text\/|^\d|^#[a-f0-9]+$/i.test(value)) return whole;
@@ -136,6 +217,9 @@ function englishHeroLetters(html){
     ).join('');
     return open+chars+'<span class="sb-av-hero__rec" aria-hidden="true"></span>'+close;
   });
+  // Rebuild this three-line editorial heading as one natural English phrase.
+  html=html.replace(/(<section class="editorial-hero">[\s\S]*?<h1>)[\s\S]*?(<\/h1>)/i,
+    (_,opening,closing)=>opening+'Graphic<br/><span>design</span><br/><em>&amp; advertising<span class="period">.</span></em>'+closing);
   return html;
 }
 function urlForPage(relativeFile) {

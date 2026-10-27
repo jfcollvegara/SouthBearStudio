@@ -34,7 +34,7 @@ const quote=(pkg)=>base+'/presupuesto/?servicio='+encodeURIComponent(service.slu
       <div class="qr-intro__stage">
         <span class="qr-intro__ring" aria-hidden="true"></span>
         <figure class="qr-media qr-media--hero">
-          <img src="/images/qr/hero-movil.png" alt="Vista de carta digital en un smartphone" onerror="this.hidden=true"/>
+          <img src="/hero-movil.png" alt="Vista de carta digital en un smartphone" onerror="this.hidden=true"/>
           <div class="qr-media__placeholder"><span class="qr-phone"><i></i><b>Tu diseño<br/>aquí</b></span><small>hero-movil.png</small></div>
         </figure>
         <span class="qr-intro__chip" aria-hidden="true">QR + NFC</span>
@@ -42,7 +42,7 @@ const quote=(pkg)=>base+'/presupuesto/?servicio='+encodeURIComponent(service.slu
     </section>
     <section class="qr-experience">
       <div class="qr-experience__text"><h2>Escanea.<br/>Descubre.<br/><span>Conecta.</span></h2><p>Sin instalar aplicaciones. Solo un código QR o un toque NFC para acceder a la información.</p></div>
-      <figure class="qr-media qr-media--wide"><img src="/images/qr/escaneo-qr.jpg" alt="Ejemplo del uso de un código QR" loading="lazy" onerror="this.hidden=true"/><div class="qr-media__placeholder"><span aria-hidden="true">⌗</span><small>escaneo-qr.jpg</small></div></figure>
+      <figure class="qr-media qr-media--wide"><img src="/escaneo-qr.jpg" alt="Ejemplo del uso de un código QR" loading="lazy" onerror="this.hidden=true"/><div class="qr-media__placeholder"><span aria-hidden="true">⌗</span><small>escaneo-qr.jpg</small></div></figure>
     </section>
     <section class="qr-products" id="qr-productos">
       <div class="qr-heading"><h2>Soluciones<br/>a tu medida<span>.</span></h2><p>Selecciona una opción para conocer sus características y condiciones.</p></div>
@@ -54,8 +54,8 @@ const quote=(pkg)=>base+'/presupuesto/?servicio='+encodeURIComponent(service.slu
       </div>
     </section>
     <section class="qr-showcase">
-      <div class="qr-showcase__row"><div><h2>Todo tu catálogo.<br/>Siempre a mano.</h2><p>La información organizada y preparada para consultar desde cualquier móvil.</p></div><figure class="qr-media qr-media--showcase"><img src="/images/qr/catalogo-movil.png" alt="Ejemplo de catálogo digital" loading="lazy" onerror="this.hidden=true"/><div class="qr-media__placeholder"><span aria-hidden="true">▤</span><small>catalogo-movil.png</small></div></figure></div>
-      <div class="qr-showcase__row qr-showcase__row--reverse"><div><h2>Del soporte físico<br/>al mundo digital.</h2><p>Metacrilato, madera y NFC como punto de encuentro con tu contenido.</p></div><figure class="qr-media qr-media--showcase"><img src="/images/qr/soportes-nfc.png" alt="Ejemplo de soportes QR y NFC" loading="lazy" onerror="this.hidden=true"/><div class="qr-media__placeholder"><span aria-hidden="true">◇</span><small>soportes-nfc.png</small></div></figure></div>
+      <div class="qr-showcase__row"><div><h2>Todo tu catálogo.<br/>Siempre a mano.</h2><p>La información organizada y preparada para consultar desde cualquier móvil.</p></div><figure class="qr-media qr-media--showcase"><img src="/catalogo-movil.png" alt="Ejemplo de catálogo digital" loading="lazy" onerror="this.hidden=true"/><div class="qr-media__placeholder"><span aria-hidden="true">▤</span><small>catalogo-movil.png</small></div></figure></div>
+      <div class="qr-showcase__row qr-showcase__row--reverse"><div><h2>Del soporte físico<br/>al mundo digital.</h2><p>Metacrilato, madera y NFC como punto de encuentro con tu contenido.</p></div><figure class="qr-media qr-media--showcase"><img src="/soportes-nfc.png" alt="Ejemplo de soportes QR y NFC" loading="lazy" onerror="this.hidden=true"/><div class="qr-media__placeholder"><span aria-hidden="true">◇</span><small>soportes-nfc.png</small></div></figure></div>
     </section>
     <section class="qr-extras"><div class="qr-heading"><h2>Un poco más<span>.</span></h2><p>Extras, soportes y complementos para adaptar cada solución a tu negocio.</p></div>
       {service.extraSections?.map(group=><details class="qr-extras__group"><summary>{group.title}<span aria-hidden="true">+</span></summary><div class="qr-extras__content"><p>{group.intro}</p><div class="qr-extras__grid">{group.items.map(item=><div class="qr-extras__item"><div><strong>{item.name}</strong><b>{formatPrice(item)}</b></div><p>{item.detail}</p></div>)}</div></div></details>)}

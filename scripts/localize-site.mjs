@@ -217,8 +217,9 @@ function englishHeroLetters(html){
     ).join('');
     return open+chars+'<span class="sb-av-hero__rec" aria-hidden="true"></span>'+close;
   });
-  // Rebuild this three-line editorial heading as one natural English phrase.
-  html=html.replace(/(<section class="editorial-hero">[\s\S]*?<h1>)[\s\S]*?(<\/h1>)/i,
+  // Astro adds scoped data-astro-* attributes to the section and h1,
+  // so never require an exact literal opening tag here.
+  html=html.replace(/(<section\b[^>]*\bclass="[^"]*\beditorial-hero\b[^"]*"[^>]*>[\s\S]*?<h1\b[^>]*>)[\s\S]*?(<\/h1>)/i,
     (_,opening,closing)=>opening+'Graphic<br/><span>design</span><br/><em>&amp; advertising<span class="period">.</span></em>'+closing);
   return html;
 }
@@ -267,6 +268,10 @@ for(const sourceFile of files){
   const original=await readFile(sourceFile,'utf8');
   const translated=insertSEO(englishHeroLetters(translateMarkup(original)),route)
     .replace('</body>','<script type="module" src="/southbear-translate-live.js"></script></body>');
+  // Fail loudly if this custom editorial hero ever ships with Spanish copy again.
+  if (route==='/servicios/diseno-grafico/' && !/<h1\b[^>]*>Graphic<br\s*\/?><span>design<\/span>/i.test(translated)) {
+    throw new Error('English graphic design hero was not translated; inspect Astro hero markup.');
+  }
   const destination=path.join(dist,'en',rel);
   await mkdir(path.dirname(destination),{recursive:true});
   // Astro may have already prerendered a native, fully translated English page.

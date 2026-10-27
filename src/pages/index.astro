@@ -108,8 +108,8 @@ const serviceDescriptions={
         )}
         {service.slug === 'soluciones-qr' && (
           <div class="kb-qr-stage" aria-hidden="true">
-            <img class="kb-qr-object kb-qr-object--stand" src={link('/southbear-qr-stand-movil-v2.webp')} alt="" width="677" height="890" loading="lazy" decoding="async" />
-            <img class="kb-qr-object kb-qr-object--code" src={link('/southbear-qr-code.png')} alt="" width="480" height="480" loading="lazy" decoding="async" />
+            <img class="kb-qr-object kb-qr-object--hero" src={link('/hero-movil.png')} alt="" width="2048" height="1536" loading="lazy" decoding="async" />
+            <img class="kb-qr-object kb-qr-object--catalogue" src={link('/catalogo-movil.png')} alt="" width="1200" height="1800" loading="lazy" decoding="async" />
           </div>
         )}
         {service.slug === 'audiovisual' && (
@@ -354,7 +354,8 @@ const serviceDescriptions={
   }
   .kb-services-tile--diseno-grafico{--kb-glass-rgb:221,255,154}
   .kb-services-tile--soluciones-qr{--kb-glass-rgb:221,255,154}
-  /* QR/NFC: expositor real y código QR en dos planos, revelados mediante scroll. */
+  /* QR/NFC: los dos mockups originales del estudio dentro del mosaico.
+     Se despliegan con el scroll y se recogen al subir, como los demás servicios. */
   .kb-qr-stage{
     position:absolute;
     inset:0;
@@ -362,53 +363,49 @@ const serviceDescriptions={
     pointer-events:none;
     perspective:1100px;
   }
-  .kb-services-tile--soluciones-qr .kb-services-tile-content{z-index:3}
+  .kb-services-tile--soluciones-qr .kb-services-tile-content{
+    position:relative;
+    z-index:3;
+  }
   .kb-qr-object{
     position:absolute;
     display:block;
+    max-width:none;
     height:auto;
+    object-fit:contain;
     will-change:transform,opacity;
     backface-visibility:hidden;
     transform-style:preserve-3d;
   }
-  .kb-qr-object--stand{
-    width:43%;
-    top:5%;
-    left:11%;
+  .kb-qr-object--hero{
+    width:91%;
+    top:-4%;
+    left:-14%;
     z-index:1;
-    object-fit:contain;
     opacity:var(--kb-qr-opacity-1,1);
-    filter:drop-shadow(0 16px 22px rgba(11,49,54,.22));
-    transform:perspective(1100px) translate3d(0,var(--kb-qr-y-1,0px),18px) rotateX(6deg) rotateY(-9deg) rotateZ(var(--kb-qr-rotation-1,-5deg));
+    transform:translate3d(0,var(--kb-qr-y-1,0px),18px) rotateZ(var(--kb-qr-rotation-1,-4deg));
   }
-  .kb-qr-object--code{
-    box-sizing:border-box;
-    width:28%;
-    aspect-ratio:1;
-    top:21%;
-    right:10%;
+  .kb-qr-object--catalogue{
+    width:43%;
+    top:4%;
+    right:4%;
     z-index:2;
-    padding:clamp(7px,1vw,14px);
-    border:1px solid rgba(255,255,255,.78);
-    border-radius:clamp(12px,1.5vw,23px);
-    background:#fff;
-    object-fit:contain;
-    box-shadow:0 16px 35px rgba(11,49,54,.18),0 4px 11px rgba(11,49,54,.1);
     opacity:var(--kb-qr-opacity-2,1);
-    transform:perspective(1100px) translate3d(0,var(--kb-qr-y-2,0px),55px) rotateX(5deg) rotateY(8deg) rotateZ(var(--kb-qr-rotation-2,6deg));
+    filter:drop-shadow(0 12px 24px rgba(18,28,21,.12));
+    transform:translate3d(0,var(--kb-qr-y-2,0px),55px) rotateZ(var(--kb-qr-rotation-2,3deg));
   }
   @media(max-width:980px){
-    .kb-qr-object--stand{width:38%;top:5%;left:11%}
-    .kb-qr-object--code{width:26%;top:19%;right:10%}
+    .kb-qr-object--hero{width:96%;top:-2%;left:-18%}
+    .kb-qr-object--catalogue{width:44%;top:5%;right:3%}
   }
   @media(max-width:680px){
-    .kb-qr-object--stand{width:35%;top:4%;left:12%}
-    .kb-qr-object--code{width:27%;top:15%;right:11%;padding:6px;border-radius:12px}
+    .kb-qr-object--hero{width:91%;top:0;left:-14%}
+    .kb-qr-object--catalogue{width:41%;top:5%;right:3%}
   }
   @media(prefers-reduced-motion:reduce){
     .kb-qr-object{will-change:auto;opacity:1}
-    .kb-qr-object--stand{transform:rotateZ(-5deg)}
-    .kb-qr-object--code{transform:rotateZ(6deg)}
+    .kb-qr-object--hero{transform:rotateZ(-3deg)}
+    .kb-qr-object--catalogue{transform:rotateZ(3deg)}
   }
   /* Audiovisual: el vídeo llena el interior redondeado, con el Liquid Glass
      restringido a un fino anillo perimetral para no desenfocar la imagen. */
@@ -1126,13 +1123,13 @@ const serviceDescriptions={
     renderBrandLogos();
   }
 
-  // Cuadrado 04: descenso gradual y reversible del expositor QR/NFC.
+  // Cuadrado 04: descenso gradual y reversible de los dos mockups QR.
   const qrTile = document.querySelector('.kb-services-tile--soluciones-qr');
   if (qrTile) {
     const qrReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
     const qrCards = [
-      {delay:0, rise:340, start:-17, end:-5},
-      {delay:.13, rise:410, start:18, end:6}
+      {delay:0, rise:340, start:-12, end:-4},
+      {delay:.13, rise:410, start:10, end:3}
     ];
     let qrFrameRequested = false;
     const qrClamp = value => Math.max(0,Math.min(1,value));

@@ -17,8 +17,12 @@ const placeholders=Array.from({length:12},(_,i)=>{
           <article class="sb-portfolio__item">
             {project.slug ? (
               <a class="sb-portfolio__link" href={'/proyectos/'+project.slug+'/'} aria-label={'Ver proyecto '+project.title}>
-                <div class="sb-portfolio__glass">
-                  <div class="sb-portfolio__shine" aria-hidden="true"></div>
+                <div class:list={['sb-portfolio__glass',{'sb-portfolio__glass--art':Boolean(project.cardImage)}]}>
+                  {project.cardImage ? (
+                    <img class="sb-portfolio__artwork" src={project.cardImage} alt={project.cardImageAlt||project.title} width="2000" height="2000" loading="lazy" decoding="async" />
+                  ) : (
+                    <div class="sb-portfolio__shine" aria-hidden="true"></div>
+                  )}
                 </div>
                 <h2>{project.title}</h2>
               </a>
@@ -51,6 +55,10 @@ const placeholders=Array.from({length:12},(_,i)=>{
 .sb-portfolio__link:focus-visible{outline:2px solid #385f35}
 .sb-portfolio__glass{position:relative;width:100%;aspect-ratio:1;overflow:hidden;border:1px solid rgba(45,78,61,.28);border-radius:0;background:linear-gradient(135deg,rgba(255,255,255,.22),rgba(255,255,255,.08) 39%,rgba(255,255,255,.11) 75%,rgba(255,255,255,.19)),radial-gradient(circle at 22% 17%,rgba(181,226,201,.22),transparent 52%),rgba(148,178,160,.24);-webkit-backdrop-filter:blur(30px) saturate(165%);backdrop-filter:blur(30px) saturate(165%);box-shadow:none;transition:border-color .24s,background-color .24s,transform .3s,box-shadow .3s}
 .sb-portfolio__glass:hover{transform:translateY(-4px);border-color:rgba(45,78,61,.50);box-shadow:none}
+/* Fotografías originales del portfolio: no convertimos, optimizamos ni rasterizamos. */
+.sb-portfolio__glass--art{border:0;background:transparent;-webkit-backdrop-filter:none;backdrop-filter:none}
+.sb-portfolio__artwork{display:block;width:100%;height:100%;object-fit:cover;object-position:center;image-rendering:auto}
+
 .sb-portfolio__shine{position:absolute;inset:0;pointer-events:none;border-radius:0;background:linear-gradient(145deg,rgba(255,255,255,.17) 0,transparent 29%,transparent 75%,rgba(255,255,255,.055) 100%)}
 .sb-portfolio__item h2{font-family:'Space Grotesk Variable',system-ui,sans-serif;font-weight:550;font-size:clamp(17px,1.8vw,27px);letter-spacing:-.045em;line-height:1.35;margin:18px 3px 0;color:#1d2922}
 @media(max-width:850px){.sb-portfolio__grid{grid-template-columns:repeat(2,minmax(0,1fr))}}

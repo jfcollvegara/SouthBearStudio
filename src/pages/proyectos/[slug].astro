@@ -51,6 +51,11 @@ const {project}=Astro.props;
         {project.conceptual && <span class="sb-case__note">Proyecto conceptual · SouthBear Studio</span>}
       </div>
     </section>
+    {project.paletteImage && (
+      <figure class="sb-case__palette">
+        <img src={project.paletteImage} alt={project.paletteAlt||'Paleta cromática de '+project.title} width="2048" height="1152" loading="lazy" decoding="async" />
+      </figure>
+    )}
   </main>
 </Base>
 <style>
@@ -77,6 +82,22 @@ const {project}=Astro.props;
     max-width:none;
     object-fit:cover;
     object-position:center;
+    image-rendering:auto;
+  }
+  /* Nueva imagen a continuación del texto editorial: ancho completo sin recodificar. */
+  .sb-case__palette {
+    display:block;
+    width:100%;
+    margin:0;
+    padding:0;
+    background:#f2e6d8;
+    overflow:hidden;
+  }
+  .sb-case__palette img {
+    display:block;
+    width:100%;
+    height:auto;
+    max-width:none;
     image-rendering:auto;
   }
   .sb-case__information {

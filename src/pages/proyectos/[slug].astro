@@ -1,0 +1,186 @@
+---
+import Base from '../../layouts/Base.astro';
+import {projects} from '../../data/projects.js';
+
+export function getStaticPaths() {
+  return projects.map(project=>({params:{slug:project.slug},props:{project}}));
+}
+const {project}=Astro.props;
+---
+<Base title={project.title+' — '+project.subtitle} description={project.description}>
+  <main class="sb-case">
+    <figure class="sb-case__hero">
+      <img
+        src={project.hero}
+        alt={project.heroAlt}
+        width="2048"
+        height="1152"
+        loading="eager"
+        decoding="async"
+        fetchpriority="high"
+      />
+    </figure>
+    <section class="sb-case__information" aria-labelledby="sb-case-title">
+      <div class="sb-case__identity">
+        <h1 id="sb-case-title">{project.title}</h1>
+      </div>
+      <dl class="sb-case__facts">
+        <div class="sb-case__fact">
+          <dt>PAÍS</dt>
+          <dd>{project.country}</dd>
+        </div>
+        <div class="sb-case__fact">
+          <dt>AÑO</dt>
+          <dd>{project.year}</dd>
+        </div>
+        <div class="sb-case__fact">
+          <dt>INDUSTRIA</dt>
+          <dd>{project.industry}</dd>
+        </div>
+        <div class="sb-case__fact">
+          <dt>ALCANCE</dt>
+          <dd>
+            <ul>
+              {project.scope.map(item=><li>{item}</li>)}
+            </ul>
+          </dd>
+        </div>
+      </dl>
+      <div class="sb-case__story">
+        <p>{project.description}</p>
+        {project.conceptual && <span class="sb-case__note">Proyecto conceptual · SouthBear Studio</span>}
+      </div>
+    </section>
+  </main>
+</Base>
+<style>
+  .sb-case {
+    width:100%;
+    max-width:none;
+    margin:0;
+    background:#fff;
+    color:#080908;
+  }
+  .sb-case__hero {
+    display:block;
+    width:100%;
+    margin:0;
+    padding:0;
+    overflow:hidden;
+    aspect-ratio:16/9;
+    background:#8a8b69;
+  }
+  .sb-case__hero img {
+    display:block;
+    width:100%;
+    height:100%;
+    max-width:none;
+    object-fit:cover;
+    object-position:center;
+    image-rendering:auto;
+  }
+  .sb-case__information {
+    display:grid;
+    grid-template-columns:minmax(0,25fr) minmax(0,42fr) minmax(0,33fr);
+    align-items:start;
+    width:100%;
+    column-gap:0;
+    padding:clamp(46px,4.1vw,82px) clamp(16px,2.3vw,44px) clamp(70px,7vw,130px);
+    background:#fff;
+  }
+  .sb-case__identity h1 {
+    margin:0;
+    font-family:'Space Grotesk Variable',Arial,sans-serif;
+    font-size:clamp(46px,4vw,78px);
+    font-weight:620;
+    letter-spacing:-.075em;
+    line-height:1.03;
+    color:#050605;
+  }
+  .sb-case__facts {
+    display:grid;
+    gap:14px;
+    margin:0;
+    padding:0 28px 0 0;
+    min-width:0;
+  }
+  .sb-case__fact {
+    display:grid;
+    grid-template-columns:35% minmax(0,65%);
+    align-items:start;
+    gap:0;
+    min-width:0;
+    font-size:clamp(15px,1.2vw,23px);
+    line-height:1.35;
+  }
+  .sb-case__fact dt {
+    margin:0;
+    padding:0 12px 0 0;
+    font-weight:740;
+    letter-spacing:-.025em;
+    color:#080908;
+  }
+  .sb-case__fact dd {
+    min-width:0;
+    margin:0;
+    font-weight:400;
+    overflow-wrap:break-word;
+  }
+  .sb-case__fact ul {
+    list-style:none;
+    margin:0;
+    padding:0;
+  }
+  .sb-case__fact li {margin:0 0 3px}
+  .sb-case__story {
+    min-width:0;
+    padding:0 0 0 clamp(6px,1vw,22px);
+  }
+  .sb-case__story p {
+    margin:0;
+    font-size:clamp(17px,1.25vw,24px);
+    font-weight:400;
+    line-height:1.37;
+    letter-spacing:-.012em;
+    overflow-wrap:break-word;
+  }
+  .sb-case__note {
+    display:block;
+    margin-top:40px;
+    font-size:clamp(11px,.82vw,14px);
+    font-weight:500;
+    color:#636b64;
+  }
+  @media(max-width:1140px) {
+    .sb-case__information {
+      grid-template-columns:minmax(0,31fr) minmax(0,69fr);
+      row-gap:38px;
+    }
+    .sb-case__story {
+      grid-column:1/-1;
+      padding:0;
+      max-width:780px;
+    }
+    .sb-case__facts {padding:0}
+    .sb-case__fact {grid-template-columns:32% minmax(0,68%);font-size:18px}
+    .sb-case__story p {font-size:20px}
+  }
+  @media(max-width:650px) {
+    .sb-case__information {
+      grid-template-columns:minmax(0,1fr);
+      gap:35px;
+      padding:40px 22px 85px;
+    }
+    .sb-case__identity h1 {font-size:clamp(46px,12vw,68px)}
+    .sb-case__facts {gap:16px}
+    .sb-case__fact {
+      grid-template-columns:minmax(105px,35%) minmax(0,65%);
+      font-size:16px;
+      gap:6px;
+      line-height:1.4;
+    }
+    .sb-case__story {grid-column:auto}
+    .sb-case__story p {font-size:18px;line-height:1.5}
+    .sb-case__note {margin-top:25px}
+  }
+</style>

@@ -56,6 +56,11 @@ const {project}=Astro.props;
         <img src={project.paletteImage} alt={project.paletteAlt||'Paleta cromática de '+project.title} width="2048" height="1152" loading="lazy" decoding="async" />
       </figure>
     )}
+    {project.typefacesImage && (
+      <figure class="sb-case__typefaces">
+        <img src={project.typefacesImage} alt={project.typefacesAlt||'Tipografías de '+project.title} width="2048" height="1152" loading="lazy" decoding="async" />
+      </figure>
+    )}
   </main>
 </Base>
 <style>
@@ -85,7 +90,7 @@ const {project}=Astro.props;
     image-rendering:auto;
   }
   /* Nueva imagen a continuación del texto editorial: ancho completo sin recodificar. */
-  .sb-case__palette {
+  .sb-case__palette, .sb-case__typefaces {
     display:block;
     width:100%;
     margin:0;
@@ -93,7 +98,7 @@ const {project}=Astro.props;
     background:#f2e6d8;
     overflow:hidden;
   }
-  .sb-case__palette img {
+  .sb-case__palette img, .sb-case__typefaces img {
     display:block;
     width:100%;
     height:auto;

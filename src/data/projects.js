@@ -20,8 +20,8 @@ export const projects = [
     description: 'NØRDA nace como una pequeña tostadora de café de especialidad fundada por dos amigos que viajaron por el norte de Europa y descubrieron otra manera de entender el café. Comienzan vendiendo café en grano por internet y preparan su primer local, donde quieren unir producto de alta calidad, calma y diseño.',
     hero: '/proyectos/norda/banner-portfolio.jpg',
     heroAlt: 'Bolsa de café NØRDA sobre un fondo verde natural y tonos tierra.',
-    cardImage: '/proyectos/norda/logo.jpg',
-    cardImageAlt: 'Logotipo de NØRDA Coffee sobre fondo marfil.',
+    cardVideo: '/proyectos/norda/logo_effect.mp4',
+    cardVideoAlt: 'Animación del logotipo de NØRDA Coffee.',
     paletteImage: '/proyectos/norda/paleta-colores.jpg',
     paletteAlt: 'Paleta de identidad visual NØRDA: Marfil Cálido, Arena Tostada, Marrón Espresso, Terracota Café y Verde Oliva Bosque con sus códigos HEX y CMYK.',
     conceptual: true

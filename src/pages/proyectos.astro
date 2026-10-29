@@ -17,8 +17,22 @@ const placeholders=Array.from({length:12},(_,i)=>{
           <article class="sb-portfolio__item">
             {project.slug ? (
               <a class="sb-portfolio__link" href={'/proyectos/'+project.slug+'/'} aria-label={'Ver proyecto '+project.title}>
-                <div class:list={['sb-portfolio__glass',{'sb-portfolio__glass--art':Boolean(project.cardImage)}]}>
-                  {project.cardImage ? (
+                <div class:list={['sb-portfolio__glass',{'sb-portfolio__glass--art':Boolean(project.cardVideo||project.cardImage)}]}>
+                  {project.cardVideo ? (
+                    <video
+                      class="sb-portfolio__artwork sb-portfolio__artwork--video"
+                      autoplay
+                      muted
+                      loop
+                      playsinline
+                      preload="metadata"
+                      aria-label={project.cardVideoAlt||'Animación de '+project.title}
+                      width="1080"
+                      height="1080"
+                    >
+                      <source src={project.cardVideo} type="video/mp4" />
+                    </video>
+                  ) : project.cardImage ? (
                     <img class="sb-portfolio__artwork" src={project.cardImage} alt={project.cardImageAlt||project.title} width="2000" height="2000" loading="lazy" decoding="async" />
                   ) : (
                     <div class="sb-portfolio__shine" aria-hidden="true"></div>
@@ -58,6 +72,8 @@ const placeholders=Array.from({length:12},(_,i)=>{
 /* Fotografías originales del portfolio: no convertimos, optimizamos ni rasterizamos. */
 .sb-portfolio__glass--art{border:0;background:transparent;-webkit-backdrop-filter:none;backdrop-filter:none}
 .sb-portfolio__artwork{display:block;width:100%;height:100%;object-fit:cover;object-position:center;image-rendering:auto}
+/* El MP4 se sirve directamente: sin transcodificar ni cambiar su calidad original. */
+.sb-portfolio__artwork--video{object-fit:cover;background:#f2e6d8;pointer-events:none}
 
 .sb-portfolio__shine{position:absolute;inset:0;pointer-events:none;border-radius:0;background:linear-gradient(145deg,rgba(255,255,255,.17) 0,transparent 29%,transparent 75%,rgba(255,255,255,.055) 100%)}
 .sb-portfolio__item h2{font-family:'Space Grotesk Variable',system-ui,sans-serif;font-weight:550;font-size:clamp(17px,1.8vw,27px);letter-spacing:-.045em;line-height:1.35;margin:18px 3px 0;color:#1d2922}

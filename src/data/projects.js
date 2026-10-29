@@ -24,7 +24,7 @@ export const projects = [
     cardVideoAlt: 'Animación del logotipo de NØRDA Coffee.',
     paletteImage: '/proyectos/norda/paleta-colores.jpg',
     paletteAlt: 'Paleta de identidad visual NØRDA: Marfil Cálido, Arena Tostada, Marrón Espresso, Terracota Café y Verde Oliva Bosque con sus códigos HEX y CMYK.',
-    typefacesImage: '/proyectos/norda/fuentes_tipograficas.jpg',
+    typefacesImage: '/proyectos/norda/fuentes_tipográficas.jpg',
     typefacesAlt: 'Fuentes tipográficas NØRDA: Roastie para los títulos y Geist para los textos.',
     conceptual: true
   }

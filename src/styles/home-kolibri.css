@@ -543,7 +543,7 @@ body.landing-page,body.landing-page main{background:#FFFFFF;color:#101010}
 }
 
 
-/* Capas de la portada: navegación > logo > degradado > vídeo. */
+/* Capas de la portada: navegación > logo en negativo > vídeo. */
 .kb-wordmark{
   position:relative;
   isolation:isolate;
@@ -561,16 +561,15 @@ body.landing-page,body.landing-page main{background:#FFFFFF;color:#101010}
   transform:rotate(180deg);
 }
 .kb-wordmark::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  z-index:-1;
-  pointer-events:none;
-  background:linear-gradient(to top,rgba(255,255,255,1) 0%,rgba(255,255,255,.35) 8%,rgba(255,255,255,.07) 24%,rgba(255,255,255,0) 48%);
+  content:none;
 }
 .kb-wordmark-container{
   position:relative;
   z-index:1;
+  mix-blend-mode:difference;
+}
+.kb-wordmark-container img{
+  filter:brightness(0) invert(1) blur(var(--kb-logo-blur,0px));
 }
 .kb-top-nav{z-index:100}
 

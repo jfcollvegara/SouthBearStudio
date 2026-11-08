@@ -558,7 +558,6 @@ body.landing-page,body.landing-page main{background:#FFFFFF;color:#101010}
   object-fit:cover;
   object-position:center;
   pointer-events:none;
-  transform:rotate(180deg);
 }
 .kb-wordmark::before{
   content:none;

@@ -22,7 +22,7 @@ const serviceDescriptions={
 ---
 <Base title="SOUTHBEAR STUDIO" description="SOUTHBEAR STUDIO. Diseño web, branding, diseño gráfico, soluciones QR/NFC y producción audiovisual desde Murcia." landing={true}>
   <section class="kb-wordmark" aria-label="SOUTHBEAR STUDIO">
-    <video class="kb-hero-bear-video" autoplay muted loop playsinline webkit-playsinline preload="auto" disablepictureinpicture disableremoteplayback aria-hidden="true"><source src={coverVideo} type="video/mp4"/></video>
+    <video class="kb-hero-bear-video" muted loop playsinline webkit-playsinline preload="auto" disablepictureinpicture disableremoteplayback aria-hidden="true"><source src={coverVideo} type="video/mp4"/></video>
     <div class="kb-wordmark-container">
       <img src={link('/southbear-logo.svg')} alt="SOUTHBEAR STUDIO"/>
     </div>
@@ -912,7 +912,8 @@ const serviceDescriptions={
 </style>
 
 <script>
-  // La portada es decorativa: intenta iniciar el vídeo silenciado sin controles.
+  // Inicio automático mediante JS (sin atributo autoplay para que Safari iOS
+  // no superponga el botón nativo cuando el ahorro de batería lo bloquea).
   // Safari (especialmente en iOS) puede bloquear autoplay al volver a la pestaña
   // o en ahorro de batería; en ese caso, reintenta al tocar cualquier parte.
   const heroVideo = document.querySelector('.kb-hero-bear-video');
@@ -926,9 +927,8 @@ const serviceDescriptions={
       if (document.hidden || !heroVideo.paused) return;
       const attempt = heroVideo.play();
       attempt?.catch?.(() => {
-        // Si Safari bloquea autoplay, evita que muestre su botón superpuesto.
-        // Una interacción posterior del usuario volverá a intentar reproducir.
-        heroVideo.removeAttribute('autoplay');
+        // En ahorro de batería, Safari puede exigir una interacción real.
+        // Se intentará de nuevo con el siguiente toque, sin botón superpuesto.
       });
     };
 

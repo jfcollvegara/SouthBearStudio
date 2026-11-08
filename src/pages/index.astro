@@ -22,7 +22,7 @@ const serviceDescriptions={
 ---
 <Base title="SOUTHBEAR STUDIO" description="SOUTHBEAR STUDIO. Diseño web, branding, diseño gráfico, soluciones QR/NFC y producción audiovisual desde Murcia." landing={true}>
   <section class="kb-wordmark" aria-label="SOUTHBEAR STUDIO">
-    <video class="kb-hero-bear-video" autoplay muted loop playsinline preload="metadata" aria-hidden="true"><source src={coverVideo} type="video/mp4"/></video>
+    <video class="kb-hero-bear-video" autoplay muted loop playsinline webkit-playsinline preload="auto" disablepictureinpicture disableremoteplayback aria-hidden="true"><source src={coverVideo} type="video/mp4"/></video>
     <div class="kb-wordmark-container">
       <img src={link('/southbear-logo.svg')} alt="SOUTHBEAR STUDIO"/>
     </div>
@@ -156,6 +156,15 @@ const serviceDescriptions={
 </Base>
 
 <style>
+  /* Safari iOS: nunca mostrar el botón nativo sobre el vídeo decorativo. */
+  .kb-hero-bear-video::-webkit-media-controls,
+  .kb-hero-bear-video::-webkit-media-controls-panel,
+  .kb-hero-bear-video::-webkit-media-controls-start-playback-button,
+  .kb-hero-bear-video::-webkit-media-controls-play-button {
+    display: none !important;
+    -webkit-appearance: none;
+  }
+
   /* Bloque 03 — cinco servicios en mosaico 2 + 2 + 1.
      Las superficies van pegadas entre sí y llegan a ambos bordes de pantalla.
      No se añade ninguna animación asociada al desplazamiento por ahora. */
@@ -903,6 +912,36 @@ const serviceDescriptions={
 </style>
 
 <script>
+  // La portada es decorativa: intenta iniciar el vídeo silenciado sin controles.
+  // Safari (especialmente en iOS) puede bloquear autoplay al volver a la pestaña
+  // o en ahorro de batería; en ese caso, reintenta al tocar cualquier parte.
+  const heroVideo = document.querySelector('.kb-hero-bear-video');
+  if (heroVideo) {
+    heroVideo.muted = true;
+    heroVideo.defaultMuted = true;
+    heroVideo.playsInline = true;
+    heroVideo.controls = false;
+
+    const playHero = () => {
+      if (document.hidden || !heroVideo.paused) return;
+      const attempt = heroVideo.play();
+      attempt?.catch?.(() => {
+        // Si Safari bloquea autoplay, evita que muestre su botón superpuesto.
+        // Una interacción posterior del usuario volverá a intentar reproducir.
+        heroVideo.removeAttribute('autoplay');
+      });
+    };
+
+    playHero();
+    heroVideo.addEventListener('loadeddata', playHero, {once: true});
+    window.addEventListener('pageshow', playHero);
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden) playHero();
+    });
+    document.addEventListener('pointerdown', playHero, {passive: true});
+    document.addEventListener('touchstart', playHero, {passive: true});
+  }
+
   // El menú necesita ser hermano de la sección del logo para que
   // position: sticky funcione y se mantenga visible durante el scroll.
   const logo = document.querySelector('.kb-wordmark-container');

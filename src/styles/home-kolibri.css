@@ -565,7 +565,7 @@ body.landing-page,body.landing-page main{background:#FFFFFF;color:#101010}
   inset:0;
   z-index:-1;
   pointer-events:none;
-  background:linear-gradient(to top,rgba(255,255,255,1) 0%,rgba(255,255,255,.88) 18%,rgba(255,255,255,.40) 47%,rgba(255,255,255,0) 82%);
+  background:linear-gradient(to top,rgba(255,255,255,1) 0%,rgba(255,255,255,.60) 12%,rgba(255,255,255,.18) 34%,rgba(255,255,255,0) 65%);
 }
 .kb-wordmark-container{
   position:relative;

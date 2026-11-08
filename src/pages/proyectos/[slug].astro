@@ -8,7 +8,7 @@ export function getStaticPaths() {
 }
 const {project}=Astro.props;
 const nordaPhotos = project.slug === 'norda'
-  ? ['norda1.jpeg', 'norda2.jpeg'].map(name => ({
+  ? ['norda1.jpg', 'norda2.jpg'].map(name => ({
       src: '/proyectos/norda/' + name,
       available: existsSync('public/proyectos/norda/' + name)
     }))

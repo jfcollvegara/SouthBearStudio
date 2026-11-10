@@ -13,6 +13,12 @@ const nordaPhotos = project.slug === 'norda'
       available: existsSync('public/proyectos/norda/' + name)
     }))
   : [];
+const nordaPosts = project.slug === 'norda'
+  ? ['norda3.jpg', 'norda4.jpg'].map(name => ({
+      src: '/proyectos/norda/' + name,
+      available: existsSync('public/proyectos/norda/' + name)
+    }))
+  : [];
 ---
 <Base title={project.title+' — '+project.subtitle} description={project.description}>
   <main class="sb-case">
@@ -77,6 +83,15 @@ const nordaPhotos = project.slug === 'norda'
         ))}
       </div>
     )}
+    {nordaPosts.some(photo => photo.available) && (
+      <div class="sb-case__photo-pair sb-case__photo-pair--posts">
+        {nordaPosts.map((photo, index) => (
+          <div class="sb-case__post-slot">
+            {photo.available && <img src={photo.src} alt={index === 0 ? 'Publicación de NØRDA: El arte de bajar el ritmo.' : 'Publicación de NØRDA: De origen, con calma.'} loading="lazy" decoding="async" />}
+          </div>
+        ))}
+      </div>
+    )}
   </main>
 </Base>
 <style>
@@ -125,7 +140,13 @@ const nordaPhotos = project.slug === 'norda'
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     width: 100%;
+    gap: 0;
+    margin: 0;
+    padding: 0;
   }
+  .sb-case__photo-pair--posts { align-items: start; }
+  .sb-case__post-slot { min-width: 0; background: #fff; }
+  .sb-case__post-slot img { display: block; width: 100%; height: auto; }
   .sb-case__photo-slot {
     aspect-ratio: 4 / 3;
     overflow: hidden;
